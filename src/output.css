@@ -2019,6 +2019,11 @@ html {
   margin-right: 12rem;
 }
 
+.mx-8 {
+  margin-left: 2rem;
+  margin-right: 2rem;
+}
+
 .mr-4 {
   margin-right: 1rem;
 }
@@ -2069,6 +2074,10 @@ html {
 
 .mt-8 {
   margin-top: 2rem;
+}
+
+.ml-12 {
+  margin-left: 3rem;
 }
 
 .flex {
@@ -2126,6 +2135,10 @@ html {
 
 .h-3\/4 {
   height: 75%;
+}
+
+.h-4\/5 {
+  height: 80%;
 }
 
 .w-1\/2 {
@@ -2226,6 +2239,10 @@ html {
 
 .gap-10 {
   gap: 2.5rem;
+}
+
+.gap-8 {
+  gap: 2rem;
 }
 
 .overflow-visible {

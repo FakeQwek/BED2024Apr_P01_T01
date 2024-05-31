@@ -88,12 +88,14 @@
                             <div class="card-body">
                                 <div class="card-title flex justify-between items-center">
                                     <h2>Lorem ipsum dolor sit amet?</h2>
+                                    <!-- options dropdown -->
                                     <div class="dropdown dropdown-end">
                                         <div tabindex="0" role="button" class="btn btn-sm bg-white border-0 shadow-none"><img src="../images/dots-horizontal.svg" width="20px" /></div>
                                         <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
                                           <li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="report_modal.showModal()"><span class="w-full">Report</span></button></li>
                                           <li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="delete_modal.showModal()"><span class="w-full">Delete</span></button></li>
                                         </ul>
+                                        <!-- report popup -->
                                         <dialog id="report_modal" class="modal">
                                             <div class="modal-box flex flex-col h-2/3 rounded-3xl gap-2">
                                                 <h2 class="font-bold text-2xl">Submit a report</h2>
@@ -113,6 +115,7 @@
                                                 </div>
                                             </div>
                                         </dialog>
+                                        <!-- delete popup -->
                                         <dialog id="delete_modal" class="modal">
                                             <div class="modal-box flex flex-col rounded-3xl gap-2">
                                                 <h2 class="font-bold text-2xl">Delete this post</h2>
