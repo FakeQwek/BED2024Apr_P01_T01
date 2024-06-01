@@ -42,6 +42,21 @@ class Discussion {
             )
             : null;
     }
+
+    static async createDiscussion(newDiscussionData) {
+        const connection = await sql.connect(dbConfig);
+
+        const sqlQuery = `INSERT INTO Discussion (DscID, DscName, DscDesc, OwnerID) SELECT MAX(DscID) + 1, @dscName, @dscDesc, @ownerId FROM Discussion;`;
+
+        const request = connection.request();
+        request.input("dscName", newDiscussionData.dscName);
+        request.input("dscDesc", newDiscussionData.dscDesc);
+        request.input("ownerId", newDiscussionData.ownerId);
+
+        const result = await request.query(sqlQuery);
+
+        connection.close();
+    }
 }
 
 module.exports = Discussion;

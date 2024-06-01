@@ -24,7 +24,19 @@ const getDiscussionById = async (req, res) => {
     }
 };
 
+const createDiscussion = async (req, res) => {
+    const newDiscussion = req.body;
+    try {
+        const createdDiscussion = await Discussion.createDiscussion(newDiscussion);
+        res.status(201).json(createdDiscussion);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Error creating discussion");
+    }
+};
+
 module.exports = {
     getAllDiscussions,
     getDiscussionById,
+    createDiscussion,
 };

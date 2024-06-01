@@ -24,7 +24,19 @@ const getPostById = async (req, res) => {
     }
 };
 
+const createPost = async (req, res) => {
+    const newPost = req.body;
+    try {
+        const createdPost = await Post.createPost(newPost);
+        res.status(201).json(createdPost);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Error creating post");
+    }
+};
+
 module.exports = {
     getAllPosts,
     getPostById,
+    createPost,
 };

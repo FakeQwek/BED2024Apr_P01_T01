@@ -1,6 +1,7 @@
 const express = require("express");
 const sql = require("mssql");
 const dbConfig = require("./dbConfig");
+const bodyParser = require("body-parser");
 
 const accountsController = require("./mvc/controllers/accountsController");
 const postsController = require("./mvc/controllers/postsController");
@@ -10,6 +11,9 @@ const commentsController = require("./mvc/controllers/commentsController");
 const app = express();
 const port = process.env.PORT || 3000;
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.get("/accounts", accountsController.getAllAccounts);
 app.get("/accounts/:accId", accountsController.getAccountById);
 app.get("/posts", postsController.getAllPosts);
@@ -18,6 +22,8 @@ app.get("/discussions", discussionController.getAllDiscussions);
 app.get("/discussions/:dscId", discussionController.getDiscussionById);
 app.get("/comments", commentsController.getAllComments);
 app.get("/comments/:postId", commentsController.getCommentsByPost);
+app.post("/discussions", discussionController.createDiscussion);
+app.post("/posts", postsController.createPost);
 
 app.listen(port, async () => {
     try {

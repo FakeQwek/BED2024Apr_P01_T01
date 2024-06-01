@@ -1,5 +1,6 @@
 const sql =  require("mssql");
 const dbConfig = require("../../dbConfig");
+const { request } = require("express");
 
 class Post {
     constructor(postId, postName, postDesc, isEvent, isApproved, ownerId, dscId) {
@@ -47,6 +48,23 @@ class Post {
                 result.recordset[0].DscID
             )
             : null;
+    }
+
+    static async createPost(newPostData) {
+        const connection = await sql.connect(dbConfig);
+        
+        const sqlQuery = `INSERT INTO Post (PostID, PostName, PostDesc, isEvent, isApproved, OwnerID, DscID) SELECT MAX(PostID) + 1, @postName, @postDesc, @isEvent, 'False', @ownerId, @dscId FROM Post;`;
+
+        const request = connection.request();
+        request.input("postName", newPostData.postName);
+        request.input("postDesc", newPostData.postDesc);
+        request.input("isEvent", newPostData.isEvent);
+        request.input("ownerId", newPostData.ownerId);
+        request.input("dscId", newPostData.dscId);
+
+        const result = await request.query(sqlQuery);
+
+        connection.close();
     }
 }
 
