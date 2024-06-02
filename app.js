@@ -31,11 +31,11 @@ app.get("/postReports", postReportsController.getAllPostReports);
 app.get("/postReports/:postRptId", postReportsController.getPostReportById);
 app.get("/volunteers", volunteersController.getAllVolunteers);
 app.get("/volunteers/:volId", volunteersController.getVolunteerById);
-app.post("/postReports", postReportsController.createPostReport);
-app.post("/discussions", discussionController.createDiscussion);
+app.post("/postReport", postReportsController.createPostReport);
+app.post("/discussion", discussionController.createDiscussion);
 app.post("/comment", commentsController.createComment);
 app.post("/post", postsController.createPost);
-app.post("/volunteers", volunteersController.createVolunteer);
+app.post("/volunteer", volunteersController.createVolunteer);
 app.put("/post/:postId", postsController.updatePost);
 app.delete("/posts/:postId", postsController.deletePost);
 

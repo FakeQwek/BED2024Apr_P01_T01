@@ -85,47 +85,47 @@
                         <div class="modal-box flex flex-col h-5/6 rounded-3xl gap-2">
                             <h2 class="font-bold text-2xl">Create a discussion</h2>
                             <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                            <input type="text" placeholder="Title" class="input input-bordered w-full my-4" />
+                            <input id="discussionName" type="text" placeholder="Title" class="input input-bordered w-full my-4" />
                             <h2 class="text-xl font-bold ml-4 mb-4">Type of discussion</h2>
                             <div class="flex flex-col gap-8">
                                 <!-- public option -->
-                                <div class="flex flex-row-reverse justify-between items-center mx-8 gap-2">
-                                    <input type="radio" name="radio-1" class="radio radio-xs" />
+                                <div class="flex flex-row justify-between items-center mx-4 gap-2">
                                     <div>
                                         <div class="flex items-center gap-2">
-                                            <img src="../images/web.svg" width="40px" />
+                                            <img src="../images/web.svg" width="30px" />
                                             <h2 class="font-bold">Public</h2>
                                         </div>
                                         <p>Lorem ipsum dolor sit amet</p>
                                     </div>
+                                    <input type="radio" name="radio-1" class="radio radio-xs" />
                                 </div>
                                 <!-- restricted option -->
-                                <div class="flex flex-row-reverse justify-between items-center mx-8 gap-2">
-                                    <input type="radio" name="radio-1" class="radio radio-xs" />
+                                <div class="flex flex-row justify-between items-center mx-4 gap-2">
                                     <div>
                                         <div class="flex items-center gap-2">
-                                            <img src="../images/eye-off-outline.svg" width="40px" />
+                                            <img src="../images/eye-off-outline.svg" width="30px" />
                                             <h2 class="font-bold">Restricted</h2>
                                         </div>
                                         <p>Lorem ipsum dolor sit amet</p>
                                     </div>
+                                    <input type="radio" name="radio-1" class="radio radio-xs" />
                                 </div>
                                 <!-- private option -->
-                                <div class="flex flex-row-reverse justify-between items-center mx-8 gap-2">
-                                    <input type="radio" name="radio-1" class="radio radio-xs" />
+                                <div class="flex flex-row justify-between items-center mx-4 gap-2">
                                     <div>
                                         <div class="flex items-center gap-2">
-                                            <img src="../images/lock-outline.svg" width="40px" />
+                                            <img src="../images/lock-outline.svg" width="30px" />
                                             <h2 class="font-bold">Private</h2>
                                         </div>
                                         <p>Lorem ipsum dolor sit amet</p>
                                     </div>
+                                    <input type="radio" name="radio-1" class="radio radio-xs" />
                                 </div>
                             </div>
                             <div class="modal-action">
                                 <form class="flex gap-4" method="dialog">
                                     <button class="btn btn-sm">Cancel</button>
-                                    <button class="btn btn-sm bg-red-500 text-white">Submit</button>
+                                    <button class="btn btn-sm bg-red-500 text-white" onclick="createDiscussion()">Submit</button>
                                 </form>
                             </div>
                         </div>
@@ -135,4 +135,5 @@
         </div>
     </div>
 </body>
+<script src="./js/index.js"></script>
 </html>

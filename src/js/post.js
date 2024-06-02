@@ -44,13 +44,13 @@ async function Comments() {
     }
 };
 
-const postComment = document.getElementById("postComment");
+const commentDesc = document.getElementById("commentDesc");
 
 async function createComment() {
     await fetch("http://localhost:3000/comment", {
         method: "POST",
         body: JSON.stringify({
-            cmtDesc: postComment.value,
+            cmtDesc: commentDesc.value,
             ownerId: "1",
             postId: postId
         }),
