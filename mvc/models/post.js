@@ -66,6 +66,35 @@ class Post {
 
         connection.close();
     }
+
+    static async updatePost(postId, newPostData) {
+        const connection = await sql.connect(dbConfig);
+
+        const sqlQuery = `UPDATE Post SET PostName = @postName, PostDesc = @postDesc WHERE PostID = @postId`;
+
+        const request = connection.request();
+        request.input("postId", postId);
+        request.input("postName", newPostData.postName || null);
+        request.input("postDesc", newPostData.postDesc || null);
+
+        await request.query(sqlQuery);
+
+        connection.close()
+
+        return this.getPostById(postId);
+    }
+
+    static async deletePost(postId) {
+        const connection = await sql.connect(dbConfig);
+
+        const sqlQuery = `DELETE FROM Comment WHERE PostID = @postId; DELETE FROM PostReport WHERE PostID = @postId; DELETE FROM Volunteer WHERE PostID = @postId; DELETE FROM Post WHERE PostID = @postId`;
+
+        const request = connection.request();
+        request.input("postId", postId);
+        const result = await request.query(sqlQuery);
+
+        connection.close();
+    }
 }
 
 module.exports = Post;

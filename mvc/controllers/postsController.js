@@ -35,8 +35,39 @@ const createPost = async (req, res) => {
     }
 };
 
+const updatePost = async (req, res) => {
+    const postId = parseInt(req.params.postId);
+    const newPostData = req.body;
+    try {
+        const updatedPost = await Post.updatePost(postId, newPostData);
+        if (!updatePost) {
+            return res.status(404).send("Post not found");
+        }
+        res.json(updatePost);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Error updating post");
+    }
+}
+
+const deletePost = async (req, res) => {
+    const postId = parseInt(req.params.postId);
+    try {
+        const success = await Post.deletePost(postId);
+        if (!success) {
+            return res.status(404).send("Post not found")
+        }
+        res.status(204).send();
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Error deleting post");
+    }
+};
+
 module.exports = {
     getAllPosts,
     getPostById,
     createPost,
+    deletePost,
+    updatePost,
 };

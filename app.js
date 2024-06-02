@@ -32,6 +32,8 @@ app.post("/postReports", postReportsController.createPostReport);
 app.post("/discussions", discussionController.createDiscussion);
 app.post("/posts", postsController.createPost);
 app.post("/volunteers", volunteersController.createVolunteer);
+app.put("/posts/:postId", postsController.updatePost);
+app.delete("/posts/:postId", postsController.deletePost);
 
 app.listen(port, async () => {
     try {
