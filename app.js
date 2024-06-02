@@ -33,6 +33,7 @@ app.get("/volunteers", volunteersController.getAllVolunteers);
 app.get("/volunteers/:volId", volunteersController.getVolunteerById);
 app.post("/postReports", postReportsController.createPostReport);
 app.post("/discussions", discussionController.createDiscussion);
+app.post("/comment", commentsController.createComment);
 app.post("/post", postsController.createPost);
 app.post("/volunteers", volunteersController.createVolunteer);
 app.put("/post/:postId", postsController.updatePost);

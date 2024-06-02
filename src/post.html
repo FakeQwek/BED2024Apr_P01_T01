@@ -6,7 +6,7 @@
     <link href="output.css" rel="stylesheet">
     <title>Document</title>
 </head>
-<body class="h-screen bg-gray-100">
+<body class="h-full bg-gray-100">
     <!-- navbar -->
     <div class="flex justify-center items-center h-12 bg-white border-b-2">
         <div class="flex w-1/4">
@@ -24,7 +24,7 @@
     <!-- main -->
     <div class="flex flex-row h-full">
         <!-- sidebar -->
-        <div class="flex flex-col items-center w-1/6 h-full bg-white border-r-2">
+        <div class="flex flex-col items-center sticky w-1/6 h-screen bg-white border-r-2 top-0">
             <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
                 <div class="flex items-center">
                     <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/home-variant-outline.svg" width="30px" />Home</span></button>
@@ -63,36 +63,31 @@
                     <div class="flex flex-col w-3/4 h-full mt-4">
                         <div class="card w-full h-fit bg-white">
                             <div class="card-body">
-                                <div class="card-title flex justify-between">
-                                    <h2>Lorem ipsum dolor sit amet?</h2>
+                                <div class="flex justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <img src="../images/account-circle-outline.svg" width="30px" />
+                                        <h2>testerman</h2>
+                                    </div>
                                     <button class="btn btn-sm bg-white border-0 shadow-none"><img src="../images/dots-horizontal.svg" width="20px" /></button>
                                 </div>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-                                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
-                                    nisi ut aliquip ex ea commodo consequat
-                                    <br><br>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-                                    sed do eiusmod tempor incididunt
-                                    <br><br>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-                                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris</p>
+                                <div id="postName" class="card-title flex justify-between">
+                                    
+                                </div>
+                                <div id="postDesc">
+
+                                </div>
                             </div>
                         </div>
                         <!-- comment -->
                         <div class="flex w-full h-fit bg-white rounded-2xl my-4 p-4">
-                            <input type="text" placeholder="Comment" class="input input-bordered w-full" />
+                            <input id="postComment" type="text" placeholder="Comment" class="input input-bordered w-full" />
                         </div>
                         <!-- comments -->
                         <div class="flex w-full h-fit my-4">
                             <button class="btn btn-sm bg-white ml-8"><img src="../images/fire.svg" width="20px" />Hot</button>
                             <button class="btn btn-sm bg-white ml-4"><img src="../images/finance.svg" width="20px" />Trending</button>
                         </div>
-                        <div class="card w-full h-fit bg-white">
-                            <div class="card-body">
-                                <p>Lorem ipsum dolor sit amet</p>
-                            </div>
+                        <div id="postComments" class="flex flex-col gap-4">
                         </div>
                     </div>
                     <!-- banner -->
@@ -126,4 +121,5 @@
         </div>
     </div>
 </body>
+<script src="./js/post.js"></script>
 </html>
