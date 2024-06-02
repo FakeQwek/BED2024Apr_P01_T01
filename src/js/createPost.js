@@ -7,7 +7,7 @@ const createPostName = document.getElementById("createPostName");
 const createPostDesc = document.getElementById("createPostDesc");
 
 async function createPost() {
-    await fetch("http://localhost:3000/posts", {
+    await fetch("http://localhost:3000/post", {
         method: "POST",
         body: JSON.stringify({
             postName: createPostName.value,

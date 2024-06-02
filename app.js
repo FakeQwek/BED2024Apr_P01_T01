@@ -22,7 +22,7 @@ app.get("/accounts", accountsController.getAllAccounts);
 app.get("/accounts/:accId", accountsController.getAccountById);
 app.get("/posts", postsController.getAllPosts);
 app.get("/posts/:dscId", postsController.getPostsByDiscussion);
-//app.get("/posts/:postId", postsController.getPostById);
+app.get("/post/:postId", postsController.getPostById);
 app.get("/discussions", discussionController.getAllDiscussions);
 app.get("/discussions/:dscId", discussionController.getDiscussionById);
 app.get("/comments", commentsController.getAllComments);
@@ -33,9 +33,9 @@ app.get("/volunteers", volunteersController.getAllVolunteers);
 app.get("/volunteers/:volId", volunteersController.getVolunteerById);
 app.post("/postReports", postReportsController.createPostReport);
 app.post("/discussions", discussionController.createDiscussion);
-app.post("/posts", postsController.createPost);
+app.post("/post", postsController.createPost);
 app.post("/volunteers", volunteersController.createVolunteer);
-app.put("/posts/:postId", postsController.updatePost);
+app.put("/post/:postId", postsController.updatePost);
 app.delete("/posts/:postId", postsController.deletePost);
 
 app.listen(port, async () => {
