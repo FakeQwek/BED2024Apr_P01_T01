@@ -6,7 +6,133 @@
     <link href="output.css" rel="stylesheet">
     <title>Document</title>
 </head>
-<body>
-    
+<body class="h-screen bg-gray-100">
+    <!-- navbar -->
+    <div class="flex justify-center items-center h-12 bg-white border-b-2">
+        <div class="flex w-1/4">
+
+        </div>
+        <div class="flex justify-center w-1/2">
+            <input type="text" placeholder="Search" class="input input-sm input-bordered w-full rounded-full" />
+        </div>
+        <div class="flex justify-end w-1/4">
+            <button class="btn btn-sm mr-4">Login</button>
+            <button class="btn btn-sm mr-4">Sign Up</button>
+        </div>
+    </div>
+
+    <!-- main -->
+    <div class="flex flex-row h-full">
+        <!-- sidebar -->
+        <div class="flex flex-col items-center w-1/6 h-full bg-white border-r-2">
+            <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+                <div class="flex items-center   ">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/home-variant-outline.svg" width="30px" />Home</span></button>
+                </div>
+                <div class="flex items-center   ">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/account-circle-outline.svg" width="30px" />Profile</span></button>
+                </div>
+                <div class="flex items-center   ">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/newspaper-variant-outline.svg" width="30px" />News</span></button>
+                </div>
+            </div>
+            <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+                <h2 class="font-bold mb-2">FOR YOU</h2>
+            </div>
+            <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+                <h2 class="font-bold mb-2">LEARN MORE</h2>
+                <div class="flex items-center   ">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/information-outline.svg" width="30px" />About Us</span></button>
+                </div>
+                <div class="flex items-center   ">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/phone-in-talk.svg" width="30px" />Contact Us</span></button>
+                </div>
+                <div class="flex items-center   ">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/finance.svg" width="30px" />User Statistics</span></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- content -->
+        <div class="flex flex-col w-4/6 h-full">
+            <div class="flex w-full h-fit my-4">
+                <button class="btn btn-sm bg-white ml-32"><img src="../images/fire.svg" width="20px" />Hot</button>
+                <button class="btn btn-sm bg-white ml-4"><img src="../images/finance.svg" width="20px" />Trending</button>
+            </div>
+            <div class="flex justify-center w-full">
+                <div class="card w-5/6 bg-white">
+                    <div class="card-body">
+                        <h2 class="card-title">Lorem ipsum dolor sit amet?</h2>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- banner -->
+        <div class="flex w-1/6 h-full">
+            <div class="flex flex-col w-64 h-80 bg-white mt-16">
+                <div>
+                    <img src="../images/reddit_banner.png" />
+                </div>
+                <div class="mx-4 my-4">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                </div>
+                <div class="flex justify-center mx-4 my-4">
+                    <button class="btn btn-sm w-full" onclick="create_discussion_modal.showModal()">Create Discussion</button>
+                    <!-- create discussion popup -->
+                    <dialog id="create_discussion_modal" class="modal">
+                        <div class="modal-box flex flex-col h-5/6 rounded-3xl gap-2">
+                            <h2 class="font-bold text-2xl">Create a discussion</h2>
+                            <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                            <input type="text" placeholder="Title" class="input input-bordered w-full my-4" />
+                            <h2 class="text-xl font-bold ml-4 mb-4">Type of discussion</h2>
+                            <div class="flex flex-col gap-8">
+                                <!-- public option -->
+                                <div class="flex flex-row-reverse justify-between items-center mx-8 gap-2">
+                                    <input type="radio" name="radio-1" class="radio radio-xs" />
+                                    <div>
+                                        <div class="flex items-center gap-2">
+                                            <img src="../images/web.svg" width="40px" />
+                                            <h2 class="font-bold">Public</h2>
+                                        </div>
+                                        <p>Lorem ipsum dolor sit amet</p>
+                                    </div>
+                                </div>
+                                <!-- restricted option -->
+                                <div class="flex flex-row-reverse justify-between items-center mx-8 gap-2">
+                                    <input type="radio" name="radio-1" class="radio radio-xs" />
+                                    <div>
+                                        <div class="flex items-center gap-2">
+                                            <img src="../images/eye-off-outline.svg" width="40px" />
+                                            <h2 class="font-bold">Restricted</h2>
+                                        </div>
+                                        <p>Lorem ipsum dolor sit amet</p>
+                                    </div>
+                                </div>
+                                <!-- private option -->
+                                <div class="flex flex-row-reverse justify-between items-center mx-8 gap-2">
+                                    <input type="radio" name="radio-1" class="radio radio-xs" />
+                                    <div>
+                                        <div class="flex items-center gap-2">
+                                            <img src="../images/lock-outline.svg" width="40px" />
+                                            <h2 class="font-bold">Private</h2>
+                                        </div>
+                                        <p>Lorem ipsum dolor sit amet</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-action">
+                                <form class="flex gap-4" method="dialog">
+                                    <button class="btn btn-sm">Cancel</button>
+                                    <button class="btn btn-sm bg-red-500 text-white">Submit</button>
+                                </form>
+                            </div>
+                        </div>
+                    </dialog>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
