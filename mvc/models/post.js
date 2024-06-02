@@ -50,6 +50,20 @@ class Post {
             : null;
     }
 
+    static async getPostsByDiscussion(dscId) {
+        const connection = await sql.connect(dbConfig);
+
+        const sqlQuery = `SELECT * FROM Post WHERE DscID = @dscId`;
+
+        const request = connection.request();
+        request.input("dscId", dscId);
+        const result = await request.query(sqlQuery);
+
+        connection.close();
+
+        return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.OwnerID, row.DscID));
+    }
+
     static async createPost(newPostData) {
         const connection = await sql.connect(dbConfig);
         

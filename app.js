@@ -2,6 +2,7 @@ const express = require("express");
 const sql = require("mssql");
 const dbConfig = require("./dbConfig");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 
 const accountsController = require("./mvc/controllers/accountsController");
 const postsController = require("./mvc/controllers/postsController");
@@ -11,15 +12,17 @@ const postReportsController = require("./mvc/controllers/postReportsController")
 const volunteersController = require("./mvc/controllers/volunteersController");
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 
 app.get("/accounts", accountsController.getAllAccounts);
 app.get("/accounts/:accId", accountsController.getAccountById);
 app.get("/posts", postsController.getAllPosts);
-app.get("/posts/:postId", postsController.getPostById);
+app.get("/posts/:dscId", postsController.getPostsByDiscussion);
+//app.get("/posts/:postId", postsController.getPostById);
 app.get("/discussions", discussionController.getAllDiscussions);
 app.get("/discussions/:dscId", discussionController.getDiscussionById);
 app.get("/comments", commentsController.getAllComments);

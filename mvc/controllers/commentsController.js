@@ -14,9 +14,6 @@ const getCommentsByPost = async (req, res) => {
     const postId = parseInt(req.params.postId);
     try {
         const comments = await Comment.getCommentsByPost(postId);
-        if (!comments) {
-            return res(404).send("Comments not found");
-        }
         res.json(comments);
     } catch (error) {
         console.log(error);

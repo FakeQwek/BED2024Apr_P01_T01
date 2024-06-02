@@ -24,6 +24,17 @@ const getPostById = async (req, res) => {
     }
 };
 
+const getPostsByDiscussion = async (req, res) => {
+    const dscId = parseInt(req.params.dscId);
+    try {
+        const posts = await Post.getPostsByDiscussion(dscId);
+        res.json(posts);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Error retrieving posts");
+    }
+}
+
 const createPost = async (req, res) => {
     const newPost = req.body;
     try {
@@ -67,6 +78,7 @@ const deletePost = async (req, res) => {
 module.exports = {
     getAllPosts,
     getPostById,
+    getPostsByDiscussion,
     createPost,
     deletePost,
     updatePost,
