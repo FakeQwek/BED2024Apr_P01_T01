@@ -8,6 +8,7 @@ const postsController = require("./mvc/controllers/postsController");
 const discussionController = require("./mvc/controllers/discussionController");
 const commentsController = require("./mvc/controllers/commentsController");
 const postReportsController = require("./mvc/controllers/postReportsController");
+const volunteersController = require("./mvc/controllers/volunteersController");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -25,9 +26,12 @@ app.get("/comments", commentsController.getAllComments);
 app.get("/comments/:postId", commentsController.getCommentsByPost);
 app.get("/postReports", postReportsController.getAllPostReports);
 app.get("/postReports/:postRptId", postReportsController.getPostReportById);
+app.get("/volunteers", volunteersController.getAllVolunteers);
+app.get("/volunteers/:volId", volunteersController.getVolunteerById);
 app.post("/postReports", postReportsController.createPostReport);
 app.post("/discussions", discussionController.createDiscussion);
 app.post("/posts", postsController.createPost);
+app.post("/volunteers", volunteersController.createVolunteer);
 
 app.listen(port, async () => {
     try {

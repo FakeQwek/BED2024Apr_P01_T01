@@ -38,7 +38,7 @@ class Discussion {
                 result.recordset[0].DscID,
                 result.recordset[0].DscName,
                 result.recordset[0].DscDesc,
-                result.recordset[0].OwnerID,
+                result.recordset[0].OwnerID
             )
             : null;
     }
