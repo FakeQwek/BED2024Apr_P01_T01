@@ -7,6 +7,7 @@ const accountsController = require("./mvc/controllers/accountsController");
 const postsController = require("./mvc/controllers/postsController");
 const discussionController = require("./mvc/controllers/discussionController");
 const commentsController = require("./mvc/controllers/commentsController");
+const postReportsController = require("./mvc/controllers/postReportsController");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -22,6 +23,9 @@ app.get("/discussions", discussionController.getAllDiscussions);
 app.get("/discussions/:dscId", discussionController.getDiscussionById);
 app.get("/comments", commentsController.getAllComments);
 app.get("/comments/:postId", commentsController.getCommentsByPost);
+app.get("/postReports", postReportsController.getAllPostReports);
+app.get("/postReports/:postRptId", postReportsController.getPostReportById);
+app.post("/postReports", postReportsController.createPostReport);
 app.post("/discussions", discussionController.createDiscussion);
 app.post("/posts", postsController.createPost);
 
