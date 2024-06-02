@@ -26,7 +26,7 @@ async function Discussion() {
                                     <h2>` + discussion.ownerId + `</h2>
                                 </div>`;
     discussionOwners.insertAdjacentHTML("beforeend", discussionOwnersHTML);
-}
+};
 
 async function Posts() {
     const res = await fetch("http://localhost:3000/posts/" + discussionId);
@@ -80,7 +80,7 @@ async function Posts() {
                                                         <div class="modal-action">
                                                             <form class="flex gap-4" method="dialog">
                                                                 <button class="btn btn-sm">Cancel</button>
-                                                                <button class="btn btn-sm bg-red-500 text-white">Delete</button>
+                                                                <button class="btn btn-sm bg-red-500 text-white" onclick="deletePost(` + posts[i].postId + `)">Delete</button>
                                                             </form>
                                                         </div>
                                                     </div>
@@ -95,6 +95,17 @@ async function Posts() {
                         </div>`;
         discussionPosts.insertAdjacentHTML("beforeend", postHTML);
     }
+};
+
+async function deletePost(postId) {
+    await fetch("http://localhost:3000/posts/" + postId, {
+        method: "DELETE"
+    });
+    window.location.href = "http://127.0.0.1:5500/src/discussion.html?discussionId=" + discussionId;
+}
+
+function goToCreatePost() {
+    window.location.href = "http://127.0.0.1:5500/src/create-post.html?discussionId=" + discussionId;
 }
 
 Discussion();
