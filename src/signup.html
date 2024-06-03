@@ -17,18 +17,6 @@
         .content {
             flex: 1;
         }
-        input.input-bordered, button.btn-primary {
-            border-color: #ddd;
-            background-color: #fff;
-            color: #000;
-        }
-        button.btn-primary {
-            border: 1px solid #ddd;
-        }
-        input.input-bordered:focus, button.btn-primary:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.6);
-        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -42,14 +30,12 @@
                 <h1 class="text-2xl font-bold text-gray-800">Sign Up</h1>
                 <p class="text-gray-600">Join Us in the Discussion!</p>
             </div>
-            <form id="signupForm" autocomplete="off">
-                <!-- Hidden dummy input -->
-                <input type="text" style="display:none" autocomplete="false">
+            <form id="signupForm">
                 <div class="mb-4">
-                    <input type="text" id="email" placeholder="Email or Username" class="input input-bordered w-full" required autocomplete="off">
+                    <input type="text" id="email" placeholder="Email or Username" class="input input-bordered w-full" required>
                 </div>
                 <div class="mb-4">
-                    <input type="password" id="password" placeholder="Password" class="input input-bordered w-full" required autocomplete="new-password">
+                    <input type="password" id="password" placeholder="Password" class="input input-bordered w-full" required>
                 </div>
                 <div class="mb-4 flex items-center">
                     <input type="checkbox" id="terms" class="mr-2">
@@ -61,28 +47,9 @@
             </form>
         </div>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('signupForm').reset();
-        });
-    </script>
+    <script src="app.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
