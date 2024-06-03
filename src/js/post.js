@@ -51,7 +51,7 @@ async function createComment() {
         method: "POST",
         body: JSON.stringify({
             cmtDesc: commentDesc.value,
-            ownerId: "1",
+            accName: "1",
             postId: postId
         }),
         headers: {

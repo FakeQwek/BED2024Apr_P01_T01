@@ -25,9 +25,9 @@ const getPostById = async (req, res) => {
 };
 
 const getPostsByDiscussion = async (req, res) => {
-    const dscId = parseInt(req.params.dscId);
+    const dscName = req.params.dscName;
     try {
-        const posts = await Post.getPostsByDiscussion(dscId);
+        const posts = await Post.getPostsByDiscussion(dscName);
         res.json(posts);
     } catch (error) {
         console.log(error);

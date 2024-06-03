@@ -2,10 +2,10 @@ const sql = require("mssql");
 const dbConfig = require("../../dbConfig");
 
 class Comment {
-    constructor(cmtId, cmtDesc, ownerId, postId) {
+    constructor(cmtId, cmtDesc, accName, postId) {
         this.cmtId = cmtId;
         this.cmtDesc = cmtDesc;
-        this.ownerId = ownerId;
+        this.accName = accName;
         this.postId = postId;
     }
 
@@ -19,7 +19,7 @@ class Comment {
 
         connection.close();
 
-        return result.recordset.map((row) => new Comment(row.CmtID, row.CmtDesc, row.OwnerID, row.PostId));
+        return result.recordset.map((row) => new Comment(row.CmtID, row.CmtDesc, row.AccName, row.PostId));
     }
 
     static async getCommentsByPost(postId) {
@@ -33,17 +33,17 @@ class Comment {
 
         connection.close();
 
-        return result.recordset.map((row) => new Comment(row.CmtID, row.CmtDesc, row.OwnerID, row.PostId));
+        return result.recordset.map((row) => new Comment(row.CmtID, row.CmtDesc, row.AccName, row.PostId));
     }
 
     static async createComment(newCommentData) {
         const connection = await sql.connect(dbConfig);
 
-        const sqlQuery = `INSERT INTO Comment (CmtID, CmtDesc, OwnerID, PostID) SELECT MAX(CmtID) + 1, @cmtDesc, @ownerId, @postId FROM Comment`;
+        const sqlQuery = `INSERT INTO Comment (CmtID, CmtDesc, AccName, PostID) SELECT MAX(CmtID) + 1, @cmtDesc, @accName, @postId FROM Comment`;
 
         const request = connection.request();
         request.input("cmtDesc", newCommentData.cmtDesc);
-        request.input("ownerId", newCommentData.ownerId);
+        request.input("accName", newCommentData.accName);
         request.input("postId", newCommentData.postId);
 
         const result = await request.query(sqlQuery);

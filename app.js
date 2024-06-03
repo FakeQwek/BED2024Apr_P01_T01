@@ -19,12 +19,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
 app.get("/accounts", accountsController.getAllAccounts);
-app.get("/accounts/:accId", accountsController.getAccountById);
+app.get("/accounts/:accName", accountsController.getAccountByName);
 app.get("/posts", postsController.getAllPosts);
-app.get("/posts/:dscId", postsController.getPostsByDiscussion);
+app.get("/posts/:dscName", postsController.getPostsByDiscussion);
 app.get("/post/:postId", postsController.getPostById);
 app.get("/discussions", discussionController.getAllDiscussions);
-app.get("/discussions/:dscId", discussionController.getDiscussionById);
+app.get("/discussions/:dscName", discussionController.getDiscussionByName);
 app.get("/comments", commentsController.getAllComments);
 app.get("/comments/:postId", commentsController.getCommentsByPost);
 app.get("/postReports", postReportsController.getAllPostReports);

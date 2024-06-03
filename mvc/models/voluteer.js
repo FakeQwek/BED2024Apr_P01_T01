@@ -2,9 +2,9 @@ const sql = require("mssql");
 const dbConfig = require("../../dbConfig");
 
 class Volunteer {
-    constructor(volId, accId, postId) {
+    constructor(volId, accName, postId) {
         this.volId = volId;
-        this.accId = accId;
+        this.accName = accName;
         this.postId = postId;
     }
 
@@ -18,7 +18,7 @@ class Volunteer {
 
         connection.close();
 
-        return result.recordset.map((row) => new Volunteer(row.VolID, row.AccID, row.PostID));
+        return result.recordset.map((row) => new Volunteer(row.VolID, row.AccName, row.PostID));
     }
 
     static async getVolunteerById(volId) {
@@ -35,7 +35,7 @@ class Volunteer {
         return result.recordset[0]
             ? new Volunteer(
                 result.recordset[0].VolID,
-                result.recordset[0].AccID,
+                result.recordset[0].AccName,
                 result.recordset[0].PostID
             )
             : null;
@@ -44,10 +44,10 @@ class Volunteer {
     static async createVolunteer(newVolunteerData) {
         const connection = await sql.connect(dbConfig);
 
-        const sqlQuery = `INSERT INTO Volunteer (VolID, AccID, PostID) SELECT MAX(VolID) + 1, @accId, @postId FROM Volunteer;`;
+        const sqlQuery = `INSERT INTO Volunteer (VolID, AccName, PostID) SELECT CASE WHEN COUNT(*) = 0 THEN 1 ELSE MAX(VolID) + 1 END, @accName, @postId FROM Volunteer;`;
 
         const request = connection.request();
-        request.input("accId", newVolunteerData.accId);
+        request.input("accName", newVolunteerData.accName);
         request.input("postId", newVolunteerData.postId);
 
         const result = await request.query(sqlQuery);

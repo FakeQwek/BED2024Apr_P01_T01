@@ -2,11 +2,11 @@ const sql = require("mssql");
 const dbConfig = require("../../dbConfig");
 
 class PostReport {
-    constructor(postRptId, postRptCat, postRptDesc, accId, postId) {
+    constructor(postRptId, postRptCat, postRptDesc, accName, postId) {
         this.postRptId = postRptId;
         this.postRptCat = postRptCat;
         this.postRptDesc = postRptDesc;
-        this.accId = accId;
+        this.accName = accName;
         this.postId = postId;
     }
 
@@ -20,7 +20,7 @@ class PostReport {
 
         connection.close();
 
-        return result.recordset.map((row) => new PostReport(row.PostRptID, row.PostRptCat, row.PostRptDesc, row.AccID, row.PostID));
+        return result.recordset.map((row) => new PostReport(row.PostRptID, row.PostRptCat, row.PostRptDesc, row.AccName, row.PostID));
     }
 
     static async getPostReportById(postRptId) {
@@ -39,7 +39,7 @@ class PostReport {
                 result.recordset[0].PostRptID,
                 result.recordset[0].PostRptCat,
                 result.recordset[0].PostRptDesc,
-                result.recordset[0].AccID,
+                result.recordset[0].AccName,
                 result.recordset[0].PostID
             )
             : null;
@@ -48,12 +48,12 @@ class PostReport {
     static async createPostReport(newPostReportData) {
         const connection = await sql.connect(dbConfig);
 
-        const sqlQuery = `INSERT INTO PostReport (PostRptID, PostRptCat, PostRptDesc, AccID, PostID) SELECT MAX(PostRptID) + 1, @postRptCat, @postRptDesc, @accId, @postId FROM PostReport;`;
+        const sqlQuery = `INSERT INTO PostReport (PostRptID, PostRptCat, PostRptDesc, AccName, PostID) SELECT MAX(PostRptID) + 1, @postRptCat, @postRptDesc, @accName, @postId FROM PostReport;`;
 
         const request = connection.request();
         request.input("postRptCat", newPostReportData.postRptCat);
         request.input("postRptDesc", newPostReportData.postRptDesc);
-        request.input("accId", newPostReportData.accId);
+        request.input("accName", newPostReportData.accName);
         request.input("postId", newPostReportData.postId);
 
         const result = await request.query(sqlQuery);

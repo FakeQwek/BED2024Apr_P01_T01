@@ -10,10 +10,10 @@ const getAllAccounts = async (req, res) =>  {
     }
 };
 
-const getAccountById = async (req, res) => {
-    const accountId = parseInt(req.params.accId);
+const getAccountByName = async (req, res) => {
+    const accountName = parseInt(req.params.accName);
     try {
-        const account = await Account.getAccountById(accountId);
+        const account = await Account.getAccountByName(accountName);
         if (!account) {
             return res.status(404).send("Account not found");
         }
@@ -26,5 +26,5 @@ const getAccountById = async (req, res) => {
 
 module.exports = {
     getAllAccounts,
-    getAccountById,
+    getAccountByName,
 };
