@@ -173,6 +173,7 @@ async function createVolunteer(postId) {
         method: "POST",
         body: JSON.stringify({
             accName: "ApplestTan",
+            isApproved: "False",
             postId: postId
         }),
         headers: {

@@ -30,14 +30,17 @@ app.get("/comments/:postId", commentsController.getCommentsByPost);
 app.get("/postReports", postReportsController.getAllPostReports);
 app.get("/postReports/:postRptId", postReportsController.getPostReportById);
 app.get("/volunteers", volunteersController.getAllVolunteers);
-app.get("/volunteers/:volId", volunteersController.getVolunteerById);
+app.get("/volunteer/:volId", volunteersController.getVolunteerById);
+app.get("/volunteers/:postId", volunteersController.getVolunteersByPost);
 app.post("/postReport", postReportsController.createPostReport);
 app.post("/discussion", discussionController.createDiscussion);
 app.post("/comment", commentsController.createComment);
 app.post("/post", postsController.createPost);
 app.post("/volunteer", volunteersController.createVolunteer);
 app.put("/post/:postId", postsController.updatePost);
+app.put("/volunteer/:volId", volunteersController.approveVolunteer);
 app.delete("/posts/:postId", postsController.deletePost);
+app.delete("/volunteer/:volId", volunteersController.deleteVolunteer);
 
 app.listen(port, async () => {
     try {
