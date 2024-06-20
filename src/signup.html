@@ -46,7 +46,7 @@
                 <!-- Hidden dummy input -->
                 <input type="text" style="display:none" autocomplete="false">
                 <div class="mb-4">
-                    <input type="text" id="email" placeholder="Email or Username" class="input input-bordered w-full" required autocomplete="off">
+                    <input type="text" id="usernameOrEmail" placeholder="Email or Username" class="input input-bordered w-full" required autocomplete="off">
                 </div>
                 <div class="mb-4">
                     <input type="password" id="password" placeholder="Password" class="input input-bordered w-full" required autocomplete="new-password">
@@ -59,15 +59,45 @@
                     <button type="submit" class="btn btn-primary w-full">Sign Up</button>
                 </div>
             </form>
+            <div id="message" class="text-center mt-4"></div> <!-- Added message div -->
         </div>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('signupForm').reset();
+        document.getElementById('signupForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const usernameOrEmail = document.getElementById('usernameOrEmail').value;
+            const password = document.getElementById('password').value;
+            const messageDiv = document.getElementById('message');
+
+            const response = await fetch('http://localhost:3000/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ usernameOrEmail, password })
+            });
+
+            if (response.ok) {
+                messageDiv.innerHTML = '<p class="text-green-600">Sign up successful!</p>';
+            } else {
+                messageDiv.innerHTML = '<p class="text-red-600">Sign up failed.</p>';
+            }
         });
     </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
 
 
 
