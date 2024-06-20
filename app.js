@@ -3,6 +3,7 @@ const sql = require("mssql");
 const dbConfig = require("./dbConfig");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const bcrypt = require('bcrypt');
 
 const accountsController = require("./mvc/controllers/accountsController");
 const postsController = require("./mvc/controllers/postsController");
@@ -12,17 +13,53 @@ const postReportsController = require("./mvc/controllers/postReportsController")
 const volunteersController = require("./mvc/controllers/volunteersController");
 
 const app = express();
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
+// Signup route
+app.post('/signup', async (req, res) => {
+    const { usernameOrEmail, password } = req.body;
+
+    if (!usernameOrEmail || !password) {
+        console.log('Both fields are required');
+        return res.status(400).send('Both fields are required');
+    }
+
+    try {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        
+        const pool = await sql.connect(dbConfig);
+
+        // Determine if the input is an email or username
+        const isEmail = usernameOrEmail.includes('@');
+        const username = isEmail ? usernameOrEmail.split('@')[0] : usernameOrEmail;
+        const email = isEmail ? usernameOrEmail : null;
+
+        const result = await pool.request()
+            .input('AccName', sql.VarChar, username)
+            .input('AccEmail', sql.VarChar, email)
+            .input('Password', sql.VarChar, hashedPassword)
+            .input('isAdmin', sql.VarChar, 'False')
+            .input('isMuted', sql.VarChar, 'False')
+            .input('isBanned', sql.VarChar, 'False')
+            .query(`INSERT INTO Account (AccName, AccEmail, Password, isAdmin, isMuted, isBanned) 
+                    VALUES (@AccName, @AccEmail, @Password, @isAdmin, @isMuted, @isBanned)`);
+
+        res.status(201).send('User created successfully');
+    } catch (err) {
+        console.error('Database insertion error:', err.originalError ? err.originalError.message : err.message);
+        res.status(500).send('Server error');
+    }
+});
+
 app.get("/accounts", accountsController.getAllAccounts);
 app.get("/accounts/:accId", accountsController.getAccountById);
 app.get("/posts", postsController.getAllPosts);
 app.get("/posts/:dscId", postsController.getPostsByDiscussion);
-//app.get("/posts/:postId", postsController.getPostById);
+// app.get("/posts/:postId", postsController.getPostById);
 app.get("/discussions", discussionController.getAllDiscussions);
 app.get("/discussions/:dscId", discussionController.getDiscussionById);
 app.get("/comments", commentsController.getAllComments);
@@ -56,3 +93,16 @@ process.on("SIGINT", async () => {
     console.log("Database connection closed");
     process.exit(0);
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
