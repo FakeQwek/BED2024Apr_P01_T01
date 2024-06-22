@@ -10,6 +10,7 @@ const discussionController = require("./mvc/controllers/discussionController");
 const commentsController = require("./mvc/controllers/commentsController");
 const postReportsController = require("./mvc/controllers/postReportsController");
 const volunteersController = require("./mvc/controllers/volunteersController");
+const newsController = require("./mvc/controllers/newsController");
 
 const app = express();
 const port = process.env.PORT || 3000
@@ -18,6 +19,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
+app.get("/news", newsController.getAllNews);
+app.get("/news/:newsId", newsController.getNewsById);
 app.get("/accounts", accountsController.getAllAccounts);
 app.get("/accounts/:accId", accountsController.getAccountById);
 app.get("/posts", postsController.getAllPosts);
@@ -31,12 +34,20 @@ app.get("/postReports", postReportsController.getAllPostReports);
 app.get("/postReports/:postRptId", postReportsController.getPostReportById);
 app.get("/volunteers", volunteersController.getAllVolunteers);
 app.get("/volunteers/:volId", volunteersController.getVolunteerById);
+app.post("/news", newsController.createNews);
 app.post("/postReports", postReportsController.createPostReport);
 app.post("/discussions", discussionController.createDiscussion);
 app.post("/posts", postsController.createPost);
 app.post("/volunteers", volunteersController.createVolunteer);
 app.put("/posts/:postId", postsController.updatePost);
+app.put("/news/:newsId", newsController.updateNews);
+app.delete("/news/:newsId", newsController.deleteNews);
 app.delete("/posts/:postId", postsController.deletePost);
+
+
+
+
+
 
 app.listen(port, async () => {
     try {

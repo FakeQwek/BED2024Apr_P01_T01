@@ -2459,3 +2459,29 @@ html {
   --tw-text-opacity: 1;
   color: rgb(126 34 206 / var(--tw-text-opacity));
 }
+
+.news-thumbnail {
+  height: 60%;
+  width: 60%;
+  margin-left: 20%;
+  border-radius: 20px;
+
+}
+
+.news-body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  padding: var(--padding-card, 2rem);
+  gap: 1rem;
+  
+}
+
+.news-body p {
+  margin-bottom: 0;
+}
+
+.news-card {
+  margin-top: 2%;
+  width: 63%;
+}
