@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,56 +8,149 @@
     <link href="output.css" rel="stylesheet">
     <style>
         .button-black-text {
-            background-color: #e5e7eb; /* Light gray background */
-            color: black; /* Black text */
-            padding: 0.5rem; /* Padding */
-            border-radius: 0.375rem; /* Rounded corners */
+            background-color: #e5e7eb;
+            color: black;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
         }
-        .toggle input:checked + .slider {
-            background-color: #6366f1; /* Tailwind Indigo-500 */
+
+        .navbar-input {
+            width: 100%;
+            max-width: 600px;
         }
-        .toggle input:checked + .slider:before {
-            transform: translateX(1.25rem); /* Move the circle to the right */
+
+        .input {
+            background-color: #f1f5f9;
+            color: #1f2937;
+            width: 50%;
+            max-width: 500px;
         }
-        .toggle {
-            position: relative;
-            display: inline-block;
-            width: 2.5rem;
-            height: 1.25rem;
+
+        .post-card {
+            background-color: #f9fafb;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
         }
-        .toggle input {
-            opacity: 0;
-            width: 0;
-            height: 0;
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
         }
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: 0.4s;
-            border-radius: 1.25rem;
-        }
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 1rem;
-            width: 1rem;
-            left: 0.125rem;
-            bottom: 0.125rem;
-            background-color: white;
-            transition: 0.4s;
+
+        .post-header img {
             border-radius: 50%;
+            margin-right: 0.5rem;
+            width: 32px;
+            height: 32px;
+        }
+
+        .post-meta {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        .post-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            font-size: 1.125rem;
+        }
+
+        .post-body {
+            color: #4b5563;
+            font-size: 0.875rem;
+        }
+
+        .badge-container {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .badge {
+            background-color: #e5e7eb;
+            color: #1f2937;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            text-decoration: none;
+        }
+
+        .badge:hover {
+            background-color: #d1d5db;
+        }
+
+        .sidebar {
+            flex: 1;
+            padding: 1rem;
+        }
+
+        .create-discussion-card {
+            background-color: #fff;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .create-discussion-button {
+            background-color: #6366f1;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .right-banner {
+            background-color: white;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            margin-left: 1rem;
+            width: 250px;
+            /* Adjust the width to fit better */
+        }
+
+        .right-banner img {
+            border-radius: 0.375rem;
+            width: 100%;
+            height: auto;
+        }
+
+        .right-banner p {
+            margin: 1rem 0;
+            font-size: 0.875rem;
+            color: #4b5563;
+        }
+
+        .right-banner .create-discussion-button {
+            margin-top: 0;
         }
     </style>
 </head>
+
 <body class="bg-gray-100 min-h-screen flex flex-col">
     <!-- Navbar -->
     <header class="flex items-center p-4 bg-white shadow-md w-full">
-        <img src="../images/socialise2.png" alt="Socialise Logo" class="h-12 w-auto">
+        <img src="../images/socialise2.png" alt="Socialise Logo" class="h-12 w-auto mr-auto">
+        <div class="flex justify-center mx-4" style="flex-grow: 1;">
+            <input type="text" placeholder="Search" class="input input-sm input-bordered rounded-full mx-auto" />
+        </div>
+        <div class="flex items-center ml-auto">
+            <button class="btn w-full bg-white border-0 text-left shadow-none">
+                <span class="flex items-center w-full gap-2">
+                    <img src="../images/account-circle-outline.svg" width="24px" />
+                </span>
+            </button>
+        </div>
     </header>
 
     <div class="flex flex-1">
@@ -125,68 +219,74 @@
 
         <!-- Main Content -->
         <main class="flex-1 p-8">
-            <div class="flex items-center mb-4">
-                <div class="h-16 w-16 bg-blue-200 rounded-full flex items-center justify-center">
-                    <img src="../images/avatar.png" alt="User Avatar" class="rounded-full">
+            <div class="bg-white p-8 rounded-2xl shadow-lg max-w-2xl mx-auto">
+                <div class="flex items-center mb-8">
+                    <img src="../images/person.png" alt="User Profile Picture" class="rounded-full h-20 w-20 mr-4">
+                    <h2 class="text-3xl font-bold">u:henryneofan2</h2>
                 </div>
-                <div class="ml-4">
-                    <h1 class="text-2xl font-bold">u:henryneofan2</h1>
+                <div class="mb-6">
+                    <h3 class="text-xl font-bold mb-2">Account Settings</h3>
+                    <hr>
+                    <div class="mt-4 space-y-4">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-gray-600">Name</p>
+                                <p id="profileUsername">Default</p>
+                            </div>
+                            <button class="text-blue-500 hover:underline">change</button>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-gray-600">Email</p>
+                                <p id="profileEmail">Default@gmail.com</p>
+                            </div>
+                            <button class="text-blue-500 hover:underline">change</button>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-gray-600">Email notifications</p>
+                                <p>Not allowed</p>
+                            </div>
+                            <button class="text-blue-500 hover:underline">change</button>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-gray-600">Gender</p>
+                                <p>NIL</p>
+                            </div>
+                            <button class="text-blue-500 hover:underline">change</button>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-gray-600">Display language</p>
+                                <p>English</p>
+                            </div>
+                            <button class="text-blue-500 hover:underline">change</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="bg-white shadow-lg rounded-lg p-8">
-                <div class="flex border-b border-gray-200 pb-2 mb-4">
-                    <h2 class="text-2xl font-bold">Account Settings</h2>
-                    <nav class="ml-8">
-                        <a href="#" class="text-gray-800 font-bold">Account</a>
-                        <a href="#" class="text-gray-600 ml-4">Profile</a>
-                    </nav>
+                <div class="text-right">
+                    <button class="text-red-600 hover:underline">delete account</button>
                 </div>
-                <form id="accountSettingsForm" autocomplete="off">
-                    <!-- Hidden dummy input -->
-                    <input type="text" style="display:none" autocomplete="false">
-                    <div class="mb-4">
-                        <label class="block text-gray-700">Name</label>
-                        <div class="flex items-center">
-                            <input type="text" value="Apple Tan" class="input input-bordered w-full mr-2 bg-gray-100 rounded" required autocomplete="off">
-                            <button class="button-black-text">Change</button>
-                        </div>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700">Email</label>
-                        <div class="flex items-center">
-                            <input type="email" value="appletan123@gmail.com" class="input input-bordered w-full mr-2 bg-gray-100 rounded" required autocomplete="off">
-                            <button class="button-black-text">Change</button>
-                        </div>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700">Email notifications</label>
-                        <label class="toggle">
-                            <input type="checkbox" checked>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700">Gender</label>
-                        <div class="flex items-center">
-                            <input type="text" value="Male" class="input input-bordered w-full mr-2 bg-gray-100 rounded" required autocomplete="off">
-                            <button class="button-black-text">Change</button>
-                        </div>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700">Display language</label>
-                        <div class="flex items-center">
-                            <input type="text" value="English" class="input input-bordered w-full mr-2 bg-gray-100 rounded" required autocomplete="off">
-                            <button class="button-black-text">Change</button>
-                        </div>
-                    </div>
-                    <button class="bg-red-500 text-white w-full py-2 rounded mt-4">Delete Account</button>
-                </form>
             </div>
         </main>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const username = urlParams.get('username');
+            const email = urlParams.get('email');
+    
+            if (username && email) {
+                document.getElementById('profileUsername').textContent = username;
+                document.getElementById('profileEmail').textContent = email;
+            } else {
+                document.getElementById('profileUsername').textContent = 'Default';
+                document.getElementById('profileEmail').textContent = 'Default@gmail.com';
+            }
+        });
+    </script>
 </body>
+
 </html>
-
-
-
 
