@@ -2752,8 +2752,24 @@ html {
 .news-card {
   margin-top: 2%;
   width: 63%;
+  margin-bottom: 5%;
 }
 
 .hover\:underline:hover {
   text-decoration-line: underline;
+}
+
+#news-container {
+  margin-bottom: 10%;
+}
+
+#load-button {
+  width: 25%;
+  height: 14%;
+  border-radius: 10px;
+}
+
+#load-button:hover {
+  cursor: pointer;
+  background-color: rgb(187, 187, 187);
 }
