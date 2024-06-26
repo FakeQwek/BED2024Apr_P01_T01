@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="output.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <title>Document</title>
+    <title>d:Social - Admin</title>
 </head>
 <body class="h-screen bg-gray-100">
 <!-- navbar -->
@@ -16,8 +16,7 @@
         <input type="text" placeholder="Search" class="input input-sm input-bordered w-full rounded-full" />
     </div>
     <div class="flex justify-end w-1/4">
-        <button class="btn btn-sm mr-4">Login</button>
-        <button class="btn btn-sm mr-4">Sign Up</button>
+        <img src="../images/account-circle-outline.svg" width="30px" />
     </div>
 </div>
 
@@ -81,13 +80,14 @@
     <div class="flex justify-center w-5/6">
         <div class="flex flex-col w-2/3 h-full">
             <div class="flex w-full h-40 mt-4 mb-20 bg-white overflow-visible">
-                <div class="ml-8 mt-12">
+                <div class="ml-8 mt-4">
                     <img src="../images/account-circle-outline.svg" width="120px" />
                 </div>
-                <div id="discussionName" class="text-3xl font-bold ml-4 mt-28">
+                <div id="discussionName" class="text-3xl font-bold ml-4 mt-10">
                     <p>d:Social</p>
                 </div>
             </div>
+
 
             <!-- discussion content -->
             <div class="flex flex-row h-full">
@@ -169,38 +169,47 @@
                 </div>
             </div>
 
-            <!-- Popup dialog -->
+            <!--Mod Tools-->
             <dialog id="popupDialog" class="modal">
-                <div class="modal-box flex flex-col h-1/2 rounded-3xl gap-2">
+                <div class="modal-box flex flex-col h-2/5 rounded-3xl gap-2">
                     <div class="flex items-center gap-4">
                         <img src="../images/account-circle-outline.svg" width="50px" />
                         <h2 class="font-bold text-2xl">Mod Tools</h2>
                     </div>
-                    <div class="flex flex-col gap-4 mt-4">
-                        <button class="flex items-center gap-4 p-4 border rounded-lg cursor-pointer text-left w-full transition duration-300 hover:bg-gray-200">
+                    <div class="flex flex-col gap-4 mt-4" id="popupContent">
+                        <button id="editDetailsButton" class="flex items-center gap-4 p-4 border rounded-lg cursor-pointer text-left w-full transition duration-300 hover:bg-gray-200">
                             <img src="../images/edit.svg" width="24px" />
                             <div class="flex flex-col text-left">
                                 <span class="font-bold">Edit Discussion Detail</span>
                                 <span class="text-sm text-gray-500">Edit the description of this discussion</span>
                             </div>
                         </button>
-                        <button class="flex items-center gap-4 p-4 border rounded-lg cursor-pointer text-left w-full transition duration-300 hover:bg-gray-200">
+                        <a href="reportedposts.html" class="flex items-center gap-4 p-4 border rounded-lg cursor-pointer text-left w-full transition duration-300 hover:bg-gray-200">
                             <img src="../images/admin.svg" width="24px" />
                             <div class="flex flex-col text-left">
                                 <span class="font-bold">Admin Page</span>
                                 <span class="text-sm text-gray-500">Admin page for discussion moderation</span>
                             </div>
-                        </button>
-                    </div>
-                    <div class="modal-action">
-                        <button class="btn btn-sm transition duration-300 hover:bg-gray-200" id="cancelButton">Cancel</button>
-                        <button class="btn btn-sm transition duration-300 hover:bg-gray-200">Submit</button>
+                        </a>
                     </div>
                 </div>
             </dialog>
-            
-            
-            
+
+            <!-- Edit Discussion Detail Popup Dialog -->
+            <dialog id="editDialog" class="modal">
+                <div class="modal-box flex flex-col h-1.2/3 rounded-3xl gap-2">
+                    <div class="flex items-center gap-4">
+                        <img src="../images/account-circle-outline.svg" width="50px" />
+                        <h2 class="font-bold text-2xl">Edit discussion details</h2>
+                    </div>
+                    <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    <input type="text" placeholder="Details" class="input input-bordered w-full mt-4" />
+                    <div class="modal-action">
+                        <button class="btn btn-sm transition duration-300 hover:bg-gray-200" id="cancelEditButton">Cancel</button>
+                        <button class="btn btn-sm transition duration-300 hover:bg-gray-200">Save</button>
+                    </div>
+                </div>
+            </dialog>
         </div>
     </div>
 </div>
