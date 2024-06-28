@@ -3,7 +3,6 @@ const sql = require("mssql");
 const dbConfig = require("./dbConfig");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const bcrypt = require('bcrypt');
 
 const accountsController = require("./mvc/controllers/accountsController");
 const postsController = require("./mvc/controllers/postsController");
@@ -20,165 +19,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
-// Signup route
-app.post('/signup', async (req, res) => {
-    const { usernameOrEmail, password } = req.body;
-
-    if (!usernameOrEmail || !password) {
-        console.log('Both fields are required');
-        return res.status(400).send('Both fields are required');
-    }
-
-    try {
-        const hashedPassword = await bcrypt.hash(password, 10);
-        
-        const pool = await sql.connect(dbConfig);
-
-        // Determine if the input is an email or username
-        const isEmail = usernameOrEmail.includes('@');
-        const username = isEmail ? usernameOrEmail.split('@')[0] : usernameOrEmail;
-        const email = isEmail ? usernameOrEmail : null;
-
-        const result = await pool.request()
-            .input('AccName', sql.VarChar, username)
-            .input('AccEmail', sql.VarChar, email)
-            .input('Password', sql.VarChar, hashedPassword)
-            .input('isAdmin', sql.VarChar, 'False')
-            .input('isMuted', sql.VarChar, 'False')
-            .input('isBanned', sql.VarChar, 'False')
-            .query(`INSERT INTO Account (AccName, AccEmail, Password, isAdmin, isMuted, isBanned) 
-                    VALUES (@AccName, @AccEmail, @Password, @isAdmin, @isMuted, @isBanned)`);
-
-        res.status(201).send('User created successfully');
-    } catch (err) {
-        console.error('Database insertion error:', err.originalError ? err.originalError.message : err.message);
-        res.status(500).send('Server error');
-    }
-});
-
-// Login route
-app.get('/login', async (req, res) => {
-    const { usernameOrEmail, password } = req.query;
-
-    if (!usernameOrEmail || !password) {
-        return res.status(400).send('Both fields are required');
-    }
-
-    try {
-        const pool = await sql.connect(dbConfig);
-
-        // Determine if the input is an email or username
-        const isEmail = usernameOrEmail.includes('@');
-        const username = isEmail ? null : usernameOrEmail;
-        const email = isEmail ? usernameOrEmail : null;
-
-        const result = await pool.request()
-            .input('AccName', sql.VarChar, username)
-            .input('AccEmail', sql.VarChar, email)
-            .query(`SELECT * FROM Account WHERE (AccName = @AccName OR AccEmail = @AccEmail)`);
-
-        if (result.recordset.length === 0) {
-            return res.status(404).send('Your username/email did not sign up');
-        }
-
-        const user = result.recordset[0];
-
-        const passwordMatch = await bcrypt.compare(password, user.Password);
-
-        if (passwordMatch) {
-            const userData = {
-                username: user.AccName,
-                email: user.AccEmail
-            };
-            return res.status(200).json(userData);
-        } else {
-            return res.status(401).send('Login failed');
-        }
-    } catch (err) {
-        console.error('Database error:', err.originalError ? err.originalError.message : err.message);
-        res.status(500).send('Server error');
-    }
-});
-
-// Signup route
-app.post('/signup', async (req, res) => {
-    const { usernameOrEmail, password } = req.body;
-
-    if (!usernameOrEmail || !password) {
-        console.log('Both fields are required');
-        return res.status(400).send('Both fields are required');
-    }
-
-    try {
-        const hashedPassword = await bcrypt.hash(password, 10);
-        
-        const pool = await sql.connect(dbConfig);
-
-        // Determine if the input is an email or username
-        const isEmail = usernameOrEmail.includes('@');
-        const username = isEmail ? usernameOrEmail.split('@')[0] : usernameOrEmail;
-        const email = isEmail ? usernameOrEmail : null;
-
-        const result = await pool.request()
-            .input('AccName', sql.VarChar, username)
-            .input('AccEmail', sql.VarChar, email)
-            .input('Password', sql.VarChar, hashedPassword)
-            .input('isAdmin', sql.VarChar, 'False')
-            .input('isMuted', sql.VarChar, 'False')
-            .input('isBanned', sql.VarChar, 'False')
-            .query(`INSERT INTO Account (AccName, AccEmail, Password, isAdmin, isMuted, isBanned) 
-                    VALUES (@AccName, @AccEmail, @Password, @isAdmin, @isMuted, @isBanned)`);
-
-        res.status(201).send('User created successfully');
-    } catch (err) {
-        console.error('Database insertion error:', err.originalError ? err.originalError.message : err.message);
-        res.status(500).send('Server error');
-    }
-});
-
-// Login route
-app.get('/login', async (req, res) => {
-    const { usernameOrEmail, password } = req.query;
-
-    if (!usernameOrEmail || !password) {
-        return res.status(400).send('Both fields are required');
-    }
-
-    try {
-        const pool = await sql.connect(dbConfig);
-
-        // Determine if the input is an email or username
-        const isEmail = usernameOrEmail.includes('@');
-        const username = isEmail ? null : usernameOrEmail;
-        const email = isEmail ? usernameOrEmail : null;
-
-        const result = await pool.request()
-            .input('AccName', sql.VarChar, username)
-            .input('AccEmail', sql.VarChar, email)
-            .query(`SELECT * FROM Account WHERE (AccName = @AccName OR AccEmail = @AccEmail)`);
-
-        if (result.recordset.length === 0) {
-            return res.status(404).send('Your username/email did not sign up');
-        }
-
-        const user = result.recordset[0];
-
-        const passwordMatch = await bcrypt.compare(password, user.Password);
-
-        if (passwordMatch) {
-            const userData = {
-                username: user.AccName,
-                email: user.AccEmail
-            };
-            return res.status(200).json(userData);
-        } else {
-            return res.status(401).send('Login failed');
-        }
-    } catch (err) {
-        console.error('Database error:', err.originalError ? err.originalError.message : err.message);
-        res.status(500).send('Server error');
-    }
-});
+app.post('/signup', accountsController.signup);
+app.get('/login', accountsController.login);
 
 app.get("/news", newsController.getAllNews);
 app.get("/news/:newsId", newsController.getNewsById);
@@ -205,11 +47,6 @@ app.put("/news/:newsId", newsController.updateNews);
 app.delete("/news/:newsId", newsController.deleteNews);
 app.delete("/posts/:postId", postsController.deletePost);
 
-
-
-
-
-
 app.listen(port, async () => {
     try {
         await sql.connect(dbConfig);
@@ -228,6 +65,7 @@ process.on("SIGINT", async () => {
     console.log("Database connection closed");
     process.exit(0);
 });
+
 
 
 

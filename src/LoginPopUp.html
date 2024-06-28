@@ -20,7 +20,7 @@
 
         .input {
             background-color: #f1f5f9;
-            color: #1f2937;
+            color: #fd0707;
             width: 50%;
             max-width: 500px;
         }
@@ -202,77 +202,47 @@
         </div>
     </header>
 
-    <div class="flex flex-1">
-        <!-- Sidebar -->
-        <aside class="w-72 bg-white p-4 border-r-2 flex flex-col">
-            <nav class="flex-1">
-                <ul>
-                    <li class="mb-4">
-                        <a href="#" class="flex items-center text-gray-800">
-                            <span class="mr-2">🏠</span> Home
-                        </a>
-                    </li>
-                    <li class="mb-4">
-                        <a href="#" class="flex items-center text-gray-800">
-                            <span class="mr-2">👤</span> Profile
-                        </a>
-                    </li>
-                    <li class="mb-8">
-                        <a href="#" class="flex items-center text-gray-800">
-                            <span class="mr-2">📰</span> News
-                        </a>
-                    </li>
-                </ul>
-                <div class="mb-8">
-                    <h2 class="text-gray-600 mb-2">FAVOURITES</h2>
-                    <ul>
-                        <li class="mb-2">
-                            <a href="#" class="flex items-center text-gray-800">
-                                <span class="mr-2">🩺</span> Healthcare
-                            </a>
-                        </li>
-                        <li class="mb-2">
-                            <a href="#" class="flex items-center text-gray-800">
-                                <span class="mr-2">🌍</span> Climate
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="flex items-center text-gray-800">
-                                <span class="mr-2">📚</span> Education
-                            </a>
-                        </li>
-                    </ul>
+    <!-- main -->
+    <div class="flex flex-row h-full">
+        <!-- sidebar -->
+        <div class="flex flex-col items-center w-1/6 h-full bg-white border-r-2">
+            <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+                <div class="flex items-center   ">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/home-variant-outline.svg" width="30px" />Home</span></button>
                 </div>
-                <div>
-                    <h2 class="text-gray-600 mb-2">LEARN MORE</h2>
-                    <ul>
-                        <li class="mb-2">
-                            <a href="#" class="flex items-center text-gray-800">
-                                <span class="mr-2">ℹ️</span> About Us
-                            </a>
-                        </li>
-                        <li class="mb-2">
-                            <a href="#" class="flex items-center text-gray-800">
-                                <span class="mr-2">✉️</span> Contact Us
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="flex items-center text-gray-800">
-                                <span class="mr-2">📊</span> User Statistics
-                            </a>
-                        </li>
-                    </ul>
+                <div class="flex items-center   ">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/account-circle-outline.svg" width="30px" />Profile</span></button>
                 </div>
-            </nav>
-        </aside>
+                <div class="flex items-center   ">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/newspaper-variant-outline.svg" width="30px" />News</span></button>
+                </div>
+            </div>
+            <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+                <h2 class="font-bold mb-2">FOR YOU</h2>
+            </div>
+            <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+                <h2 class="font-bold mb-2">LEARN MORE</h2>
+                <div class="flex items-center   ">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/information-outline.svg" width="30px" />About Us</span></button>
+                </div>
+                <div class="flex items-center   ">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/phone-in-talk.svg" width="30px" />Contact Us</span></button>
+                </div>
+                <div class="flex items-center   ">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/finance.svg" width="30px" />User Statistics</span></button>
+                </div>
+            </div>
+        </div>
+
+        
 
         <!-- Main Content -->
         <main class="flex-1 p-8">
             <div class="flex">
                 <div class="flex-1">
                     <div class="badge-container">
-                        <a href="#" class="badge">hot</a>
-                        <a href="#" class="badge">trending</a>
+                        <button class="btn btn-sm bg-white ml-32"><img src="../images/fire.svg" width="20px" />Hot</button>
+                <button class="btn btn-sm bg-white ml-4"><img src="../images/finance.svg" width="20px" />Trending</button>
                     </div>
                     <!-- Post Card -->
                     <div class="post-card">
@@ -318,40 +288,9 @@
         </main>
     </div>
 
-    <!-- Overlay and Login Popup -->
-    <div class="overlay">
-        <div class="login-popup">
-            <h2 class="text-2xl font-bold mb-4 text-center">Log In</h2>
-            <input type="text" placeholder="Email or Username" autocomplete="off" id="username" name="username" />
-            <input type="password" placeholder="Password" autocomplete="new-password" id="password" name="password" />
-            <button id="loginButton">Log In</button>
-            <div id="loginMessage" class="text-center mt-4"></div> <!-- Added message div -->
-            <a href="#">Forgot password?</a>
-            <a href="#">New to Socialise? Sign Up</a>
-        </div>
-    </div>
+    
 
-    <script>
-        document.getElementById('loginButton').addEventListener('click', async function() {
-        const usernameOrEmail = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-        const loginMessage = document.getElementById('loginMessage');
-
-        const response = await fetch(`http://localhost:3000/login?usernameOrEmail=${usernameOrEmail}&password=${password}`, {
-            method: 'GET'
-        });
-
-        if (response.ok) {
-            const userData = await response.json();
-            loginMessage.innerHTML = '<p class="text-green-600">Login successful!</p>';
-            // Redirect to profile page with username and email
-            window.location.href = `profile.html?username=${userData.username}&email=${userData.email}`;
-        } else {
-            const errorMessage = await response.text();
-            loginMessage.innerHTML = `<p class="text-red-600">${errorMessage}</p>`;
-        }
-    });
-    </script>
+   
 </body>
 </html>
 
