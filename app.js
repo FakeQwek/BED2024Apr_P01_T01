@@ -11,6 +11,8 @@ const commentsController = require("./mvc/controllers/commentsController");
 const postReportsController = require("./mvc/controllers/postReportsController");
 const volunteersController = require("./mvc/controllers/volunteersController");
 const newsController = require("./mvc/controllers/newsController");
+const baninfoController = require("./mvc/controllers/baninfoController");
+const muteinfoController = require("./mvc/controllers/muteinfoController");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -39,7 +41,11 @@ app.get("/postReports", postReportsController.getAllPostReports);
 app.get("/postReports/:postRptId", postReportsController.getPostReportById);
 app.get("/volunteers", volunteersController.getAllVolunteers);
 app.get("/volunteer/:volId", volunteersController.getVolunteerById);
-app.get("/volunteers/:postId", volunteersController.getVolunteersByPost);   
+app.get("/volunteers/:postId", volunteersController.getVolunteersByPost);
+app.get("/baninfo/:accName", baninfoController.getBanInfo);
+app.get("/muteinfo/:accName", muteinfoController.getMuteInfo);
+app.post("/muteinfo", muteinfoController.addMuteInfo);
+app.post("/baninfo", baninfoController.addBanInfo); 
 app.post("/postReport", postReportsController.createPostReport);
 app.post("/discussion", discussionController.createDiscussion);
 app.post("/comment", commentsController.createComment);
@@ -54,6 +60,8 @@ app.put("/news/:newsId", newsController.updateNews);
 app.delete("/news/:newsId", newsController.deleteNews);
 app.delete("/posts/:postId", postsController.deletePost);
 app.delete("/volunteer/:volId", volunteersController.deleteVolunteer);
+app.delete("/baninfo/:accName", baninfoController.removeBanInfo);
+app.delete("/muteinfo/:accName", muteinfoController.removeMuteInfo);
 
 
 app.listen(port, async () => {

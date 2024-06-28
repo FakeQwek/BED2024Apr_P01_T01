@@ -1,3 +1,17 @@
+async function fetchBanInfo(accName) {
+    try {
+        const response = await fetch(`http://localhost:3000/baninfo/${accName}`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const banInfo = await response.json();
+        return banInfo.length > 0 ? banInfo[0] : {};
+    } catch (error) {
+        console.error('Error fetching ban info:', error);
+        return {};
+    }
+}
+
 async function fetchBannedUsers() {
     try {
         const response = await fetch('http://localhost:3000/bannedaccounts');
@@ -10,40 +24,55 @@ async function fetchBannedUsers() {
         if (bannedUsers.length === 0) {
             container.innerHTML = '<div class="text-center text-gray-500">No banned users available</div>';
         } else {
-            bannedUsers.forEach(user => {
+            for (const user of bannedUsers) {
+                // Fetch ban info for each user
+                const banInfo = await fetchBanInfo(user.accName);
                 const userCard = document.createElement('div');
                 userCard.className = 'border p-4 rounded-lg shadow';
                 userCard.innerHTML = `
                     <div class="flex justify-between items-center mb-4">
                         <div>
                             <p class="font-bold text-lg">u/${user.accName}</p>
-                            <p class="text-sm text-gray-500">${user.banDate || 'N/A'}</p>
+                            <p class="text-sm text-gray-500">Banned on: ${banInfo.banDate ? new Date(banInfo.banDate).toLocaleDateString() : 'N/A'}</p>
                         </div>
-                        <div class="text-sm text-gray-500">banned by: u/${user.bannedBy || 'Unknown'}</div>
+                        <div class="text-sm text-gray-500">Banned by: u/${banInfo.bannedBy || 'Unknown'}</div>
                     </div>
                     <p class="font-bold">Reason for ban</p>
-                    <p>${user.reason || 'No reason provided'}</p>
+                    <p>${banInfo.banReason || 'No reason provided'}</p>
                     <div class="mt-4 text-right">
                         <button class="btn btn-sm btn-outline" data-username="${user.accName}">unban</button>
                     </div>
                 `;
                 container.appendChild(userCard);
-            });
+            }
 
+            // Attach event listeners to unban buttons
             const unbanButtons = container.querySelectorAll('.btn-outline');
             unbanButtons.forEach(button => {
                 button.addEventListener('click', async (event) => {
                     const accName = event.target.getAttribute('data-username');
                     try {
-                        const response = await fetch(`http://localhost:3000/accounts/unban/${accName}`, {
+                        const unbanResponse = await fetch(`http://localhost:3000/accounts/unban/${accName}`, {
                             method: 'PUT',
                             headers: {
                                 'Content-Type': 'application/json'
                             }
                         });
-                        if (!response.ok) {
+                        if (!unbanResponse.ok) {
                             throw new Error('Network response was not ok');
                         }
+
+                        // Remove ban info
+                        const removeBanInfoResponse = await fetch(`http://localhost:3000/baninfo/${accName}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        if (!removeBanInfoResponse.ok) {
+                            throw new Error('Failed to remove ban info');
+                        }
+
                         alert(`User ${accName} has been unbanned.`);
                         fetchBannedUsers(); // Refresh the list after unbanning
                     } catch (error) {
