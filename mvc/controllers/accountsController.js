@@ -145,12 +145,71 @@ const getAccountByName = async (req, res) => {
     }
 };
 
-module.exports = {
+const getAccountIsBanned = async (req, res) => {
+    try {
+        const bannedUsers = await Account.getAccountsIsBanned();
+        if (bannedUsers.length === 0) {
+            return res.status(404).send("No banned users found");
+        }
+        res.json(bannedUsers);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Error retrieving banned users");
+    }
+};
+    const unbanAccount = async (req, res) => {
+        const { accName } = req.params;
+    
+    try {
+        const pool = await sql.connect(dbConfig);
+        await pool.request()
+            .input('accName', sql.VarChar, accName)
+            .query(`UPDATE Account SET isBanned = 'False' WHERE AccName = @accName`);
+    
+        res.status(200).send(`User ${accName} has been unbanned.`);
+    } catch (error) {
+        console.error('Error unbanning user:', error);
+        res.status(500).send('Error unbanning user');
+    }
+};
+
+const getAccountsIsMuted = async (req, res) => {
+    try {
+        const mutedAccounts = await Account.getAccountsIsMuted();
+        if (mutedAccounts.length === 0) {
+            return res.status(404).send("No muted users found");
+        }
+        res.json(mutedAccounts);
+    } catch (error) {
+        console.error('Error retrieving muted users:', error);
+        res.status(500).send("Error retrieving muted users");
+    }
+};
+
+const unmuteUser = async (req, res) => {
+    const accName = req.params.accName;
+    try {
+        await Account.unmuteAccountByName(accName);
+        res.status(200).send(`User ${accName} has been unmuted.`);
+    } catch (error) {
+        console.error('Error unmuting user:', error);
+        res.status(500).send("Error unmuting user");
+    }
+};
+
+
+
+
+module.exports = {  
     signup,
     login,
     getAllAccounts,
     getAccountById,
     getAccountByName,
+    getAccountIsBanned,
+    unbanAccount,
+    getAccountsIsMuted,
+    unmuteUser
 };
 
 

@@ -98,6 +98,64 @@ class Account {
             )
             : null;
     }
+
+
+    static async getAccountsIsBanned() {
+        const connection = await sql.connect(dbConfig);
+
+        const sqlQuery = `SELECT * FROM Account WHERE isBanned = 'True'`;
+
+        const request = connection.request();
+        const result = await request.query(sqlQuery);
+
+        connection.close();
+        
+        return result.recordset.map((row) => new Account(
+            row.AccID,
+            row.AccName,
+            row.AccEmail,
+            row.isAdmin,
+            row.isMuted,
+            row.isBanned,
+            row.Password
+        ));
+    }
+
+    static async unbanAccount(accName) {
+        const connection = await sql.connect(dbConfig);
+        const sqlQuery = `UPDATE Account SET isBanned = 'False' WHERE AccName = @accName`;
+        const request = connection.request();
+        request.input("accName", sql.VarChar, accName);
+        await request.query(sqlQuery);
+        connection.close();
+    }
+
+    static async getAccountsIsMuted() {
+        const connection = await sql.connect(dbConfig);
+        const sqlQuery = `SELECT * FROM Account WHERE isMuted = 'True'`;
+        const request = connection.request();
+        const result = await request.query(sqlQuery);
+        connection.close();
+        return result.recordset.map((row) => new Account(
+            row.AccID,
+            row.AccName,
+            row.AccEmail,
+            row.isAdmin,
+            row.isMuted,
+            row.isBanned,
+            row.Password
+        ));
+    }
+    
+    static async unmuteAccountByName(accName) {
+        const connection = await sql.connect(dbConfig);
+        const sqlQuery = `UPDATE Account SET isMuted = 'False' WHERE AccName = @accName`;
+        const request = connection.request();
+        request.input("accName", sql.VarChar, accName);
+        await request.query(sqlQuery);
+        connection.close();
+    }
+    
 }
 
 module.exports = Account;

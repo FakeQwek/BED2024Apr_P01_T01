@@ -26,6 +26,8 @@ app.get("/news", newsController.getAllNews);
 app.get("/news/:newsId", newsController.getNewsById);
 app.get("/accounts", accountsController.getAllAccounts);
 app.get("/accounts/:accName", accountsController.getAccountByName);
+app.get("/bannedaccounts", accountsController.getAccountIsBanned);
+app.get("/mutedaccounts", accountsController.getAccountsIsMuted);
 app.get("/posts", postsController.getAllPosts);
 app.get("/posts/:dscName", postsController.getPostsByDiscussion);
 app.get("/post/:postId", postsController.getPostById);
@@ -37,7 +39,7 @@ app.get("/postReports", postReportsController.getAllPostReports);
 app.get("/postReports/:postRptId", postReportsController.getPostReportById);
 app.get("/volunteers", volunteersController.getAllVolunteers);
 app.get("/volunteer/:volId", volunteersController.getVolunteerById);
-app.get("/volunteers/:postId", volunteersController.getVolunteersByPost);
+app.get("/volunteers/:postId", volunteersController.getVolunteersByPost);   
 app.post("/postReport", postReportsController.createPostReport);
 app.post("/discussion", discussionController.createDiscussion);
 app.post("/comment", commentsController.createComment);
@@ -45,11 +47,14 @@ app.post("/post", postsController.createPost);
 app.post("/volunteer", volunteersController.createVolunteer);
 app.put("/post/:postId", postsController.updatePost);
 app.put("/volunteer/:volId", volunteersController.approveVolunteer);
+app.put("/accounts/unban/:accName", accountsController.unbanAccount);
+app.put("/accounts/unmute/:accName", accountsController.unmuteUser);
 app.post("/news", newsController.createNews);
 app.put("/news/:newsId", newsController.updateNews);
 app.delete("/news/:newsId", newsController.deleteNews);
 app.delete("/posts/:postId", postsController.deletePost);
 app.delete("/volunteer/:volId", volunteersController.deleteVolunteer);
+
 
 app.listen(port, async () => {
     try {
@@ -69,31 +74,4 @@ process.on("SIGINT", async () => {
     console.log("Database connection closed");
     process.exit(0);
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
