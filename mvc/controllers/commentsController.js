@@ -21,7 +21,19 @@ const getCommentsByPost = async (req, res) => {
     }
 };
 
+const createComment = async (req, res) => {
+    const newComment = req.body;
+    try {
+        const createdComment = await Comment.createComment(newComment);
+        res.status(201).json(createComment);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Error creating comment");
+    }
+};
+
 module.exports = {
     getAllComments,
     getCommentsByPost,
+    createComment,
 };

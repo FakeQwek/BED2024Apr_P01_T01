@@ -10,10 +10,10 @@ const getAllDiscussions = async (req, res) => {
     }
 };
 
-const getDiscussionById = async (req, res) => {
-    const dscId = parseInt(req.params.dscId);
-    try {
-        const discussion = await Discussion.getDiscussionById(dscId);
+const getDiscussionByName = async (req, res) => {
+    const dscName = req.params.dscName;
+    try {   
+        const discussion = await Discussion.getDiscussionByName(dscName);
         if (!discussion) {
             return res.status(404).send("Discussion not found");
         }
@@ -37,6 +37,6 @@ const createDiscussion = async (req, res) => {
 
 module.exports = {
     getAllDiscussions,
-    getDiscussionById,
+    getDiscussionByName,
     createDiscussion,
 };
