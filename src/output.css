@@ -2125,6 +2125,12 @@ html {
   border-bottom-left-radius: 0px;
 }
 
+.sticky {
+  position: sticky;
+}
+
+.top-0 {
+  top: 0px;
 .fixed {
   position: fixed;
 }
@@ -2141,6 +2147,7 @@ html {
   margin-left: 1rem;
   margin-right: 1rem;
 }
+
 
 .mx-8 {
   margin-left: 2rem;
@@ -2443,12 +2450,16 @@ html {
   border-radius: 9999px;
 }
 
+.rounded-xl {
+  border-radius: 0.75rem;
+  
 .rounded-lg {
   border-radius: 0.5rem;
 }
 
 .border {
   border-width: 1px;
+
 }
 
 .border-0 {

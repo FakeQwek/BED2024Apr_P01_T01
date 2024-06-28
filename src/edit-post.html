@@ -65,21 +65,21 @@
                     </div>
                 </div>
     
-                <!-- create post content -->
+                <!-- edit post content -->
                 <div class="flex flex-row h-full">
                     <!-- post -->
                     <div class="flex flex-col w-3/4 h-full">
                         <div class="card w-full h-2/3 bg-white">
                             <div class="card-body">
                                 <div class="card-title flex justify-between items-center mb-4">
-                                    <h2>Create a post</h2>
+                                    <h2>Edit your post</h2>
                                     <button class="btn btn-sm bg-white border-0 shadow-none"><img src="../images/plus.svg" width="20px" />Image</button>
                                 </div>
                                 <div class="flex flex-col h-full gap-4">
                                     <!-- title -->
-                                    <input id="createPostName" type="text" placeholder="Title" class="input input-bordered w-full" />
+                                    <input id="editPostName" type="text" placeholder="Title" class="input input-bordered w-full" />
                                     <!-- description -->
-                                    <textarea id="createPostDesc" class="textarea textarea-bordered h-2/3 resize-none" placeholder="Description"></textarea>
+                                    <textarea id="editPostDesc" class="textarea textarea-bordered h-2/3 resize-none" placeholder="Description"></textarea>
                                     <!-- event -->
                                     <div class="flex justify-between items-center">
                                         <div class="flex flex-row-reverse items-center gap-2">
@@ -88,7 +88,7 @@
                                             <img src="../images/party-popper.svg" width="30px" />
                                         </div>
                                         <div>
-                                            <button class="btn btn-sm" onclick="createPost()">Post</button>
+                                            <button class="btn btn-sm" onclick="updatePost()">Post</button>
                                         </div>
                                     </div>
                                 </div>
@@ -126,5 +126,5 @@
         </div>
     </div>
 </body>
-<script src="./js/createPost.js"></script>
+<script src="./js/editPost.js"></script>
 </html>
