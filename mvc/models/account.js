@@ -64,14 +64,10 @@ class Account {
 
     static async getAllAccounts() {
         const connection = await sql.connect(dbConfig);
-
         const sqlQuery = `SELECT * FROM Account`;
-
         const request = connection.request();
         const result = await request.query(sqlQuery);
-
         connection.close();
-
         return result.recordset.map((row) => new Account(
             row.AccID,
             row.AccName,
@@ -85,15 +81,11 @@ class Account {
 
     static async getAccountById(accId) {
         const connection = await sql.connect(dbConfig);
-
         const sqlQuery = `SELECT * FROM Account WHERE AccID = @accId`;
-
         const request = connection.request();
         request.input("accId", sql.Int, accId);
         const result = await request.query(sqlQuery);
-
         connection.close();
-
         return result.recordset[0]
             ? new Account(
                 result.recordset[0].AccID,
@@ -109,6 +101,7 @@ class Account {
 }
 
 module.exports = Account;
+
 
 
 /*const sql = require("mssql");

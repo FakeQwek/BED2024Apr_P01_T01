@@ -29,9 +29,85 @@ module.exports = {
     getAccountById,
 };*/
 
+const sql = require("mssql");
+const bcrypt = require("bcrypt");
+const dbConfig = require("../../dbConfig");
 const Account = require("../models/account");
 
-const getAllAccounts = async (req, res) =>  {
+const signup = async (req, res) => {
+    const { usernameOrEmail, password } = req.body;
+
+    if (!usernameOrEmail || !password) {
+        return res.status(400).send('Both fields are required');
+    }
+
+    try {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const pool = await sql.connect(dbConfig);
+
+        const isEmail = usernameOrEmail.includes('@');
+        const username = isEmail ? usernameOrEmail.split('@')[0] : usernameOrEmail;
+        const email = isEmail ? usernameOrEmail : null;
+
+        await pool.request()
+            .input('AccName', sql.VarChar, username)
+            .input('AccEmail', sql.VarChar, email)
+            .input('Password', sql.VarChar, hashedPassword)
+            .input('isAdmin', sql.VarChar, 'False')
+            .input('isMuted', sql.VarChar, 'False')
+            .input('isBanned', sql.VarChar, 'False')
+            .query(`INSERT INTO Account (AccName, AccEmail, Password, isAdmin, isMuted, isBanned) 
+                    VALUES (@AccName, @AccEmail, @Password, @isAdmin, @isMuted, @isBanned)`);
+
+        res.status(201).send('User created successfully');
+    } catch (err) {
+        console.error('Database insertion error:', err.originalError ? err.originalError.message : err.message);
+        res.status(500).send('Server error');
+    }
+};
+
+const login = async (req, res) => {
+    const { usernameOrEmail, password } = req.query;
+
+    if (!usernameOrEmail || !password) {
+        return res.status(400).send('Both fields are required');
+    }
+
+    try {
+        const pool = await sql.connect(dbConfig);
+
+        const isEmail = usernameOrEmail.includes('@');
+        const username = isEmail ? null : usernameOrEmail;
+        const email = isEmail ? usernameOrEmail : null;
+
+        const result = await pool.request()
+            .input('AccName', sql.VarChar, username)
+            .input('AccEmail', sql.VarChar, email)
+            .query(`SELECT * FROM Account WHERE (AccName = @AccName OR AccEmail = @AccEmail)`);
+
+        if (result.recordset.length === 0) {
+            return res.status(404).send('Your username/email did not sign up');
+        }
+
+        const user = result.recordset[0];
+        const passwordMatch = await bcrypt.compare(password, user.Password);
+
+        if (passwordMatch) {
+            const userData = {
+                username: user.AccName,
+                email: user.AccEmail
+            };
+            return res.status(200).json(userData);
+        } else {
+            return res.status(401).send('Login failed');
+        }
+    } catch (err) {
+        console.error('Database error:', err.originalError ? err.originalError.message : err.message);
+        res.status(500).send('Server error');
+    }
+};
+
+const getAllAccounts = async (req, res) => {
     try {
         const accounts = await Account.getAllAccounts();
         res.json(accounts);
@@ -41,8 +117,22 @@ const getAllAccounts = async (req, res) =>  {
     }
 };
 
+const getAccountById = async (req, res) => {
+    const accountId = parseInt(req.params.accId);
+    try {
+        const account = await Account.getAccountById(accountId);
+        if (!account) {
+            return res.status(404).send("Account not found");
+        }
+        res.json(account);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Error retrieving account");
+    }
+};
+
 const getAccountByName = async (req, res) => {
-    const accountName = parseInt(req.params.accName);
+    const accountName = req.params.accName;
     try {
         const account = await Account.getAccountByName(accountName);
         if (!account) {
@@ -56,9 +146,14 @@ const getAccountByName = async (req, res) => {
 };
 
 module.exports = {
+    signup,
+    login,
     getAllAccounts,
+    getAccountById,
     getAccountByName,
 };
+
+
 
 
 /*const Account = require("../models/account");
