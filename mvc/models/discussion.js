@@ -55,6 +55,19 @@ class Discussion {
 
         connection.close();
     }
+
+    static async updateDiscussion(dscName, dscDesc) {
+        const connection = await sql.connect(dbConfig);
+
+        const sqlQuery = `UPDATE Discussion SET DscDesc = @dscDesc WHERE DscName = @dscName`;
+
+        const request = connection.request();
+        request.input("dscName", sql.VarChar, dscName);
+        request.input("dscDesc", sql.VarChar, dscDesc);
+
+        await request.query(sqlQuery);
+        connection.close();
+    }
 }
 
 module.exports = Discussion;

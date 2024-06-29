@@ -4,46 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="output.css" rel="stylesheet">
-    <title> - Reported Posts</title>
+    <title>- Reported Posts</title>
     <style>
-        .underline-animation {
-            position: relative;
-        }
-        .underline-animation::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: black;
-            transform: scaleX(0);
-            transform-origin: bottom right;
-            transition: transform 0.25s ease-out;
-        }
-        .underline-animation.active::after {
-            transform: scaleX(1);
-            transform-origin: bottom left;
+        .content-container {
+            overflow-y: auto;
+            height: calc(100vh - 3rem); /* Adjust height based on the navbar height */
+            padding-top: 1rem; /* Add some padding to the top */
         }
     </style>
 </head>
 <body class="h-screen bg-gray-100">
 <!-- navbar -->
-<div class="flex justify-center items-center h-12 bg-white border-b-2">
-    <div class="flex w-1/4">
-    </div>
-    <div class="flex justify-center w-1/2">
-        <input type="text" placeholder="Search" class="input input-sm input-bordered w-full rounded-full" />
-    </div>
-    <div class="flex justify-end w-1/4">
-        <img src="../images/account-circle-outline.svg" width="30px" />
+<div class="fixed w-full z-10 bg-white border-b-2">
+    <div class="flex justify-center items-center h-12">
+        <div class="flex w-1/4"></div>
+        <div class="flex justify-center w-1/2">
+            <input type="text" placeholder="Search" class="input input-sm input-bordered w-full rounded-full" />
+        </div>
+        <div class="flex justify-end w-1/4">
+            <img src="../images/account-circle-outline.svg" width="30px" />
+        </div>
     </div>
 </div>
 
-<!-- main -->
-<div class="flex flex-row h-full">
+<!-- main content -->
+<div class="flex pt-12">
     <!-- sidebar -->
-    <div class="flex flex-col items-center w-1/6 h-full bg-white border-r-2">
+    <div class="flex flex-col items-center w-1/6 h-full bg-white border-r-2 fixed pt-1">
         <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
             <div class="flex items-center">
                 <button class="btn w-full bg-white border-0 text-left shadow-none">
@@ -97,15 +84,15 @@
     </div>
 
     <!-- content -->
-    <div class="flex justify-center w-5/6">
-        <div class="flex flex-col w-2/3 h-full">
-            <div class="flex w-full h-24 mt-4 mb-20 bg-white rounded-xl overflow-visible">
+    <div class="flex flex-col w-5/6 ml-auto content-container pt-12">
+        <div class="flex flex-col w-2/3 h-full mx-auto">
+            <div class="flex w-full h-24 mt-2 mb-20 bg-white rounded-xl overflow-visible">
                 <div class="ml-8 mt-12">
                     <img src="../images/account-circle-outline.svg" width="120px" />
                 </div>
                 <div id="discussionName" class="text-3xl font-bold ml-4 mt-28">
-                    <a href="discussion-admin.html" class="text-black"></a>
                     <!-- discussion name -->
+                    <a href="discussion-admin.html" class="text-black"></a>
                 </div>
             </div>
 
@@ -119,7 +106,7 @@
                     </div>
                 </div>
 
-                <h2 class="text-xl font-bold mb-4">Reported posts</h2>
+                <h2 class="text-xl font-bold mb-4">Reported Posts</h2>
                 <div class="flex gap-4 mb-4 px-8">
                     <button class="btn btn-sm btn-outline flex items-center gap-2">
                         <img src="../images/new.svg" width="16px" />
@@ -130,16 +117,12 @@
                         most reported
                     </button>
                 </div>
-                
-
-                <!-- Placeholder for future reported post items -->
-                <div class="text-center text-gray-500">No reported posts available</div>
+                <div id="reportedPostsContainer" class="space-y-4"></div>
             </div>
         </div>
     </div>
 </div>
-<script src="./js/discussion.js"></script>
-<script src="./js/discussion-admin.js"></script>
+<script src="./js/reportedposts.js"></script>
 <script>
     // JavaScript for tab navigation
     const tabs = document.querySelectorAll('.underline-animation');
