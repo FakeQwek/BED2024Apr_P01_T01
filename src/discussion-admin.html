@@ -221,6 +221,34 @@
                     </div>
                 </div>
             </dialog>
+
+            <!-- Promote User Popup Dialog -->
+            <dialog id="promoteUserDialog" class="modal">
+                <div class="modal-box flex flex-col h-1.6/3 rounded-3xl gap-2">
+                    <h2 class="font-bold text-2xl">Promote user</h2>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p>
+                    <div class="flex items-center gap-4">
+                        <img src="../images/account-circle-outline.svg" width="50px" />
+                        <p id="promoteUsername" class="font-bold text-xl">u:Username</p>
+                    </div>
+                    <div class="flex flex-col gap-4 mt-4">
+                        <button class="btn btn-outline w-full flex items-center gap-4" onclick="promoteUser(promoteUsername.innerText.substring(2), 'admin')">
+                            <img src="../images/admin.svg" width="24px" />
+                            <div class="flex flex-col text-left">
+                                <span class="font-bold">Admin</span>
+                                <span class="text-sm text-gray-500">Promote this user to an admin of this discussion</span>
+                            </div>
+                        </button>
+                        <button class="btn btn-outline w-full flex items-center gap-4" onclick="promoteUser(promoteUsername.innerText.substring(2), 'owner')">
+                            <img src="../images/owner.svg" width="24px" />
+                            <div class="flex flex-col text-left">
+                                <span class="font-bold">Owner</span>
+                                <span class="text-sm text-gray-500">Promote this user to the owner of this discussion</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </dialog>
         </div>
     </div>
 </div>

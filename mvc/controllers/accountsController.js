@@ -157,6 +157,20 @@ const getAccountIsBanned = async (req, res) => {
         res.status(500).send("Error retrieving banned users");
     }
 };
+
+const banUser = async (req, res) => {
+    const accName = req.params.accName;
+    const { banReason, bannedBy } = req.body;
+    try {
+        const banDate = new Date().toISOString();
+        await Account.banUser(accName);
+        res.status(200).send("User banned successfully");
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Error banning user");
+    }
+};
+
     const unbanAccount = async (req, res) => {
         const { accName } = req.params;
     
@@ -186,6 +200,17 @@ const getAccountsIsMuted = async (req, res) => {
     }
 };
 
+const muteUser = async (req, res) => {
+    const accName = req.params.accName;
+    try {
+        await Account.muteUser(accName);
+        res.status(200).send("User muted successfully");
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Error muting user");
+    }
+};
+
 const unmuteUser = async (req, res) => {
     const accName = req.params.accName;
     try {
@@ -207,8 +232,10 @@ module.exports = {
     getAccountById,
     getAccountByName,
     getAccountIsBanned,
+    banUser,
     unbanAccount,
     getAccountsIsMuted,
+    muteUser,
     unmuteUser
 };
 

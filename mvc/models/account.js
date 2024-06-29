@@ -121,6 +121,15 @@ class Account {
         ));
     }
 
+    static async banUser(accName) {
+        const connection = await sql.connect(dbConfig);
+        const sqlQuery = `UPDATE Account SET isBanned = 'True' WHERE AccName = @accName`;
+        const request = connection.request();
+        request.input("accName", accName);
+        await request.query(sqlQuery);
+        connection.close();
+    }   
+
     static async unbanAccount(accName) {
         const connection = await sql.connect(dbConfig);
         const sqlQuery = `UPDATE Account SET isBanned = 'False' WHERE AccName = @accName`;
@@ -145,6 +154,18 @@ class Account {
             row.isBanned,
             row.Password
         ));
+    }
+
+    static async muteUser(accName) {
+        const connection = await sql.connect(dbConfig);
+
+        const sqlQuery = `UPDATE Account SET isMuted = 'True' WHERE AccName = @accName`;
+
+        const request = connection.request();
+        request.input("accName", accName);
+        await request.query(sqlQuery);
+
+        connection.close(); 
     }
     
     static async unmuteAccountByName(accName) {

@@ -45,9 +45,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                             <img src="../images/account-circle-outline.svg" width="30px" />
                             <a href="#" class="text-blue-500 hover:underline" onclick="handleUserClick('${post.accName}')">u:${post.accName}</a>
                         </div>
-                        <div>
-                            <button class="btn btn-sm bg-white border-0 shadow-none" onclick="approvePost('${post.postId}')"><img src="../images/tick.svg" width="20px" /></button>
-                            <button class="btn btn-sm bg-white border-0 shadow-none" onclick="reportPost('${post.postId}', '${post.accName}')"><img src="../images/cross.svg" width="20px" /></button>
+                        <div class="relative">
+                            <button class="btn btn-sm bg-white border-0 shadow-none" onclick="toggleDropdown(${post.postId})"><img src="../images/dots-horizontal.svg" width="20px" /></button>
+                            <div id="dropdown-${post.postId}" class="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg hidden transition ease-in-out duration-300">
+                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100" onclick="approvePost(${post.postId})">Approve</a>
+                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100" onclick="muteUser('${post.accName}', '${post.postDesc}', 'admin', ${post.postId})">Mute</a>
+                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100" onclick="banUser('${post.accName}', '${post.postDesc}', 'admin', ${post.postId})">Ban</a>
+                            </div>
                         </div>
                     </div>
                     <p class="font-bold text-lg mb-2">${post.postName}</p>
@@ -107,8 +111,10 @@ window.addEventListener('click', (event) => {
 });
 
 function handleUserClick(accName) {
-    alert(`User ${accName} clicked!`);
-    // Implement further actions here
+    const promoteUserDialog = document.getElementById('promoteUserDialog');
+    const promoteUsername = document.getElementById('promoteUsername');
+    promoteUsername.innerText = `u:${accName}`;
+    promoteUserDialog.showModal();
 }
 
 async function approvePost(postId) {
@@ -129,26 +135,71 @@ async function approvePost(postId) {
     }
 }
 
-async function reportPost(postId, accName) {
+async function muteUser(accName, muteReason, mutedBy, postId) {
     try {
-        const response = await fetch('http://localhost:3000/postReport', {
-            method: 'POST',
+        const response = await fetch(`http://localhost:3000/accounts/mute/${accName}`, {
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                postRptCat: 'Mod',
-                postRptDesc: 'Mod unapproved',
-                accName: accName,
-                postId: postId
-            })
+            body: JSON.stringify({ muteReason: muteReason, mutedBy: mutedBy })
         });
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
-        alert('Post reported successfully');
-        location.reload(); // Reload the page to reflect changes
+        alert('User muted successfully');
+        document.getElementById(`post-${postId}`).remove(); // Remove the post from the page
     } catch (error) {
-        console.error('Error reporting post:', error);
+        console.error('Error muting user:', error);
     }
 }
+
+async function banUser(accName, banReason, bannedBy, postId) {
+    try {
+        const response = await fetch(`http://localhost:3000/accounts/ban/${accName}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ banReason: banReason, bannedBy: bannedBy })
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        alert('User banned successfully');
+        document.getElementById(`post-${postId}`).remove(); // Remove the post from the page
+    } catch (error) {
+        console.error('Error banning user:', error);
+    }
+}
+
+function toggleDropdown(postId) {
+    const dropdown = document.getElementById(`dropdown-${postId}`);
+    dropdown.classList.toggle('hidden');
+}
+
+// Event listeners for the promote user dialog buttons
+const promoteUserDialog = document.getElementById('promoteUserDialog');
+const promoteUsername = document.getElementById('promoteUsername');
+
+function promoteUser(accName, role) {
+    fetch(`http://localhost:3000/promoteUser/${accName}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ role: role })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        alert('User promoted successfully');
+        promoteUserDialog.close();
+        location.reload(); // Reload the page to reflect changes
+    })
+    .catch(error => {
+        console.error('Error promoting user:', error);
+    });
+}
+        
