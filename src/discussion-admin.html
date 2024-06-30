@@ -226,26 +226,31 @@
             <dialog id="promoteUserDialog" class="modal">
                 <div class="modal-box flex flex-col h-1.6/3 rounded-3xl gap-2">
                     <h2 class="font-bold text-2xl">Promote user</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p>
                     <div class="flex items-center gap-4">
                         <img src="../images/account-circle-outline.svg" width="50px" />
                         <p id="promoteUsername" class="font-bold text-xl">u:Username</p>
                     </div>
                     <div class="flex flex-col gap-4 mt-4">
-                        <button class="btn btn-outline w-full flex items-center gap-4" onclick="promoteUser(promoteUsername.innerText.substring(2), 'admin')">
+                        <label class="flex items-center gap-4 p-4 border rounded-lg cursor-pointer w-full transition duration-300 hover:bg-gray-200">
+                            <input type="radio" name="promoteRole" value="admin" />
                             <img src="../images/admin.svg" width="24px" />
                             <div class="flex flex-col text-left">
                                 <span class="font-bold">Admin</span>
                                 <span class="text-sm text-gray-500">Promote this user to an admin of this discussion</span>
                             </div>
-                        </button>
-                        <button class="btn btn-outline w-full flex items-center gap-4" onclick="promoteUser(promoteUsername.innerText.substring(2), 'owner')">
-                            <img src="../images/owner.svg" width="24px" />
+                        </label>
+                        <label class="flex items-center gap-4 p-4 border rounded-lg cursor-pointer w-full transition duration-300 hover:bg-gray-200">
+                            <input type="radio" name="promoteRole" value="user" />
+                            <img src="../images/user.svg" width="24px" />
                             <div class="flex flex-col text-left">
-                                <span class="font-bold">Owner</span>
+                                <span class="font-bold">User</span>
                                 <span class="text-sm text-gray-500">Promote this user to the owner of this discussion</span>
                             </div>
-                        </button>
+                        </label>
+                    </div>
+                    <div class="modal-action">
+                        <button class="btn btn-sm transition duration-300 hover:bg-gray-200" id="cancelPromoteButton">Cancel</button>
+                        <button class="btn btn-sm transition duration-300 hover:bg-gray-200" id="savePromoteButton">Save</button>
                     </div>
                 </div>
             </dialog>

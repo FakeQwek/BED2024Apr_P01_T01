@@ -1,12 +1,14 @@
 const popupButton = document.getElementById('popupButton');
 const popupDialog = document.getElementById('popupDialog');
-const cancelButton = document.getElementById('cancelButton');
 const editDetailsButton = document.getElementById('editDetailsButton');
 const editDialog = document.getElementById('editDialog');
 const cancelEditButton = document.getElementById('cancelEditButton');
 const saveEditButton = document.getElementById('saveEditButton');
 const editDiscussionDetailInput = document.getElementById('editDiscussionDetailInput');
 const postListElement = document.getElementById('postList');
+const promoteUserDialog = document.getElementById('promoteUserDialog');
+const savePromoteButton = document.getElementById('savePromoteButton');
+const cancelPromoteButton = document.getElementById('cancelPromoteButton');
 
 document.addEventListener('DOMContentLoaded', async () => {
     const discussionNameElement = document.getElementById('discussionName');
@@ -46,7 +48,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             <a href="#" class="text-blue-500 hover:underline" onclick="handleUserClick('${post.accName}')">u:${post.accName}</a>
                         </div>
                         <div class="relative">
-                            <button class="btn btn-sm bg-white border-0 shadow-none" onclick="toggleDropdown(${post.postId})"><img src="../images/dots-horizontal.svg" width="20px" /></button>
+                            <button class="btn btn-sm bg-white border-0 shadow-none" onclick="toggleDropdown(${post.postId})"><img src="../images/action.svg" width="20px" /></button>
                             <div id="dropdown-${post.postId}" class="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg hidden transition ease-in-out duration-300">
                                 <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100" onclick="approvePost(${post.postId})">Approve</a>
                                 <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100" onclick="muteUser('${post.accName}', '${post.postDesc}', 'admin', ${post.postId})">Mute</a>
@@ -107,6 +109,9 @@ window.addEventListener('click', (event) => {
     }
     if (event.target === editDialog) {
         editDialog.close();
+    }
+    if (event.target === promoteUserDialog) {
+        promoteUserDialog.close();
     }
 });
 
@@ -179,8 +184,21 @@ function toggleDropdown(postId) {
 }
 
 // Event listeners for the promote user dialog buttons
-const promoteUserDialog = document.getElementById('promoteUserDialog');
-const promoteUsername = document.getElementById('promoteUsername');
+savePromoteButton.addEventListener('click', () => {
+    const selectedRole = document.querySelector('input[name="promoteRole"]:checked').value;
+    const accName = promoteUsername.innerText.substring(2);
+    
+    if (selectedRole === 'admin') {
+        promoteUser(accName, selectedRole);
+    } else if (selectedRole === 'user') {
+        demoteUser(accName);
+    }
+    promoteUserDialog.close(); // Close the dialog after saving
+});
+
+cancelPromoteButton.addEventListener('click', () => {
+    promoteUserDialog.close();
+});
 
 function promoteUser(accName, role) {
     fetch(`http://localhost:3000/promoteUser/${accName}`, {
@@ -195,11 +213,28 @@ function promoteUser(accName, role) {
             throw new Error('Network response was not ok');
         }
         alert('User promoted successfully');
-        promoteUserDialog.close();
         location.reload(); // Reload the page to reflect changes
     })
     .catch(error => {
         console.error('Error promoting user:', error);
     });
 }
-        
+
+function demoteUser(accName) {
+    fetch(`http://localhost:3000/demoteUser/${accName}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        alert('User demoted successfully');
+        location.reload(); // Reload the page to reflect changes
+    })
+    .catch(error => {
+        console.error('Error demoting user:', error);
+    });
+}

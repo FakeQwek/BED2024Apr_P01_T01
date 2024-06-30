@@ -99,6 +99,27 @@ class Account {
             : null;
     }
 
+    static async getAccountByName(accName) {
+        const connection = await sql.connect(dbConfig);
+
+        const sqlQuery = `SELECT * FROM Account WHERE AccName = @accName`;
+
+        const request = connection.request();
+        request.input("accName", accName);
+        const result = await request.query(sqlQuery);
+
+        connection.close();
+
+        return result.recordset[0]
+            ? new Account(
+                result.recordset[0].AccName,
+                result.recordset[0].AccEmail,
+                result.recordset[0].isAdmin,
+                result.recordset[0].isMuted,
+                result.recordset[0].isBanned
+            )
+            : null;
+    }
 
     static async getAccountsIsBanned() {
         const connection = await sql.connect(dbConfig);
@@ -176,6 +197,31 @@ class Account {
         await request.query(sqlQuery);
         connection.close();
     }
+
+    static async promoteUser(accName) {
+        const connection = await sql.connect(dbConfig);
+    
+        const sqlQuery = `UPDATE Account SET isAdmin = 'True' WHERE AccName = @accName`;
+    
+        const request = connection.request();
+        request.input("accName", accName);
+        await request.query(sqlQuery);
+    
+        connection.close();
+    }
+
+    static async demoteUser(accName) {
+        const connection = await sql.connect(dbConfig);
+    
+        const sqlQuery = `UPDATE Account SET isAdmin = 'False' WHERE AccName = @accName`;
+    
+        const request = connection.request();
+        request.input("accName", accName);
+        await request.query(sqlQuery);
+    
+        connection.close();
+    }
+    
     
 }
 

@@ -222,6 +222,29 @@ const unmuteUser = async (req, res) => {
     }
 };
 
+const promoteUser = async (req, res) => {
+    const accName = req.params.accName;
+    try {
+        await Account.promoteUser(accName);
+        res.status(200).send("User promoted successfully");
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Error promoting user");
+    }
+};
+
+const demoteUser = async (req, res) => {
+    const accName = req.params.accName;
+    try {
+        await Account.demoteUser(accName);
+        res.status(200).send("User demoted successfully");
+    } catch (error) {
+        console.error('Error demoting user:', error);
+        res.status(500).send("Error demoting user");
+    }
+};
+
+
 
 
 
@@ -236,7 +259,9 @@ module.exports = {
     unbanAccount,
     getAccountsIsMuted,
     muteUser,
-    unmuteUser
+    unmuteUser,
+    promoteUser,
+    demoteUser
 };
 
 

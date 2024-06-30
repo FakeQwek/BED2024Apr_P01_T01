@@ -52,6 +52,8 @@ app.post("/discussion", discussionController.createDiscussion);
 app.post("/comment", commentsController.createComment);
 app.post("/post", postsController.createPost);
 app.post("/volunteer", volunteersController.createVolunteer);
+app.put('/promoteUser/:accName', accountsController.promoteUser);
+app.put('/demoteUser/:accName', accountsController.demoteUser);
 app.put("/accounts/mute/:accName", accountsController.muteUser);
 app.put('/accounts/ban/:accName', accountsController.banUser);
 app.put('/post/approve/:postId', postsController.approvePost);
