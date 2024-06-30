@@ -8,6 +8,8 @@ DROP TABLE Discussion;
 DROP TABLE Account; 
 DROP TABLE BanInfo;
 DROP TABLE MuteInfo;
+DROP TABLE NewsPost;
+DROP TABLE Question;
  
 CREATE TABLE Account (      
 AccName varchar(16) NOT NULL,  
@@ -138,4 +140,13 @@ CREATE TABLE MuteInfo (
     muteReason VARCHAR(255) NOT NULL,
     mutedBy VARCHAR(16) NOT NULL,
     CONSTRAINT FK_Account_MuteInfo FOREIGN KEY (AccName) REFERENCES Account (AccName)
+);
+
+CREATE TABLE Question (
+    QuestionID int NOT NULL,
+    Name varchar(255) NOT NULL,
+    Email varchar(255) NOT NULL,
+    Query varchar(255) NOT NULL,
+    CONSTRAINT PK_Question PRIMARY KEY(QuestionID)
+
 );
