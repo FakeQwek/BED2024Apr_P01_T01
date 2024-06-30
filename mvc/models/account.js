@@ -52,8 +52,7 @@ const sql = require("mssql");
 const dbConfig = require("../../dbConfig");
 
 class Account {
-    constructor(accId, accName, accEmail, isAdmin, isMuted, isBanned, password) {
-        this.accId = accId;
+    constructor(accName, accEmail, isAdmin, isMuted, isBanned, password) {
         this.accName = accName;
         this.accEmail = accEmail;
         this.isAdmin = isAdmin;
@@ -73,7 +72,6 @@ class Account {
         connection.close();
 
         return result.recordset.map((row) => new Account(
-            row.AccID,
             row.AccName,
             row.AccEmail,
             row.isAdmin,
@@ -83,20 +81,19 @@ class Account {
         ));
     }
 
-    static async getAccountById(accId) {
+    static async getAccountById(accName) {
         const connection = await sql.connect(dbConfig);
 
-        const sqlQuery = `SELECT * FROM Account WHERE AccID = @accId`;
+        const sqlQuery = `SELECT * FROM Account WHERE AccName = @accName`;
 
         const request = connection.request();
-        request.input("accId", sql.Int, accId);
+        request.input("accName", accName);
         const result = await request.query(sqlQuery);
 
         connection.close();
 
         return result.recordset[0]
             ? new Account(
-                result.recordset[0].AccID,
                 result.recordset[0].AccName,
                 result.recordset[0].AccEmail,
                 result.recordset[0].isAdmin,

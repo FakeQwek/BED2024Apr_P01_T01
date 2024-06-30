@@ -19,7 +19,7 @@ class Comment {
 
         connection.close();
 
-        return result.recordset.map((row) => new Comment(row.CmtID, row.CmtDesc, row.AccName, row.PostId));
+        return result.recordset.map((row) => new Comment(row.CmtID, row.CmtDesc, row.OwnerID, row.PostId));
     }
 
     static async getCommentsByPost(postId) {
@@ -33,13 +33,13 @@ class Comment {
 
         connection.close();
 
-        return result.recordset.map((row) => new Comment(row.CmtID, row.CmtDesc, row.AccName, row.PostId));
+        return result.recordset.map((row) => new Comment(row.CmtID, row.CmtDesc, row.OwnerID, row.PostId));
     }
 
     static async createComment(newCommentData) {
         const connection = await sql.connect(dbConfig);
 
-        const sqlQuery = `INSERT INTO Comment (CmtID, CmtDesc, AccName, PostID) SELECT MAX(CmtID) + 1, @cmtDesc, @accName, @postId FROM Comment`;
+        const sqlQuery = `INSERT INTO Comment (CmtID, CmtDesc, OwnerID, PostID) SELECT CASE WHEN COUNT(*) = 0 THEN 1 ELSE MAX(CmtID) + 1 END, @cmtDesc, @accName, @postId FROM Comment;`;
 
         const request = connection.request();
         request.input("cmtDesc", newCommentData.cmtDesc);

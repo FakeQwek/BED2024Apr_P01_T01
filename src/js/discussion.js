@@ -93,7 +93,7 @@ async function Posts() {
                                     </div>
                                     <p>` + posts[i].postDesc + `</p>
                                     <div class="flex justify-end">
-                                        <button id=` + i + ` class="btn btn-sm" onclick="createVolunteer(` + i + `)">Join</button>
+                                        <button id=` + posts[i].postId + ` class="btn btn-sm" onclick="createVolunteer(` + posts[i].postId + `)">Join</button>
                                     </div>
                                 </div>
                             </div>`;
@@ -165,14 +165,15 @@ async function deletePost(postId) {
     await fetch("http://localhost:3000/posts/" + postId, {
         method: "DELETE"
     });
-    window.location.href = "http://127.0.0.1:5500/src/discussion.html?discussionName=" + discussionName;
+    location.reload();
 }
 
 async function createVolunteer(postId) {
+    console.log(postId);
     await fetch("http://localhost:3000/volunteer", {
         method: "POST",
         body: JSON.stringify({
-            accName: "ApplestTan",
+            accName: "AppleTan",
             isApproved: "False",
             postId: postId
         }),
@@ -183,7 +184,18 @@ async function createVolunteer(postId) {
 }
 
 function goToCreatePost() {
-    window.location.href = "http://127.0.0.1:5500/src/create-post.html?discussionName=" + discussionName;
+    var script = document.getElementsByTagName("script");
+    var url = script[script.length-1].src;
+    for (let i = 0; i < url.length; i++) {
+        if (url.slice(-1) != "/") {
+            url = url.substring(0, url.length - 1);
+        } else {
+            break;
+        }
+    }
+    url = url.substring(0, url.length - 3);
+    url = url.concat("create-post.html?discussionName=" + discussionName);
+    window.location.href = url;
 }
 
 Discussion();

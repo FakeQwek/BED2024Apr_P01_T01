@@ -18,7 +18,7 @@ class Discussion {
 
         connection.close();
 
-        return result.recordset.map((row) => new Discussion(row.DscName, row.DscDesc, row.AccName));
+        return result.recordset.map((row) => new Discussion(row.DscName, row.DscDesc, row.OwnerID));
     }
 
     static async getDiscussionByName(dscName) {
@@ -36,7 +36,7 @@ class Discussion {
             ? new Discussion(
                 result.recordset[0].DscName,
                 result.recordset[0].DscDesc,
-                result.recordset[0].AccName
+                result.recordset[0].OwnerID
             )
             : null;
     }
@@ -44,7 +44,7 @@ class Discussion {
     static async createDiscussion(newDiscussionData) {
         const connection = await sql.connect(dbConfig);
 
-        const sqlQuery = `INSERT INTO Discussion (DscName, DscDesc, AccName) VALUES(@dscName, @dscDesc, @accName);`;
+        const sqlQuery = `INSERT INTO Discussion (DscName, DscDesc, OwnerID) VALUES(@dscName, @dscDesc, @accName);`;
 
         const request = connection.request();
         request.input("dscName", newDiscussionData.dscName);

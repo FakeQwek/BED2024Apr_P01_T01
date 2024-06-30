@@ -1,8 +1,8 @@
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
-const discussionId = urlParams.get("discussionId");
+const discussionName = urlParams.get("discussionName");
 const postId = urlParams.get("postId");
-console.log(discussionId);
+console.log(discussionName);
 console.log(postId);
 
 const editPostName = document.getElementById("editPostName");
@@ -29,7 +29,19 @@ async function updatePost() {
             "Content-type": "application/json; charset=UTF-8"
         }
     });
-    window.location.href = "http://127.0.0.1:5500/src/discussion.html?discussionId=" + discussionId;
+    
+    var script = document.getElementsByTagName("script");
+    var url = script[script.length-1].src;
+    for (let i = 0; i < url.length; i++) {
+        if (url.slice(-1) != "/") {
+            url = url.substring(0, url.length - 1);
+        } else {
+            break;
+        }
+    }
+    url = url.substring(0, url.length - 3);
+    url = url.concat("discussion.html?discussionName=" + discussionName);
+    window.location.href = url;
 }
 
 Post();

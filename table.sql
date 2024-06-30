@@ -5,7 +5,8 @@ DROP TABLE DiscussionReport;
 DROP TABLE Comment; 
 DROP TABLE Post; 
 DROP TABLE Discussion; 
-DROP TABLE Account; 
+DROP TABLE Account;
+DROP TABLE NewsPost; 
  
 CREATE TABLE Account (      
 AccName varchar(16) NOT NULL,  
@@ -101,9 +102,9 @@ isApproved varchar(5) NOT NULL,
 CONSTRAINT CHK_Volunteer_isApproved CHECK (isApproved IN ('True', 'False')));
 
 CREATE TABLE NewsPost (
- NewsID varchar(1000) NOT NULL,
- NewsDesc varchar(1000) NOT NULL,
- NewsSource varchar(1000) NOT NULL,
- NewsImage varchar(1000),
+ NewsID varchar(100) NOT NULL,
+ NewsDesc varchar(100) NOT NULL,
+ NewsSource varchar(100) NOT NULL,
+ NewsImage varchar(100) NOT NULL,
  CONSTRAINT PK_NewsPost PRIMARY KEY (NewsID)
 )

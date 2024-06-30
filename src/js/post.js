@@ -51,17 +51,18 @@ async function createComment() {
         method: "POST",
         body: JSON.stringify({
             cmtDesc: commentDesc.value,
-            accName: "1",
+            accName: "AppleTan",
             postId: postId
         }),
         headers: {
             "Content-type": "application/json; charset=UTF-8"
         }
     });
-    window.location.href = "http://127.0.0.1:5500/src/post.html?discussionId=" + discussionId + "&postId=" + postId;
+    location.reload();
 };
 
-postComment.addEventListener("keyup", ({key}) => {
+commentDesc.addEventListener("keyup", ({key}) => {
+    console.log("pressed");
     if (key == "Enter") {
         createComment();
     }

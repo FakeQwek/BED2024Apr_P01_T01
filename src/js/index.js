@@ -6,11 +6,23 @@ async function createDiscussion() {
         body: JSON.stringify({
             dscName: discussionName.value,
             dscDesc: "",
-            accName: "ApplestTan"
+            accName: "AppleTan"
         }),
         headers: {
             "Content-type": "application/json; charset=UTF-8"
         }
     });
-    window.location.href = "http://127.0.0.1:5500/src/discussion.html?discussionName=" + discussionName;
+    
+    var script = document.getElementsByTagName("script");
+    var url = script[script.length-1].src;
+    for (let i = 0; i < url.length; i++) {
+        if (url.slice(-1) != "/") {
+            url = url.substring(0, url.length - 1);
+        } else {
+            break;
+        }
+    }
+    url = url.substring(0, url.length - 3);
+    url = url.concat("discussion.html?discussionName=" + discussionName.value);
+    window.location.href = url;
 };

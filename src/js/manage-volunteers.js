@@ -51,7 +51,7 @@ async function Volunteers() {
                                                 </div>
                                                 <div class="flex gap-4">
                                                     <button class="btn btn-sm bg-white border-0 shadow-none"><img src="../images/check.svg" width="20px" onclick="approveVolunteer(` + volunteers[i].volId + `)"></button>
-                                                    <button class="btn btn-sm bg-white border-0 shadow-none"><img src="../images/close.svg" width="20px" onclick="deleteVol(` + volunteers[i].volId + `)"></button>
+                                                    <button class="btn btn-sm bg-white border-0 shadow-none"><img src="../images/close.svg" width="20px" onclick="deleteVolunteer(` + volunteers[i].volId + `)"></button>
                                                 </div>
                                             </div>
                                         </div>
@@ -68,12 +68,14 @@ async function approveVolunteerAsync(volId) {
 };
 
 function approveVolunteer(volId) {
-    window.location.href = "http://127.0.0.1:5500/src/manage-volunteers.html?postId=" + postId;
+    location.reload();
+
     approveVolunteerAsync(volId);
 }
 
 
 async function deleteVolunteerAsync(volId) {
+    console.log("sdfdsf");
     await fetch("http://localhost:3000/volunteer/" + volId, {
         method: "DELETE"
     });
@@ -81,7 +83,8 @@ async function deleteVolunteerAsync(volId) {
 
 
 function deleteVolunteer(volId) {
-    window.location.href = "http://127.0.0.1:5500/src/manage-volunteers.html?postId=" + postId;
+    location.reload();
+    
     deleteVolunteerAsync(volId);
 };
 
