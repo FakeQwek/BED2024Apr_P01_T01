@@ -6,6 +6,8 @@ DROP TABLE Comment;
 DROP TABLE Post; 
 DROP TABLE Discussion; 
 DROP TABLE Account; 
+DROP TABLE BanInfo;
+DROP TABLE MuteInfo;
  
 CREATE TABLE Account (      
 AccName varchar(16) NOT NULL,  
