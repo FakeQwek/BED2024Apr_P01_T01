@@ -130,7 +130,7 @@
         }
 
         .right-banner .create-discussion-button {
-            margin-top: 0;
+            margin-top: 0.
         }
 
         .overlay {
@@ -143,7 +143,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
+            z-index: 1000.
         }
 
         .login-popup {
@@ -194,7 +194,7 @@
             <input type="text" placeholder="Search" class="input input-sm input-bordered rounded-full mx-auto" />
         </div>
         <div class="flex items-center ml-auto">
-            <button class="btn w-full bg-white border-0 text-left shadow-none">
+            <button class="btn w-full bg-white border-0 text-left shadow-none" onclick="location.href='profile.html'">
                 <span class="flex items-center w-full gap-2">
                     <img src="../images/account-circle-outline.svg" width="24px" />
                 </span>
@@ -234,21 +234,19 @@
             </div>
         </div>
 
-        
-
         <!-- Main Content -->
         <main class="flex-1 p-8">
             <div class="flex">
                 <div class="flex-1">
                     <div class="badge-container">
                         <button class="btn btn-sm bg-white ml-32"><img src="../images/fire.svg" width="20px" />Hot</button>
-                <button class="btn btn-sm bg-white ml-4"><img src="../images/finance.svg" width="20px" />Trending</button>
+                        <button class="btn btn-sm bg-white ml-4"><img src="../images/finance.svg" width="20px" />Trending</button>
                     </div>
                     <!-- Post Card -->
                     <div class="post-card">
                         <div class="post-header">
                             <img src="../images/person.png" alt="Avatar">
-                            <div class="post-meta">d:Social · 1hr. ago · Popular in Reddit right now</div>
+                            <div class="post-meta"><span class="post-user">Default</span> · 1hr. ago · Popular in Reddit right now</div>
                         </div>
                         <div class="post-title">How handsome is Henry Neo?</div>
                         <div class="post-body">
@@ -259,7 +257,7 @@
                     <div class="post-card">
                         <div class="post-header">
                             <img src="../images/person.png" alt="Avatar">
-                            <div class="post-meta">d:Social · 4hr. ago · Because you visited this community before</div>
+                            <div class="post-meta"><span class="post-user">Default</span> · 4hr. ago · Because you visited this community before</div>
                         </div>
                         <div class="post-title">How handsome is Henry Neo?</div>
                         <div class="post-body">
@@ -270,7 +268,7 @@
                     <div class="post-card">
                         <div class="post-header">
                             <img src="../images/person.png" alt="Avatar">
-                            <div class="post-meta">d:Social · 9hr. ago · Popular near you</div>
+                            <div class="post-meta"><span class="post-user">Default</span> · 9hr. ago · Popular near you</div>
                         </div>
                         <div class="post-title">How handsome is Henry Neo?</div>
                         <div class="post-body">
@@ -288,28 +286,14 @@
         </main>
     </div>
 
-    
-
-   
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const username = localStorage.getItem('username') || 'Default';
+            const userSpans = document.querySelectorAll('.post-user');
+            userSpans.forEach(span => {
+                span.textContent = username;
+            });
+        });
+    </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

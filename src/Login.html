@@ -211,24 +211,31 @@
 
     <script>
         document.getElementById('loginButton').addEventListener('click', async function() {
-        const usernameOrEmail = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-        const loginMessage = document.getElementById('loginMessage');
+            const usernameOrEmail = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const loginMessage = document.getElementById('loginMessage');
 
-        const response = await fetch(`http://localhost:3000/login?usernameOrEmail=${usernameOrEmail}&password=${password}`, {
-            method: 'GET'
+            const response = await fetch(`http://localhost:3000/login?usernameOrEmail=${usernameOrEmail}&password=${password}`, {
+                method: 'GET'
+            });
+
+            if (response.ok) {
+                const userData = await response.json();
+                loginMessage.innerHTML = '<p class="text-green-600">Login successful!</p>';
+                
+                // Store the user data in localStorage
+                localStorage.setItem('username', userData.username);
+                localStorage.setItem('email', userData.email);
+
+                // Wait for 3 seconds before redirecting to home page
+                setTimeout(() => {
+                    window.location.href = `home.html`;
+                }, 3000);
+            } else {
+                const errorMessage = await response.text();
+                loginMessage.innerHTML = `<p class="text-red-600">${errorMessage}</p>`;
+            }
         });
-
-        if (response.ok) {
-            const userData = await response.json();
-            loginMessage.innerHTML = '<p class="text-green-600">Login successful!</p>';
-            // Redirect to profile page with username and email
-            window.location.href = `profile.html?username=${userData.username}&email=${userData.email}`;
-        } else {
-            const errorMessage = await response.text();
-            loginMessage.innerHTML = `<p class="text-red-600">${errorMessage}</p>`;
-        }
-    });
     </script>
 </body>
 </html>
