@@ -70,7 +70,6 @@ app.delete("/volunteer/:volId", volunteersController.deleteVolunteer);
 app.delete("/baninfo/:accName", baninfoController.removeBanInfo);
 app.delete("/muteinfo/:accName", muteinfoController.removeMuteInfo);
 
-
 app.listen(port, async () => {
     try {
         await sql.connect(dbConfig);
@@ -89,4 +88,3 @@ process.on("SIGINT", async () => {
     console.log("Database connection closed");
     process.exit(0);
 });
-

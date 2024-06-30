@@ -15,7 +15,11 @@
             flex-direction: column;
         }
         .content {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align items to the start */
             flex: 1;
+            padding-top: 50px; /* Add padding to move the content down */
         }
         input.input-bordered, button.btn-primary {
             border-color: #ddd;
@@ -39,7 +43,7 @@
             <button class="btn btn-sm mr-4">Sign Up</button>
         </div>
     </div>
-    <div class="flex items-center justify-center content">
+    <div class="content">
         <div class="w-full max-w-md bg-white shadow-md rounded-2xl p-8">
             <div class="text-center mb-6">
                 <img src="../images/socialise2.png" alt="socialise" class="h-14 mx-auto mb-4">
@@ -92,6 +96,8 @@
     </script>
 </body>
 </html>
+
+
 
 
 

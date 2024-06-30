@@ -832,14 +832,13 @@ html {
     color: var(--fallback-nc,oklch(var(--nc)/var(--tw-text-opacity)));
   }
 
-  .radio-primary:hover {
-    --tw-border-opacity: 1;
-    border-color: var(--fallback-p,oklch(var(--p)/var(--tw-border-opacity)));
-  }
+.radio-primary:hover {
+  --tw-border-opacity: 1;
+  border-color: var(--fallback-p,oklch(var(--p)/var(--tw-border-opacity)));
+}
 
-  .tab:hover {
-    --tw-text-opacity: 1;
-  }
+.tab:hover {
+  --tw-text-opacity: 1;
 }
 
 .btn {
@@ -2719,6 +2718,10 @@ input.tab:checked + .tab-content,
   margin-right: auto;
 }
 
+.mt-10 {
+  margin-top: 2.5rem;
+}
+
 .mt-12 {
   margin-top: 3rem;
 }
@@ -2777,6 +2780,10 @@ input.tab:checked + .tab-content,
 
 .h-24 {
   height: 6rem;
+}
+
+.h-40 {
+  height: 10rem;
 }
 
 .h-5\/6 {
