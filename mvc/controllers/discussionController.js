@@ -35,8 +35,22 @@ const createDiscussion = async (req, res) => {
     }
 };
 
+const updateDiscussion = async (req, res) => {
+    const dscName = req.params.dscName;
+    const { dscDesc } = req.body;
+
+    try {
+        await Discussion.updateDiscussion(dscName, dscDesc);
+        res.status(200).send('Discussion updated successfully');
+    } catch (error) {
+        console.error('Error updating discussion:', error);
+        res.status(500).send('Error updating discussion');
+    }
+};
+
 module.exports = {
     getAllDiscussions,
     getDiscussionByName,
     createDiscussion,
+    updateDiscussion,
 };
