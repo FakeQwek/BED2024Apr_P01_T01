@@ -60,8 +60,7 @@
                     <div class="ml-8 mt-12">
                         <img src="../images/account-circle-outline.svg" width="120px" />
                     </div>
-                    <div class="text-3xl font-bold ml-4 mt-28">
-                        <h1>d:Scrum</h1>
+                    <div id="discussionName" class="text-3xl font-bold ml-4 mt-28">
                     </div>
                 </div>
     
@@ -99,19 +98,42 @@
                     <div class="flex justify-end w-1/4">
                         <div class="card w-11/12 h-full bg-white">
                             <div class="card-body">
-                                <div class="card-title flex justify-between">
-                                    <h2>Scrum</h2>
-                                    <button class="btn btn-sm bg-white border-0 shadow-none"><img src="../images/dots-horizontal.svg" width="20px" /></button>
+                                <div id="discussionBannerName" class="card-title flex justify-between">
+                                    <div class="dropdown dropdown-end">
+                                        <div tabindex="0" role="button" class="btn btn-sm bg-white border-0 shadow-none"><img src="../images/dots-horizontal.svg" width="20px" /></div>
+                                        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                                            <li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="report_discussion_modal.showModal()"><span class="w-full">Report</span></button></li>
+                                        </ul>
+                                        <!-- report discussion popup -->
+                                        <dialog id="report_discussion_modal" class="modal">
+                                            <div class="modal-box flex flex-col h-2/3 rounded-3xl gap-2">
+                                                <h2 class="font-bold text-2xl">Submit a report</h2>
+                                                <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                                <select class="select select-bordered w-full mt-4">
+                                                    <option hidden>Issue</option>
+                                                    <option>Hate speech</option>
+                                                    <option>Minor abuse or sexualisation</option>
+                                                    <option>Self-harm or suicide</option>
+                                                </select>
+                                                <textarea class="textarea textarea-bordered h-2/3 resize-none mt-4" placeholder="Description"></textarea>
+                                                <div class="modal-action">
+                                                    <form class="flex gap-4" method="dialog">
+                                                        <button class="btn btn-sm">Cancel</button>
+                                                        <button class="btn btn-sm bg-red-500 text-white">Submit</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </dialog>
+                                    </div>
                                 </div>
                                 <div class="flex flex-col">
-                                    <div class="flex flex-col border-b-2 pb-8 gap-4">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                    <div id="discussionBannerDesc" class="flex flex-col border-b-2 pb-8 gap-4">
                                         <div class="flex flex-col">
                                             <h2 class="font-bold">123K</h2>
                                             <p>members</p>
                                         </div>
                                     </div>
-                                    <div class="flex flex-col border-b-2 pt-4 pb-8 gap-4">
+                                    <div id="discussionOwners" class="flex flex-col border-b-2 pt-4 pb-8 gap-4">
                                         <h2 class="font-bold">Owners</h2>
                                     </div>
                                     <div class="flex flex-col border-b-2 pt-4 pb-8 gap-4">

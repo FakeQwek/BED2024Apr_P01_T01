@@ -7,6 +7,31 @@ const createPostName = document.getElementById("createPostName");
 const createPostDesc = document.getElementById("createPostDesc");
 const isEventRadio = document.getElementById("isEvent");
 
+async function Discussion() { 
+    const res = await fetch("http://localhost:3000/discussions/" + discussionName);
+    const discussion = await res.json();
+    console.log(discussion);
+
+    const discussionName2 = document.getElementById("discussionName");
+    const discussionName2HTML = `<h2>d:` + discussion.dscName + `</h2>`;
+    discussionName2.insertAdjacentHTML("afterbegin", discussionName2HTML);
+
+    const discussionBannerName = document.getElementById("discussionBannerName");
+    const discussionBanerNameHTML = `<h2>` + discussion.dscName + `</h2>`;
+    discussionBannerName.insertAdjacentHTML("afterbegin", discussionBanerNameHTML);
+
+    const discussionBannerDesc = document.getElementById("discussionBannerDesc");
+    const discussionBannerDescHTML = `<p>` + discussion.dscDesc + `</p>`;
+    discussionBannerDesc.insertAdjacentHTML("afterbegin", discussionBannerDescHTML);
+
+    const discussionOwners = document.getElementById("discussionOwners");
+    const discussionOwnersHTML = `<div class="flex items-center gap-2">
+                                    <img src="../images/account-circle-outline.svg" width="30px" />
+                                    <h2>` + discussion.accName + `</h2>
+                                </div>`;
+    discussionOwners.insertAdjacentHTML("beforeend", discussionOwnersHTML);
+};
+
 async function createPost() {
     if (isEventRadio.checked) {
         var isEvent = "True";
@@ -41,3 +66,5 @@ async function createPost() {
     url = url.concat("discussion.html?discussionName=" + discussionName);
     window.location.href = url;
 };
+
+Discussion();

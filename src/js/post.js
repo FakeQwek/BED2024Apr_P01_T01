@@ -8,6 +8,27 @@ const postDesc = document.getElementById("postDesc");
 const postComments = document.getElementById("postComments");
 const postAccount = document.getElementById("postAccount");
 
+async function Discussion(dscName) { 
+    const res = await fetch("http://localhost:3000/discussions/" + dscName);
+    const discussion = await res.json();
+    console.log(discussion);
+
+    const discussionBannerName = document.getElementById("discussionBannerName");
+    const discussionBanerNameHTML = `<h2>` + discussion.dscName + `</h2>`;
+    discussionBannerName.insertAdjacentHTML("afterbegin", discussionBanerNameHTML);
+
+    const discussionBannerDesc = document.getElementById("discussionBannerDesc");
+    const discussionBannerDescHTML = `<p>` + discussion.dscDesc + `</p>`;
+    discussionBannerDesc.insertAdjacentHTML("afterbegin", discussionBannerDescHTML);
+
+    const discussionOwners = document.getElementById("discussionOwners");
+    const discussionOwnersHTML = `<div class="flex items-center gap-2">
+                                    <img src="../images/account-circle-outline.svg" width="30px" />
+                                    <h2>` + discussion.accName + `</h2>
+                                </div>`;
+    discussionOwners.insertAdjacentHTML("beforeend", discussionOwnersHTML);
+};
+
 async function Post() {
     const res = await fetch("http://localhost:3000/post/" + postId);
     const post = await res.json();
@@ -21,6 +42,8 @@ async function Post() {
 
     const postAccountHTML = '<p>' + post.accName + '<p>';
     postAccount.insertAdjacentHTML("beforeend", postAccountHTML);
+
+    Discussion(post.dscName);
 };
 
 async function Comments() {
