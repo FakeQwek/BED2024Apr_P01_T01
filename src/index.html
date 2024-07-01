@@ -13,7 +13,11 @@
 
         </div>
         <div class="flex justify-center w-1/2">
-            <input type="text" placeholder="Search" class="input input-sm input-bordered w-full rounded-full" />
+            <input id="searchBar" type="text" placeholder="Search" class="input input-sm input-bordered w-full rounded-full" />
+            <div id="searchResultsContainer" class="absolute w-1/2 px-4 invisible z-10">
+                <div id="searchResults" class="flex flex-col bg-white mt-8">
+                </div>
+            </div>
         </div>
         <div class="flex justify-end w-1/4">
             <button class="btn btn-sm mr-4">Login</button>

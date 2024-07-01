@@ -35,8 +35,21 @@ const createDiscussion = async (req, res) => {
     }
 };
 
+const searchDiscussions = async (req, res) => {
+    const searchTerm = req.query.searchTerm;
+
+    try {
+        const discussions = await Discussion.searchDiscussions(searchTerm);
+        res.json(discussions);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message : "Error searching discussions" });
+    }
+}
+
 module.exports = {
     getAllDiscussions,
     getDiscussionByName,
     createDiscussion,
+    searchDiscussions,
 };

@@ -55,6 +55,21 @@ class Discussion {
 
         connection.close();
     }
+
+    static async searchDiscussions(searchTerm) {
+        const connection = await sql.connect(dbConfig);
+
+        try {
+            const sqlQuery = `SELECT * FROM Discussion WHERE DscName LIKE '%${searchTerm}%'`;
+
+            const result = await connection.request().query(sqlQuery);
+            return result.recordset;
+        } catch (error) {
+            throw new Error("Error searching discussions");
+        } finally {
+            await connection.close();
+        }
+    }
 }
 
 module.exports = Discussion;

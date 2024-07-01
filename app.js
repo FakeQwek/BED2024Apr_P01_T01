@@ -188,6 +188,7 @@ app.get("/posts", postsController.getAllPosts);
 app.get("/posts/:dscName", postsController.getPostsByDiscussion);
 app.get("/post/:postId", postsController.getPostById);
 app.get("/discussions", discussionController.getAllDiscussions);
+app.get("/discussions/search", discussionController.searchDiscussions);
 app.get("/discussions/:dscName", discussionController.getDiscussionByName);
 app.get("/comments", commentsController.getAllComments);
 app.get("/comments/:postId", commentsController.getCommentsByPost);

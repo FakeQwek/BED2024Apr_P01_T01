@@ -51,6 +51,37 @@ async function Posts() {
     }
 }
 
+const searchBar = document.getElementById("searchBar");
+const searchResults = document.getElementById("searchResults");
+const searchResultsContainer = document.getElementById("searchResultsContainer");
+
+// searchBar.addEventListener("focusout", () => {
+//     searchResultsContainer.classList.add("invisible");
+// })
+
+async function searchDiscussions(searchTerm) {
+    const res = await fetch("http://localhost:3000/discussions/search?searchTerm=" + searchTerm);
+    const discussions = await res.json();
+
+    console.log(discussions);
+
+    searchResults.innerHTML = ``;
+    
+    for (let i = 0; i < discussions.length; i++) {
+        const resultHTML = `<button class="btn mx-4 my-2" onclick="goToDiscussion('` + discussions[i].DscName + `')">` + discussions[i].DscName + `</button>`
+        searchResults.insertAdjacentHTML("beforeend", resultHTML);
+    }
+}
+
+searchBar.addEventListener("input", () => {
+    searchResultsContainer.classList.remove("invisible");
+    searchDiscussions(searchBar.value);
+})
+
+searchBar.addEventListener("focus", () => {
+    searchResultsContainer.classList.remove("invisible");
+})
+
 function goToPost(postId) {
     var script = document.getElementsByTagName("script");
     var url = script[script.length-1].src;
@@ -63,6 +94,21 @@ function goToPost(postId) {
     }
     url = url.substring(0, url.length - 3);
     url = url.concat("post.html?postId=" + postId);
+    window.location.href = url;
+}
+
+function goToDiscussion(dscName) {
+    var script = document.getElementsByTagName("script");
+    var url = script[script.length-1].src;
+    for (let i = 0; i < url.length; i++) {
+        if (url.slice(-1) != "/") {
+            url = url.substring(0, url.length - 1);
+        } else {
+            break;
+        }
+    }
+    url = url.substring(0, url.length - 3);
+    url = url.concat("discussion.html?discussionName=" + dscName);
     window.location.href = url;
 }
 

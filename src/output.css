@@ -2614,6 +2614,11 @@ input.tab:checked + .tab-content,
   margin-right: auto;
 }
 
+.my-2 {
+	margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
 .my-4 {
   margin-top: 1rem;
   margin-bottom: 1rem;
@@ -2669,6 +2674,10 @@ input.tab:checked + .tab-content,
 
 .mr-auto {
   margin-right: auto;
+}
+
+.mt-8 {
+  margin-top: 2rem;
 }
 
 .mt-10 {
@@ -2771,6 +2780,10 @@ input.tab:checked + .tab-content,
 
 .w-1\/2 {
   width: 50%;
+}
+
+.w-1\/3 {
+  width: 33.333333%;
 }
 
 .w-1\/4 {
@@ -2913,6 +2926,10 @@ input.tab:checked + .tab-content,
   margin-bottom: calc(1rem * var(--tw-space-y-reverse));
 }
 
+.invisible {
+  visibility: hidden;
+}
+
 .overflow-visible {
   overflow: visible;
 }
@@ -2959,6 +2976,14 @@ input.tab:checked + .tab-content,
 
 .border-r-2 {
   border-right-width: 2px;
+}
+
+.z-0 {
+  z-index: 0;
+}
+
+.z-10 {
+  z-index: 10;
 }
 
 .border-gray-700 {
