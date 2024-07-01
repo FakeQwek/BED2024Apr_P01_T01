@@ -3255,3 +3255,43 @@ input.tab:checked + .tab-content,
 .hover\:underline:hover {
   text-decoration-line: underline;
 }
+
+.news-thumbnail {
+  height: 60%;
+  width: 60%;
+  margin-left: 20%;
+  border-radius: 20px;
+}
+.news-body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  padding: var(--padding-card, 2rem);
+  gap: 1rem;
+  
+}
+.news-body p {
+  margin-bottom: 0;
+}
+.news-card {
+  margin-top: 2%;
+  width: 63%;
+  margin-bottom: 5%;
+}
+
+
+
+#news-container {
+  margin-bottom: 10%;
+}
+
+#load-button {
+  width: 25%;
+  height: 14%;
+  border-radius: 10px;
+}
+
+#load-button:hover {
+  cursor: pointer;
+  background-color: rgb(187, 187, 187);
+}
