@@ -207,6 +207,7 @@ app.put("/volunteer/:volId", volunteersController.approveVolunteer);
 app.post("/news", newsController.createNews);
 app.put("/news/:newsId", newsController.updateNews);
 app.delete("/news/:newsId", newsController.deleteNews);
+app.delete("/comment/:cmtId", commentsController.deleteComment);
 app.delete("/posts/:postId", postsController.deletePost);
 app.delete("/volunteer/:volId", volunteersController.deleteVolunteer);
 

@@ -50,6 +50,19 @@ class Comment {
 
         connection.close();
     }
+
+    static async deleteComment(cmtId) {
+        const connection = await sql.connect(dbConfig);
+
+        const sqlQuery = `DELETE FROM Comment WHERE CmtID = @cmtId`;
+
+        const request = connection.request();
+        request.input("cmtId", cmtId);
+
+        const result = await request.query(sqlQuery);
+
+        connection.close();
+    }
 }
 
 module.exports = Comment;
