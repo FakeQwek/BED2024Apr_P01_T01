@@ -37,7 +37,7 @@ async function Posts() {
 
     for (let i = 0; i < posts.length; i++) {
         if (posts[i].isEvent == "True") {
-            const postHTML = `<div class="card w-full h-fit bg-white">
+            const postHTML = `<div class="card w-full h-fit bg-white" onclick="goToPost(` + posts[i].postId + `)">
                                 <div class="card-body">
                                     <div class="card-title flex justify-between items-center">
                                         <div class="flex flex-col justify-between w-full gap-2">
@@ -99,7 +99,7 @@ async function Posts() {
                             </div>`;
             discussionPosts.insertAdjacentHTML("beforeend", postHTML);
         } else {
-            const postHTML = `<div class="card w-full h-fit bg-white">
+            const postHTML = `<div class="card w-full h-fit bg-white" onclick="goToPost(` + posts[i].postId + `)">
                                 <div class="card-body">
                                     <div class="card-title flex justify-between items-center">
                                         <div class="flex flex-col justify-between w-full gap-2">
@@ -195,6 +195,21 @@ function goToCreatePost() {
     }
     url = url.substring(0, url.length - 3);
     url = url.concat("create-post.html?discussionName=" + discussionName);
+    window.location.href = url;
+}
+
+function goToPost(postId) {
+    var script = document.getElementsByTagName("script");
+    var url = script[script.length-1].src;
+    for (let i = 0; i < url.length; i++) {
+        if (url.slice(-1) != "/") {
+            url = url.substring(0, url.length - 1);
+        } else {
+            break;
+        }
+    }
+    url = url.substring(0, url.length - 3);
+    url = url.concat("post.html?postId=" + postId);
     window.location.href = url;
 }
 

@@ -1,13 +1,12 @@
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
-const discussionId = urlParams.get("discussionId");
 const postId = urlParams.get("postId");
-console.log(discussionId);
 console.log(postId);
 
 const postName = document.getElementById("postName");
 const postDesc = document.getElementById("postDesc");
 const postComments = document.getElementById("postComments");
+const postAccount = document.getElementById("postAccount");
 
 async function Post() {
     const res = await fetch("http://localhost:3000/post/" + postId);
@@ -19,6 +18,9 @@ async function Post() {
 
     const postDescHTML = '<p>' + post.postDesc + '<p>';
     postDesc.insertAdjacentHTML("beforeend", postDescHTML);
+
+    const postAccountHTML = '<p>' + post.accName + '<p>';
+    postAccount.insertAdjacentHTML("beforeend", postAccountHTML);
 };
 
 async function Comments() {
@@ -32,7 +34,7 @@ async function Comments() {
                                         <div class="flex justify-between">
                                             <div class="flex items-center gap-2">
                                                 <img src="../images/account-circle-outline.svg" width="30px" />
-                                                <h2>testerman</h2>
+                                                <h2>` + comments[i].accName + `</h2>
                                             </div>
                                             <button class="btn btn-sm bg-white border-0 shadow-none"><img src="../images/dots-horizontal.svg" width="20px" /></button>
                                         </div>
