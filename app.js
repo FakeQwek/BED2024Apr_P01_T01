@@ -13,6 +13,7 @@ const volunteersController = require("./mvc/controllers/volunteersController");
 const newsController = require("./mvc/controllers/newsController");
 const baninfoController = require("./mvc/controllers/baninfoController");
 const muteinfoController = require("./mvc/controllers/muteinfoController");
+const questionController = require("./mvc/controllers/questionController");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -23,7 +24,8 @@ app.use(cors());
 
 app.post('/signup', accountsController.signup);
 app.get('/login', accountsController.login);
-
+app.get('/question', questionController.getAllQuestions);
+app.get('/question/:questionId', questionController.getQuestionById);
 app.get("/news", newsController.getAllNews);
 app.get("/news/:newsId", newsController.getNewsById);
 app.get("/accounts", accountsController.getAllAccounts);
@@ -45,6 +47,7 @@ app.get("/volunteers/:postId", volunteersController.getVolunteersByPost);
 app.get("/baninfo/:accName", baninfoController.getBanInfo);
 app.get("/muteinfo/:accName", muteinfoController.getMuteInfo);
 app.get("/unapprovedposts/:dscName", postsController.getUnapprovedPostsByDiscussion);
+app.post("/question", questionController.createQuestion);
 app.post("/muteinfo", muteinfoController.addMuteInfo);
 app.post("/baninfo", baninfoController.addBanInfo); 
 app.post("/postReport", postReportsController.createPostReport);
