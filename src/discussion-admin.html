@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="output.css" rel="stylesheet">
+    <title>- Admin Page</title>
+    <style>
+        .content-container {
+            overflow-y: auto;
+            height: calc(100vh - 3rem); /* Adjust height based on the navbar height */
+            padding-top: 1rem; /* Add some padding to the top */
+        }
+    </style>
+</head>
+<body class="h-screen bg-gray-100">
+<!-- navbar -->
+<div class="fixed w-full z-10 bg-white border-b-2">
+    <div class="flex justify-center items-center h-12">
+        <div class="flex w-1/4"></div>
+        <div class="flex justify-center w-1/2">
+            <input type="text" placeholder="Search" class="input input-sm input-bordered w-full rounded-full" />
+        </div>
+        <div class="flex justify-end w-1/4">
+            <img src="../images/account-circle-outline.svg" width="30px" />
+        </div>
+    </div>
+</div>
+
+<!-- main content -->
+<div class="flex pt-12">
+    <!-- sidebar -->
+    <div class="flex flex-col items-center w-1/6 h-full bg-white border-r-2 fixed pt-1">
+        <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+            <div class="flex items-center">
+                <button class="btn w-full bg-white border-0 text-left shadow-none">
+                    <span class="flex items-center w-full gap-2">
+                        <img src="../images/home-variant-outline.svg" width="30px" />Home
+                    </span>
+                </button>
+            </div>
+            <div class="flex items-center">
+                <button class="btn w-full bg-white border-0 text-left shadow-none">
+                    <span class="flex items-center w-full gap-2">
+                        <img src="../images/account-circle-outline.svg" width="30px" />Profile
+                    </span>
+                </button>
+            </div>
+            <div class="flex items-center">
+                <button class="btn w-full bg-white border-0 text-left shadow-none">
+                    <span class="flex items-center w-full gap-2">
+                        <img src="../images/newspaper-variant-outline.svg" width="30px" />News
+                    </span>
+                </button>
+            </div>
+        </div>
+        <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+            <h2 class="font-bold mb-2">FOR YOU</h2>
+        </div>
+        <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+            <h2 class="font-bold mb-2">LEARN MORE</h2>
+            <div class="flex items-center">
+                <button class="btn w-full bg-white border-0 text-left shadow-none">
+                    <span class="flex items-center w-full gap-2">
+                        <img src="../images/information-outline.svg" width="30px" />About Us
+                    </span>
+                </button>
+            </div>
+            <div class="flex items-center">
+                <button class="btn w-full bg-white border-0 text-left shadow-none">
+                    <span class="flex items-center w-full gap-2">
+                        <img src="../images/phone-in-talk.svg" width="30px" />Contact Us
+                    </span>
+                </button>
+            </div>
+            <div class="flex items-center">
+                <button class="btn w-full bg-white border-0 text-left shadow-none">
+                    <span class="flex items-center w-full gap-2">
+                        <img src="../images/finance.svg" width="30px" />User Statistics
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- content -->
+    <div class="flex flex-col w-5/6 ml-auto content-container pt-12">
+        <div class="flex flex-col w-2/3 h-full mx-auto">
+            <div class="flex w-full h-24 mt-2 mb-20 bg-white rounded-xl overflow-visible">
+                <div class="ml-8 mt-12">
+                    <img src="../images/account-circle-outline.svg" width="120px" />
+                </div>
+                <div id="discussionName" class="text-3xl font-bold ml-4 mt-28">
+                    <!-- discussion name -->
+                </div>
+            </div>
+
+            <!-- discussion content -->
+            <div class="flex flex-row h-full">
+                <!-- posts -->
+                <div id="discussionPosts" class="flex flex-col w-3/4 h-full gap-4">
+                    <div class="flex justify-between w-full h-fit mt-4">
+                        <div>
+                            <button class="btn btn-sm bg-white ml-8">
+                                <img src="../images/fire.svg" width="20px" />Hot
+                            </button>
+                            <button class="btn btn-sm bg-white ml-4">
+                                <img src="../images/finance.svg" width="20px" />Trending
+                            </button>
+                        </div>
+                        <div>
+                            <button class="btn btn-sm bg-white mr-4" id="popupButton">
+                                <img src="../images/wrench.svg" width="20px" />Mod Tools
+                            </button>
+                            <button class="btn btn-sm bg-white mr-8">
+                                <img src="../images/plus.svg" width="20px" />Post
+                            </button>
+                        </div>
+                    </div>
+                    <!-- post list -->
+                    <div id="postList" class="flex flex-col gap-4 mt-4">
+                        <!-- posts will be appended here -->
+                    </div>
+                </div>
+                <!-- banner -->
+                <div class="flex justify-end w-1/4">
+                    <div class="card w-11/12 h-full bg-white">
+                        <div class="card-body">
+                            <div id="discussionBannerName" class="card-title flex justify-between">
+                                <div class="dropdown dropdown-end">
+                                    <div tabindex="0" role="button" class="btn btn-sm bg-white border-0 shadow-none">
+                                        <img src="../images/dots-horizontal.svg" width="20px" />
+                                    </div>
+                                    <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                                        <li>
+                                            <button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="report_discussion_modal.showModal()">
+                                                <span class="w-full">Report</span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                    <!-- report discussion popup -->
+                                    <dialog id="report_discussion_modal" class="modal">
+                                        <div class="modal-box flex flex-col h-2/3 rounded-3xl gap-2">
+                                            <h2 class="font-bold text-2xl">Submit a report</h2>
+                                            <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                            <select class="select select-bordered w-full mt-4">
+                                                <option hidden>Issue</option>
+                                                <option>Hate speech</option>
+                                                <option>Minor abuse or sexualisation</option>
+                                                <option>Self-harm or suicide</option>
+                                            </select>
+                                            <textarea class="textarea textarea-bordered h-2/3 resize-none mt-4" placeholder="Description"></textarea>
+                                            <div class="modal-action">
+                                                <form class="flex gap-4" method="dialog">
+                                                    <button class="btn btn-sm">Cancel</button>
+                                                    <button class="btn btn-sm bg-red-500 text-white">Submit</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </dialog>
+                                </div>
+                            </div>
+                            <div class="flex flex-col">
+                                <div id="discussionBannerDesc" class="flex flex-col border-b-2 pb-8 gap-4">
+                                    <div class="flex flex-col">
+                                        <h2 class="font-bold">123K</h2>
+                                        <p>members</p>
+                                    </div>
+                                </div>
+                                <div id="discussionOwners" class="flex flex-col border-b-2 pt-4 pb-8 gap-4">
+                                    <h2 class="font-bold">Owners</h2>
+                                    <div id="ownersList"></div>
+                                </div>
+                                <div class="flex flex-col border-b-2 pt-4 pb-8 gap-4">
+                                    <h2 class="font-bold">Admins</h2>
+                                    <div id="adminsList"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--Mod Tools-->
+            <dialog id="popupDialog" class="modal">
+                <div class="modal-box flex flex-col h-2/5 rounded-3xl gap-2">
+                    <div class="flex items-center gap-4">
+                        <img src="../images/account-circle-outline.svg" width="50px" />
+                        <h2 class="font-bold text-2xl">Mod Tools</h2>
+                    </div>
+                    <div class="flex flex-col gap-4 mt-4" id="popupContent">
+                        <button id="editDetailsButton" class="flex items-center gap-4 p-4 border rounded-lg cursor-pointer text-left w-full transition duration-300 hover:bg-gray-200">
+                            <img src="../images/edit.svg" width="24px" />
+                            <div class="flex flex-col text-left">
+                                <span class="font-bold">Edit Discussion Detail</span>
+                                <span class="text-sm text-gray-500">Edit the description of this discussion</span>
+                            </div>
+                        </button>
+                        <a href="reportedposts.html" class="flex items-center gap-4 p-4 border rounded-lg cursor-pointer text-left w-full transition duration-300 hover:bg-gray-200">
+                            <img src="../images/admin.svg" width="24px" />
+                            <div class="flex flex-col text-left">
+                                <span class="font-bold">Admin Page</span>
+                                <span class="text-sm text-gray-500">Admin page for discussion moderation</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </dialog>
+
+            <!-- Edit Discussion Detail Popup Dialog -->
+            <dialog id="editDialog" class="modal">
+                <div class="modal-box flex flex-col h-1.2/3 rounded-3xl gap-2">
+                    <div class="flex items-center gap-4">
+                        <img src="../images/account-circle-outline.svg" width="50px" />
+                        <h2 class="font-bold text-2xl">Edit discussion details</h2>
+                    </div>
+                    <textarea id="editDiscussionDetailInput" class="textarea textarea-bordered w-full mt-4" placeholder="Details"></textarea>
+                    <div class="modal-action">
+                        <button class="btn btn-sm transition duration-300 hover:bg-gray-200" id="cancelEditButton">Cancel</button>
+                        <button class="btn btn-sm transition duration-300 hover:bg-gray-200" id="saveEditButton">Save</button>
+                    </div>
+                </div>
+            </dialog>
+
+            <!-- Promote User Popup Dialog -->
+            <dialog id="promoteUserDialog" class="modal">
+                <div class="modal-box flex flex-col h-1.6/3 rounded-3xl gap-2">
+                    <h2 class="font-bold text-2xl">Promote user</h2>
+                    <div class="flex items-center gap-4">
+                        <img src="../images/account-circle-outline.svg" width="50px" />
+                        <p id="promoteUsername" class="font-bold text-xl">u:Username</p>
+                    </div>
+                    <div class="flex flex-col gap-4 mt-4">
+                        <label class="flex items-center gap-4 p-4 border rounded-lg cursor-pointer w-full transition duration-300 hover:bg-gray-200">
+                            <input type="radio" name="promoteRole" value="admin" />
+                            <img src="../images/admin.svg" width="24px" />
+                            <div class="flex flex-col text-left">
+                                <span class="font-bold">Admin</span>
+                                <span class="text-sm text-gray-500">Promote this user to an admin of this discussion</span>
+                            </div>
+                        </label>
+                        <label class="flex items-center gap-4 p-4 border rounded-lg cursor-pointer w-full transition duration-300 hover:bg-gray-200">
+                            <input type="radio" name="promoteRole" value="user" />
+                            <img src="../images/user.svg" width="24px" />
+                            <div class="flex flex-col text-left">
+                                <span class="font-bold">User</span>
+                                <span class="text-sm text-gray-500">Promote this user to the owner of this discussion</span>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="modal-action">
+                        <button class="btn btn-sm transition duration-300 hover:bg-gray-200" id="cancelPromoteButton">Cancel</button>
+                        <button class="btn btn-sm transition duration-300 hover:bg-gray-200" id="savePromoteButton">Save</button>
+                    </div>
+                </div>
+            </dialog>
+        </div>
+    </div>
+</div>
+<script src="./js/discussion-admin.js"></script>
+</body>
+</html>

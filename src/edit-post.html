@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="output.css" rel="stylesheet">
+    <title>Document</title>
+</head>
+<body class="h-screen bg-gray-100">
+    <!-- navbar -->
+    <div class="flex justify-center items-center h-12 bg-white border-b-2">
+        <div class="flex w-1/4">
+
+        </div>
+        <div class="flex justify-center w-1/2">
+            <input type="text" placeholder="Search" class="input input-sm input-bordered w-full rounded-full" />
+        </div>
+        <div class="flex justify-end w-1/4">
+            <button class="btn btn-sm mr-4">Login</button>
+            <button class="btn btn-sm mr-4">Sign Up</button>
+        </div>
+    </div>
+
+    <!-- main -->
+    <div class="flex flex-row h-full">
+        <!-- sidebar -->
+        <div class="flex flex-col items-center w-1/6 h-full bg-white border-r-2">
+            <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+                <div class="flex items-center">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/home-variant-outline.svg" width="30px" />Home</span></button>
+                </div>
+                <div class="flex items-center">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/account-circle-outline.svg" width="30px" />Profile</span></button>
+                </div>
+                <div class="flex items-center">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/newspaper-variant-outline.svg" width="30px" />News</span></button>
+                </div>
+            </div>
+            <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+                <h2 class="font-bold mb-2">FOR YOU</h2>
+            </div>
+            <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+                <h2 class="font-bold mb-2">LEARN MORE</h2>
+                <div class="flex items-center">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/information-outline.svg" width="30px" />About Us</span></button>
+                </div>
+                <div class="flex items-center">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/phone-in-talk.svg" width="30px" />Contact Us</span></button>
+                </div>
+                <div class="flex items-center">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/finance.svg" width="30px" />User Statistics</span></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- content -->
+        <div class="flex justify-center w-5/6">
+            <div class="flex flex-col w-2/3 h-full">
+                <div class="flex w-full h-24 mt-4 mb-20 bg-white overflow-visible">
+                    <div class="ml-8 mt-12">
+                        <img src="../images/account-circle-outline.svg" width="120px" />
+                    </div>
+                    <div class="text-3xl font-bold ml-4 mt-28">
+                        <h1>d:Scrum</h1>
+                    </div>
+                </div>
+    
+                <!-- edit post content -->
+                <div class="flex flex-row h-full">
+                    <!-- post -->
+                    <div class="flex flex-col w-3/4 h-full">
+                        <div class="card w-full h-2/3 bg-white">
+                            <div class="card-body">
+                                <div class="card-title flex justify-between items-center mb-4">
+                                    <h2>Edit your post</h2>
+                                    <button class="btn btn-sm bg-white border-0 shadow-none"><img src="../images/plus.svg" width="20px" />Image</button>
+                                </div>
+                                <div class="flex flex-col h-full gap-4">
+                                    <!-- title -->
+                                    <input id="editPostName" type="text" placeholder="Title" class="input input-bordered w-full" />
+                                    <!-- description -->
+                                    <textarea id="editPostDesc" class="textarea textarea-bordered h-2/3 resize-none" placeholder="Description"></textarea>
+                                    <!-- event -->
+                                    <div class="flex justify-between items-center">
+                                        <div class="flex flex-row-reverse items-center gap-2">
+                                            <input type="radio" name="radio-1" class="radio radio-xs" />
+                                            <p>Event</p>
+                                            <img src="../images/party-popper.svg" width="30px" />
+                                        </div>
+                                        <div>
+                                            <button class="btn btn-sm" onclick="updatePost()">Post</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- banner -->
+                    <div class="flex justify-end w-1/4">
+                        <div class="card w-11/12 h-full bg-white">
+                            <div class="card-body">
+                                <div class="card-title flex justify-between">
+                                    <h2>Scrum</h2>
+                                    <button class="btn btn-sm bg-white border-0 shadow-none"><img src="../images/dots-horizontal.svg" width="20px" /></button>
+                                </div>
+                                <div class="flex flex-col">
+                                    <div class="flex flex-col border-b-2 pb-8 gap-4">
+                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                        <div class="flex flex-col">
+                                            <h2 class="font-bold">123K</h2>
+                                            <p>members</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col border-b-2 pt-4 pb-8 gap-4">
+                                        <h2 class="font-bold">Owners</h2>
+                                    </div>
+                                    <div class="flex flex-col border-b-2 pt-4 pb-8 gap-4">
+                                        <h2 class="font-bold">Admins</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="./js/editPost.js"></script>
+</html>

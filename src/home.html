@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socialise</title>
+    <link href="output.css" rel="stylesheet">
+    <style>
+        .button-black-text {
+            background-color: #e5e7eb;
+            color: black;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+        }
+
+        .navbar-input {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .input {
+            background-color: #f1f5f9;
+            color: #fd0707;
+            width: 50%;
+            max-width: 500px;
+        }
+
+        .post-card {
+            background-color: #f9fafb;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .post-header img {
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            width: 32px;
+            height: 32px;
+        }
+
+        .post-meta {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        .post-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            font-size: 1.125rem;
+        }
+
+        .post-body {
+            color: #4b5563;
+            font-size: 0.875rem;
+        }
+
+        .badge-container {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .badge {
+            background-color: #e5e7eb;
+            color: #1f2937;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            text-decoration: none;
+        }
+
+        .badge:hover {
+            background-color: #d1d5db;
+        }
+
+        .sidebar {
+            flex: 1;
+            padding: 1rem;
+        }
+
+        .create-discussion-card {
+            background-color: #fff;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .create-discussion-button {
+            background-color: #6366f1;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .right-banner {
+            background-color: white;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            margin-left: 1rem;
+            width: 250px; /* Adjust the width to fit better */
+        }
+
+        .right-banner img {
+            border-radius: 0.375rem;
+            width: 100%;
+            height: auto;
+        }
+
+        .right-banner p {
+            margin: 1rem 0;
+            font-size: 0.875rem;
+            color: #4b5563;
+        }
+
+        .right-banner .create-discussion-button {
+            margin-top: 0.
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000.
+        }
+
+        .login-popup {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.375rem;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            max-width: 90%;
+        }
+
+        .login-popup input {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+        }
+
+        .login-popup button {
+            background-color: #6366f1;
+            color: white;
+            padding: 0.75rem;
+            width: 100%;
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+        }
+
+        .login-popup a {
+            color: #6366f1;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+
+        .login-popup a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+    <!-- Navbar -->
+    <header class="flex items-center p-4 bg-white shadow-md w-full">
+        <img src="../images/socialise2.png" alt="Socialise Logo" class="h-12 w-auto mr-auto">
+        <div class="flex justify-center mx-4" style="flex-grow: 1;">
+            <input type="text" placeholder="Search" class="input input-sm input-bordered rounded-full mx-auto" />
+        </div>
+        <div class="flex items-center ml-auto">
+            <button class="btn w-full bg-white border-0 text-left shadow-none" onclick="location.href='profile.html'">
+                <span class="flex items-center w-full gap-2">
+                    <img src="../images/account-circle-outline.svg" width="24px" />
+                </span>
+            </button>
+        </div>
+    </header>
+
+    <!-- main -->
+    <div class="flex flex-row h-full">
+        <!-- sidebar -->
+        <div class="flex flex-col items-center w-1/6 h-full bg-white border-r-2">
+            <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+                <div class="flex items-center   ">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/home-variant-outline.svg" width="30px" />Home</span></button>
+                </div>
+                <div class="flex items-center   ">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/account-circle-outline.svg" width="30px" />Profile</span></button>
+                </div>
+                <div class="flex items-center   ">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/newspaper-variant-outline.svg" width="30px" />News</span></button>
+                </div>
+            </div>
+            <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+                <h2 class="font-bold mb-2">FOR YOU</h2>
+            </div>
+            <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+                <h2 class="font-bold mb-2">LEARN MORE</h2>
+                <div class="flex items-center   ">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/information-outline.svg" width="30px" />About Us</span></button>
+                </div>
+                <div class="flex items-center   ">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/phone-in-talk.svg" width="30px" />Contact Us</span></button>
+                </div>
+                <div class="flex items-center   ">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/finance.svg" width="30px" />User Statistics</span></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-8">
+            <div class="flex">
+                <div class="flex-1">
+                    <div class="badge-container">
+                        <button class="btn btn-sm bg-white ml-32"><img src="../images/fire.svg" width="20px" />Hot</button>
+                        <button class="btn btn-sm bg-white ml-4"><img src="../images/finance.svg" width="20px" />Trending</button>
+                    </div>
+                    <!-- Post Card -->
+                    <div class="post-card">
+                        <div class="post-header">
+                            <img src="../images/person.png" alt="Avatar">
+                            <div class="post-meta"><span class="post-user">Default</span> · 1hr. ago · Popular in Reddit right now</div>
+                        </div>
+                        <div class="post-title">How handsome is Henry Neo?</div>
+                        <div class="post-body">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                        </div>
+                    </div>
+                    <div class="post-card">
+                        <div class="post-header">
+                            <img src="../images/person.png" alt="Avatar">
+                            <div class="post-meta"><span class="post-user">Default</span> · 4hr. ago · Because you visited this community before</div>
+                        </div>
+                        <div class="post-title">How handsome is Henry Neo?</div>
+                        <div class="post-body">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                        </div>
+                    </div>
+                    <div class="post-card">
+                        <div class="post-header">
+                            <img src="../images/person.png" alt="Avatar">
+                            <div class="post-meta"><span class="post-user">Default</span> · 9hr. ago · Popular near you</div>
+                        </div>
+                        <div class="post-title">How handsome is Henry Neo?</div>
+                        <div class="post-body">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="right-banner">
+                    <img src="../images/reddit_banner.png" alt="Reddit Banner">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    <button class="create-discussion-button">create discussion</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const username = localStorage.getItem('username') || 'Default';
+            const userSpans = document.querySelectorAll('.post-user');
+            userSpans.forEach(span => {
+                span.textContent = username;
+            });
+        });
+    </script>
+</body>
+</html>
