@@ -2,9 +2,10 @@ const sql = require("mssql");
 const dbConfig = require("../../dbConfig");
 
 class Discussion {
-    constructor(dscName, dscDesc, accName) {
+    constructor(dscName, dscDesc, dscType, accName) {
         this.dscName = dscName;
         this.dscDesc = dscDesc;
+        this.dscType = dscType;
         this.accName = accName;
     }
 
@@ -18,7 +19,7 @@ class Discussion {
 
         connection.close();
 
-        return result.recordset.map((row) => new Discussion(row.DscName, row.DscDesc, row.OwnerID));
+        return result.recordset.map((row) => new Discussion(row.DscName, row.DscDesc, row.DscType, row.OwnerID));
     }
 
     static async getDiscussionByName(dscName) {
@@ -36,6 +37,7 @@ class Discussion {
             ? new Discussion(
                 result.recordset[0].DscName,
                 result.recordset[0].DscDesc,
+                result.recordset[0].DscType,
                 result.recordset[0].OwnerID
             )
             : null;
@@ -44,11 +46,12 @@ class Discussion {
     static async createDiscussion(newDiscussionData) {
         const connection = await sql.connect(dbConfig);
 
-        const sqlQuery = `INSERT INTO Discussion (DscName, DscDesc, OwnerID) VALUES(@dscName, @dscDesc, @accName);`;
+        const sqlQuery = `INSERT INTO Discussion (DscName, DscDesc, DscType, OwnerID) VALUES(@dscName, @dscDesc, @dscType, @accName);`;
 
         const request = connection.request();
         request.input("dscName", newDiscussionData.dscName);
         request.input("dscDesc", newDiscussionData.dscDesc);
+        request.input("dscType", newDiscussionData.dscType);
         request.input("accName", newDiscussionData.accName);
 
         const result = await request.query(sqlQuery);

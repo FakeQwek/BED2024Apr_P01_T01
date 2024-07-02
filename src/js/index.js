@@ -1,11 +1,25 @@
 const discussionName = document.getElementById("discussionName");
 
 async function createDiscussion() {
+    const public = document.getElementById("public");
+    const restricted = document.getElementById("restricted");
+    const private = document.getElementById("private");
+    var type;
+
+    if (public.checked == true) {
+        type = "Public";
+    } else if (restricted.checked) {
+        type = "Restricted";
+    } else if (private.checked) {
+        type = "Private";
+    }
+
     await fetch("http://localhost:3000/discussion", {
         method: "POST",
         body: JSON.stringify({
             dscName: discussionName.value,
             dscDesc: "",
+            dscType: type,
             accName: "AppleTan"
         }),
         headers: {

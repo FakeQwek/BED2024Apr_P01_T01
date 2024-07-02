@@ -22,8 +22,9 @@ CONSTRAINT CHK_Account_isBanned CHECK (isBanned IN ('True', 'False')));
  
 CREATE TABLE Discussion ( 
  DscName varchar(16) NOT NULL, 
- DscDesc varchar(100) NULL, 
- OwnerID varchar(10) NOT NULL, 
+ DscDesc varchar(100) NULL,
+ DscType varchar(10) NOT NULL,
+ OwnerID varchar(16) NOT NULL, 
  CONSTRAINT PK_Discussion PRIMARY KEY (DscName), 
  CONSTRAINT FK_Discussion_OwnerID FOREIGN KEY (OwnerID) 
  REFERENCES Account(AccName)); 
@@ -34,7 +35,7 @@ CREATE TABLE Post (
  PostDesc varchar(1000) NOT NULL, 
  isEvent varchar(5) NOT NULL, 
  isApproved varchar(5) NOT NULL, 
- OwnerID varchar(10) NOT NULL, 
+ OwnerID varchar(16) NOT NULL, 
  DscName varchar(16) NOT NULL 
  CONSTRAINT PK_Post PRIMARY KEY (PostID), 
  CONSTRAINT FK_Post_OwnerID FOREIGN KEY (OwnerID) 
@@ -47,7 +48,7 @@ CREATE TABLE Post (
 CREATE TABLE Comment ( 
  CmtID varchar(10) NOT NULL, 
  CmtDesc varchar(1000) NOT NULL, 
- OwnerID varchar(10) NOT NULL, 
+ OwnerID varchar(16) NOT NULL, 
  PostId varchar(10) NOT NULL 
  CONSTRAINT PK_Comment PRIMARY KEY (CmtID), 
  CONSTRAINT FK_Comment_OwnerID FOREIGN KEY (OwnerID) 
