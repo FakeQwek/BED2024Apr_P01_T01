@@ -51,10 +51,10 @@ const updatePost = async (req, res) => {
     const newPostData = req.body;
     try {
         const updatedPost = await Post.updatePost(postId, newPostData);
-        if (!updatePost) {
+        if (!updatedPost) {
             return res.status(404).send("Post not found");
         }
-        res.json(updatePost);
+        res.json(updatedPost);
     } catch (error) {
         console.log(error);
         res.status(500).send("Error updating post");

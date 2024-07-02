@@ -51,6 +51,20 @@ class Comment {
         connection.close();
     }
 
+    static async updateComment(cmtId, newCommentData) {
+        const connection = await sql.connect(dbConfig);
+
+        const sqlQuery = `UPDATE Comment SET CmtDesc = @cmtDesc WHERE CmtID = @cmtId`;
+
+        const request = connection.request();
+        request.input("cmtId", cmtId);
+        request.input("cmtDesc", newCommentData.cmtDesc || null);
+
+        await request.query(sqlQuery);
+
+        connection.close();
+    }
+
     static async deleteComment(cmtId) {
         const connection = await sql.connect(dbConfig);
 

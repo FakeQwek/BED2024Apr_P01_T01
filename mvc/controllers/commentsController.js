@@ -32,6 +32,20 @@ const createComment = async (req, res) => {
     }
 };
 
+const updateComment = async(req, res) => {
+    const cmtId = parseInt(req.params.cmtId);
+    const newCommentData = req.body;
+    try {
+        const updatedComment = await Comment.updateComment(cmtId, newCommentData);
+        if (!updatedComment) {
+            return res.status(404).send("Comment not found");
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Error updating comment");
+    }
+}
+
 const deleteComment = async (req, res) => {
     const cmtId = parseInt(req.params.cmtId);
     try {
@@ -51,4 +65,5 @@ module.exports = {
     getCommentsByPost,
     createComment,
     deleteComment,
+    updateComment,
 };

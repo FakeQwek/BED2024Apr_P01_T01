@@ -93,7 +93,7 @@ class Post {
 
         await request.query(sqlQuery);
 
-        connection.close()
+        connection.close();
 
         return this.getPostById(postId);
     }

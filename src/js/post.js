@@ -64,6 +64,7 @@ async function Comments() {
                                                 <div tabindex="0" role="button" class="btn btn-sm bg-white border-0 shadow-none"><img src="../images/dots-horizontal.svg" width="20px" /></div>
                                                 <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
                                                     <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="report_post_modal` + i + `.showModal()"><span class="w-full">Report</span></button></li>
+                                                    <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="editComment(` + comments[i].cmtId + `,'` + comments[i].cmtDesc + `')"><span class="w-full">Edit</span></button></li>
                                                     <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="delete_modal` + i + `.showModal()"><span class="w-full">Delete</span></button></li>
                                                 </ul>
                                                 <!-- report post popup -->
@@ -101,7 +102,9 @@ async function Comments() {
                                                 </dialog>
                                             </div>
                                         </div>
-                                        <p>` + comments[i].cmtDesc + `</p>
+                                        <div id="` + comments[i].cmtId + `">
+                                            <p>` + comments[i].cmtDesc + `</p>
+                                        </div>
                                     </div>
                                 </div>`
         
@@ -123,11 +126,45 @@ async function createComment() {
             "Content-type": "application/json; charset=UTF-8"
         }
     });
+    location.reload();
 };
 
 async function deleteComment(cmtId) {
     await fetch("http://localhost:3000/comment/" + cmtId, {
         method: "DELETE"
+    });
+    location.reload();
+}
+
+function editComment(cmtId, cmtDesc) {
+    const commentDesc = document.getElementById(cmtId);
+    commentDesc.innerHTML = `<div class="flex w-full h-fit bg-white rounded-2xl my-4 p-4">
+                                <input id="editDesc` + cmtId + `" value="` + cmtDesc + `" type="text" placeholder="Comment" class="input input-bordered w-full" />
+                            </div>
+                            <button id="cancel` + cmtId + `" class="btn">Cancel</button>
+                            <button id="edit` + cmtId + `" class="btn">Edit</button>`;
+    const editDesc = document.getElementById("editDesc" + cmtId);
+    const cancel = document.getElementById("cancel" + cmtId);
+    const edit = document.getElementById("edit" + cmtId);
+
+    cancel.addEventListener("click", () => {
+        commentDesc.innerHTML = `<p>` + cmtDesc + `</p>`;
+    })
+
+    edit.addEventListener("click", () => {
+        editCommentAsync(cmtId, editDesc.value);
+    })
+}
+
+async function editCommentAsync(cmtId, editDesc) {
+    await fetch("http://localhost:3000/comment/" + cmtId, {
+        method: "PUT",
+        body: JSON.stringify({
+            "cmtDesc": editDesc,
+        }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
     });
     location.reload();
 }

@@ -203,6 +203,7 @@ app.post("/comment", commentsController.createComment);
 app.post("/post", postsController.createPost);
 app.post("/volunteer", volunteersController.createVolunteer);
 app.put("/post/:postId", postsController.updatePost);
+app.put("/comment/:cmtId", commentsController.updateComment);
 app.put("/volunteer/:volId", volunteersController.approveVolunteer);
 app.post("/news", newsController.createNews);
 app.put("/news/:newsId", newsController.updateNews);
