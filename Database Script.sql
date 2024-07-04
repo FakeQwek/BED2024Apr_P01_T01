@@ -51,6 +51,8 @@ CREATE TABLE Post (
 	NewsDesc varchar(1000) NOT NULL,
 	NewsSource varchar(1000) NOT NULL,
 	NewsImage varchar(1000),
+    NewsDate varchar(10) NOT NULL,
+    NewsContent varchar(2500) NOT NULL,
 	CONSTRAINT PK_NewsPost PRIMARY KEY (NewsID));
  
 CREATE TABLE Comment ( 
