@@ -1,6 +1,5 @@
-const sql = require("mssql");
-const dbConfig = require("../../dbConfig");
-const bcrypt = require("bcryptjs");
+const sql = require('mssql');
+const dbConfig = require('../../dbConfig');
 
 class User {
     constructor(user_id, username, passwordHash, role) {
@@ -11,31 +10,42 @@ class User {
     }
 
     static async createUser(newUser) {
-        const connection = await sql.connect(dbConfig);
-        const sqlQuery = `INSERT INTO Users (user_id, username, passwordHash, role) VALUES (@new_user_id, @new_username, @new_passwordHash, @new_role)`;
+        try {
+            const connection = await sql.connect(dbConfig);
+            const sqlQuery = `INSERT INTO Users (username, passwordHash, role) VALUES (@new_username, @new_passwordHash, @new_role)`;
 
-        const request = connection.request();
-       
-        request.input("new_username", newUser.new_username);
-        request.input("new_passwordHash", newUser.new_passwordHash);
-        request.input("role", newUser.new_role);
+            const request = connection.request();
+            request.input('new_username', sql.VarChar, newUser.username);
+            request.input('new_passwordHash', sql.VarChar, newUser.passwordHash);
+            request.input('new_role', sql.VarChar, newUser.role);
 
-        const result = await request.query(sqlQuery);
+            const result = await request.query(sqlQuery);
 
-        connection.close();
+            connection.close();
+            return result.recordset[0]; // Assuming you want to return the created user object
+        } catch (error) {
+            console.error('Error creating user:', error);
+            throw new Error('Error creating user');
+        }
     }
 
-    static async getUserByUsername(username){
-        const connection = await sql.connect(dbConfig);
-        const sqlQuery = `SELECT * FROM Users WHERE username = @username`;
-        const request = connection.request();
-        request.input("username", username);
+    static async getUserByUsername(username) {
+        try {
+            const connection = await sql.connect(dbConfig);
+            const sqlQuery = `SELECT * FROM Users WHERE username = @username`;
 
-        const result = await request.query(sqlQuery);
-        connection.close();
+            const request = connection.request();
+            request.input('username', sql.VarChar, username);
 
+            const result = await request.query(sqlQuery);
+            connection.close();
+
+            return result.recordset[0]; // Assuming you want to return the user object
+        } catch (error) {
+            console.error('Error fetching user by username:', error);
+            throw new Error('Error fetching user by username');
+        }
     }
 }
-
 
 module.exports = User;

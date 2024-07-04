@@ -1,6 +1,4 @@
 const express = require("express");
-const sql = require("mssql");
-const dbConfig = require("./dbConfig");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
@@ -15,6 +13,17 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
+// User routes
 app.get("/user/:username", userController.getUserByUsername);
 app.post("/register", registerController.registerUser);
 app.post("/user", userController.createUser);
+app.post("/login", userController.login);
+
+// Book routes (assuming you have similar CRUD operations in bookController)
+// Example:
+// app.get("/books", bookController.getAllBooks);
+// app.put("/books/:bookId/availability", bookController.updateBookAvailability);
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
