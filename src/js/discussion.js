@@ -58,17 +58,17 @@ async function Posts() {
                                                         <div class="modal-box flex flex-col h-2/3 rounded-3xl gap-2">
                                                             <h2 class="font-bold text-2xl">Submit a report</h2>
                                                             <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                                                            <select class="select select-bordered w-full mt-4">
+                                                            <select id="postReportCat` + posts[i].postId + `" class="select select-bordered w-full mt-4">
                                                                 <option hidden>Issue</option>
                                                                 <option>Hate speech</option>
                                                                 <option>Minor abuse or sexualisation</option>
                                                                 <option>Self-harm or suicide</option>
                                                             </select>
-                                                            <textarea class="textarea textarea-bordered h-2/3 resize-none mt-4" placeholder="Description"></textarea>
+                                                            <textarea id="postReportDesc` + posts[i].postId + `" class="textarea textarea-bordered h-2/3 resize-none mt-4" placeholder="Description"></textarea>
                                                             <div class="modal-action">
                                                                 <form class="flex gap-4" method="dialog">
                                                                     <button class="btn btn-sm">Cancel</button>
-                                                                    <button class="btn btn-sm bg-red-500 text-white">Submit</button>
+                                                                    <button class="btn btn-sm bg-red-500 text-white" onclick="createPostReport(` + posts[i].postId + `)">Submit</button>
                                                                 </form>
                                                             </div>
                                                         </div>
@@ -120,17 +120,17 @@ async function Posts() {
                                                         <div class="modal-box flex flex-col h-2/3 rounded-3xl gap-2">
                                                             <h2 class="font-bold text-2xl">Submit a report</h2>
                                                             <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                                                            <select class="select select-bordered w-full mt-4">
+                                                            <select id="postReportCat` + posts[i].postId + `" class="select select-bordered w-full mt-4">
                                                                 <option hidden>Issue</option>
                                                                 <option>Hate speech</option>
                                                                 <option>Minor abuse or sexualisation</option>
                                                                 <option>Self-harm or suicide</option>
                                                             </select>
-                                                            <textarea class="textarea textarea-bordered h-2/3 resize-none mt-4" placeholder="Description"></textarea>
+                                                            <textarea id="postReportDesc` + posts[i].postId + `" class="textarea textarea-bordered h-2/3 resize-none mt-4" placeholder="Description"></textarea>
                                                             <div class="modal-action">
                                                                 <form class="flex gap-4" method="dialog">
                                                                     <button class="btn btn-sm">Cancel</button>
-                                                                    <button class="btn btn-sm bg-red-500 text-white">Submit</button>
+                                                                    <button class="btn btn-sm bg-red-500 text-white" onclick="createPostReport(` + posts[i].postId + `)">Submit</button>
                                                                 </form>
                                                             </div>
                                                         </div>
@@ -169,7 +169,6 @@ async function deletePost(postId) {
 }
 
 async function createVolunteer(postId) {
-    console.log(postId);
     await fetch("http://localhost:3000/volunteer", {
         method: "POST",
         body: JSON.stringify({
@@ -181,6 +180,43 @@ async function createVolunteer(postId) {
             "Content-type": "application/json; charset=UTF-8"
         }
     });
+}
+
+const editDesc = document.getElementById("editDesc");
+
+async function editDiscussionDescription() {
+    await fetch ("http://localhost:3000/discussion/" + discussionName, {
+        method: "PUT",
+        body: JSON.stringify({
+            "dscDesc": editDesc.value,
+        }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    })
+    location.reload();
+}
+
+
+
+async function createPostReport(postId) {
+    const postReportCat = document.getElementById("postReportCat" + postId);
+    const postReportDesc = document.getElementById("postReportDesc" + postId);
+    console.log(postReportCat.value);
+    console.log(postReportDesc.value);
+
+    await fetch("http://localhost:3000/postReport", {
+        method: "POST",
+        body: JSON.stringify({
+            postRptCat: postReportCat.value,
+            postRptDesc: postReportDesc.value,
+            accName: "AppleTan",
+            postId: postId
+        }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    })
 }
 
 function goToCreatePost() {
@@ -199,18 +235,18 @@ function goToCreatePost() {
 }
 
 function goToPost(postId) {
-    var script = document.getElementsByTagName("script");
-    var url = script[script.length-1].src;
-    for (let i = 0; i < url.length; i++) {
-        if (url.slice(-1) != "/") {
-            url = url.substring(0, url.length - 1);
-        } else {
-            break;
-        }
-    }
-    url = url.substring(0, url.length - 3);
-    url = url.concat("post.html?postId=" + postId);
-    window.location.href = url;
+    // var script = document.getElementsByTagName("script");
+    // var url = script[script.length-1].src;
+    // for (let i = 0; i < url.length; i++) {
+    //     if (url.slice(-1) != "/") {
+    //         url = url.substring(0, url.length - 1);
+    //     } else {
+    //         break;
+    //     }
+    // }
+    // url = url.substring(0, url.length - 3);
+    // url = url.concat("post.html?postId=" + postId);
+    // window.location.href = url;
 }
 
 Discussion();

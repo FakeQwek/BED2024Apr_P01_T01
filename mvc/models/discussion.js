@@ -59,6 +59,20 @@ class Discussion {
         connection.close();
     }
 
+    static async updateDiscussionDescription(dscName, newDiscussionData) {
+        const connection = await sql.connect(dbConfig);
+
+        const sqlQuery = `UPDATE Discussion SET DscDesc = @dscDesc WHERE DscName = @dscName`;
+
+        const request = connection.request();
+        request.input("dscDesc", newDiscussionData.dscDesc);
+        request.input("dscName", dscName);
+
+        await request.query(sqlQuery);
+
+        connection.close();
+    }
+
     static async searchDiscussions(searchTerm) {
         const connection = await sql.connect(dbConfig);
 

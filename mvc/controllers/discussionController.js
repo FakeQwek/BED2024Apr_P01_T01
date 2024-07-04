@@ -35,6 +35,19 @@ const createDiscussion = async (req, res) => {
     }
 };
 
+const updateDiscussionDescription = async (req, res) => {
+    const dscName = req.params.dscName;
+    const newDiscussionData = req.body;
+
+    try {
+        const updatedDiscussion = await Discussion.updateDiscussionDescription(dscName, newDiscussionData);
+        res.status(201).json(updatedDiscussion);
+    } catch(error) {
+        console.log(error);
+        res.status(500).send("Error updating discussion");
+    }
+};
+
 const searchDiscussions = async (req, res) => {
     const searchTerm = req.query.searchTerm;
 
@@ -52,4 +65,5 @@ module.exports = {
     getDiscussionByName,
     createDiscussion,
     searchDiscussions,
+    updateDiscussionDescription,
 };

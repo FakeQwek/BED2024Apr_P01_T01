@@ -88,7 +88,7 @@
                                     <div class="dropdown dropdown-end">
                                         <div tabindex="0" role="button" class="btn btn-sm bg-white border-0 shadow-none"><img src="../images/dots-horizontal.svg" width="20px" /></div>
                                         <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                                            <li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick=""><span class="w-full">Edit</span></button></li>
+                                            <li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="edit_discussion_modal.showModal()"><span class="w-full">Edit</span></button></li>
                                             <li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="report_discussion_modal.showModal()"><span class="w-full">Report</span></button></li>
                                         </ul>
                                         <!-- report discussion popup -->
@@ -107,6 +107,19 @@
                                                     <form class="flex gap-4" method="dialog">
                                                         <button class="btn btn-sm">Cancel</button>
                                                         <button class="btn btn-sm bg-red-500 text-white">Submit</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </dialog>
+                                        <!-- edit discussion popup -->
+                                        <dialog id="edit_discussion_modal" class="modal">
+                                            <div class="modal-box flex flex-col h-fit rounded-3xl gap-2">
+                                                <h2 class="font-bold text-2xl">Edit discussion description</h2>
+                                                <textarea id="editDesc" class="textarea textarea-bordered resize-none mt-4" placeholder="Description"></textarea>
+                                                <div class="modal-action">
+                                                    <form class="flex gap-4" method="dialog">
+                                                        <button class="btn btn-sm">Cancel</button>
+                                                        <button class="btn btn-sm bg-red-500 text-white" onclick="editDiscussionDescription()">Submit</button>
                                                     </form>
                                                 </div>
                                             </div>
