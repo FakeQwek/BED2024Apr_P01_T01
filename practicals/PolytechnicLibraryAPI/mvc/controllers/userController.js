@@ -11,3 +11,16 @@ const createUser = async (req, res) => {
     }
 };
 
+const getUserByUsername = async (req, res) => {
+    const  user = req.body;
+    try {
+        const retreivedUser = await User.getUserByUsername(username);
+        res.status(201).json(user);
+
+    } catch(error) {
+        console.log(error);
+        res.status(500).send("Error getting user");
+    }
+    
+}
+
