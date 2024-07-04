@@ -51,9 +51,9 @@ class DiscussionReport {
 
         const sqlQuery = `INSERT INTO DiscussionReport (DscRptID, DscRptCat, DscRptDesc, AccName, DscName) SELECT CASE WHEN COUNT(*) = 0 THEN 1 ELSE MAX(DscRptID) + 1 END, @dscRptCat, @dscRptDesc, @accName, @dscName FROM DiscussionReport`;
 
-        const requset = connection.request();
-        requset.input("dscRptCat", newDiscussionReportData.dscRptCat);
-        requset.input("dscRptDesc", newDiscussionReportData.dscRptDesc);
+        const request = connection.request();
+        request.input("dscRptCat", newDiscussionReportData.dscRptCat);
+        request.input("dscRptDesc", newDiscussionReportData.dscRptDesc);
         request.input("accName", newDiscussionReportData.accName);
         request.input("dscName", newDiscussionReportData.dscName);
 

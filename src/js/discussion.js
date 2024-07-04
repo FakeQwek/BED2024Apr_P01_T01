@@ -202,8 +202,6 @@ async function editDiscussionDescription() {
 async function createPostReport(postId) {
     const postReportCat = document.getElementById("postReportCat" + postId);
     const postReportDesc = document.getElementById("postReportDesc" + postId);
-    console.log(postReportCat.value);
-    console.log(postReportDesc.value);
 
     await fetch("http://localhost:3000/postReport", {
         method: "POST",
@@ -212,6 +210,24 @@ async function createPostReport(postId) {
             postRptDesc: postReportDesc.value,
             accName: "AppleTan",
             postId: postId
+        }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    })
+}
+
+async function createDiscussionReport() {
+    const dscReportCat = document.getElementById("dscReportCat");
+    const dscReportDesc = document.getElementById("dscReportDesc");
+
+    await fetch("http://localhost:3000/discussionReport", {
+        method: "POST",
+        body: JSON.stringify({
+            dscRptCat: dscReportCat.value,
+            dscRptDesc: dscReportDesc.value,
+            accName: "AppleTan",
+            dscName: discussionName
         }),
         headers: {
             "Content-type": "application/json; charset=UTF-8"
