@@ -5,9 +5,9 @@ async function registerUser(req, res) {
     const { username, password, role } = req.body;
   
     try {
-      re1 = "/\d/";
-      re2 = "/[\D\W]/";
-      re3 = "/\s/";
+      re1 = /\d/;
+      re2 = /[\W]/;
+      re3 = /\s/;
 
       
       // Validate user data
@@ -64,16 +64,22 @@ async function registerUser(req, res) {
         referrerPolicy: "no-referrer",
         body: JSON.stringify({
             news_username: username,
-            news_passwordHash: password,
+            news_passwordHash: hashedPassword,
             role: role,
             }),
     });
-      return res.status(201).json({ message: "User created successfully" });
-    } catch (err) {
-      console.error(err);
-      return res.status(500).json({ message: "Internal server error" });
-    }
+    if (!response.ok) {
+      const errorData = await response.json();
+      return res.status(response.status).json({ message: errorData.message || "Failed to create user" });
   }
-  module.exports = {
-    registerUser
-  }
+
+  return res.status(201).json({ message: "User created successfully" });
+} catch (err) {
+  console.error(err);
+  return res.status(500).json({ message: "Internal server error" });
+}
+}
+
+module.exports = {
+registerUser
+}

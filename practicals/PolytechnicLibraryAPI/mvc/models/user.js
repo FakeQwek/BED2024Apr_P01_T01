@@ -22,7 +22,7 @@ class User {
             const result = await request.query(sqlQuery);
 
             connection.close();
-            return result.recordset[0]; // Assuming you want to return the created user object
+            return result.recordset[0];
         } catch (error) {
             console.error('Error creating user:', error);
             throw new Error('Error creating user');
@@ -40,7 +40,7 @@ class User {
             const result = await request.query(sqlQuery);
             connection.close();
 
-            return result.recordset[0]; // Assuming you want to return the user object
+            return result.recordset[0]; 
         } catch (error) {
             console.error('Error fetching user by username:', error);
             throw new Error('Error fetching user by username');
