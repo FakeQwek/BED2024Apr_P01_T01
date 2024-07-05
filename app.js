@@ -217,11 +217,6 @@ app.delete("/comment/:cmtId", commentsController.deleteComment);
 app.delete("/posts/:postId", postsController.deletePost);
 app.delete("/volunteer/:volId", volunteersController.deleteVolunteer);
 
-
-
-
-
-
 app.listen(port, async () => {
     try {
         await sql.connect(dbConfig);

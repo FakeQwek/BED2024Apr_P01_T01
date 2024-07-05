@@ -109,3 +109,13 @@ CREATE TABLE NewsPost (
  NewsImage varchar(100) NOT NULL,
  CONSTRAINT PK_NewsPost PRIMARY KEY (NewsID)
 )
+
+CREATE TABLE DiscussionMember (
+ DscMemID varchar(10) NOT NULL,
+ AccName varchar(16) NOT NULL,
+ DscName varchar(16) NOT NULL
+ CONSTRAINT PK_DiscussionMember PRIMARY KEY (DscMemID),
+ CONSTRAINT FK_DiscussionMember_AccName FOREIGN KEY (AccName)
+ REFERENCES Account(AccName),
+ CONSTRAINT FK_DiscussionMember_DscName FOREIGN KEY (DscName)
+ REFERENCES Discussion(DscName));
