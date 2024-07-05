@@ -84,12 +84,13 @@ class Post {
     static async updatePost(postId, newPostData) {
         const connection = await sql.connect(dbConfig);
 
-        const sqlQuery = `UPDATE Post SET PostName = @postName, PostDesc = @postDesc WHERE PostID = @postId`;
+        const sqlQuery = `UPDATE Post SET PostName = @postName, PostDesc = @postDesc, isEvent = @isEvent WHERE PostID = @postId`;
 
         const request = connection.request();
         request.input("postId", postId);
         request.input("postName", newPostData.postName || null);
         request.input("postDesc", newPostData.postDesc || null);
+        request.input("isEvent", newPostData.isEvent);
 
         await request.query(sqlQuery);
 

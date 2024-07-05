@@ -31,24 +31,33 @@ async function Discussion(dscName) {
     discussionOwners.insertAdjacentHTML("beforeend", discussionOwnersHTML);
 };
 
+const isEventRadio =  document.getElementById("isEvent");
+
 async function Post() {
     const res = await fetch("http://localhost:3000/post/" + postId);
     const post = await res.json();
-    console.log(post);
 
     editPostName.value = post.postName;
     editPostDesc.value = post.postDesc;
-
+    
     Discussion(post.dscName);
-}
+};
+
+var checked;
 
 async function updatePost() {
+    if (isEventRadio.checked) {
+        checked = "True";
+    } else {
+        checked = "False"
+    }
+
     await fetch("http://localhost:3000/post/" + postId, {
         method: "PUT",
         body: JSON.stringify({
             postName: editPostName.value,
             postDesc: editPostDesc.value,
-            isEvent: "False",
+            isEvent: checked,
         }),
         headers: {
             "Content-type": "application/json; charset=UTF-8"
