@@ -118,4 +118,5 @@ CREATE TABLE DiscussionMember (
  CONSTRAINT FK_DiscussionMember_AccName FOREIGN KEY (AccName)
  REFERENCES Account(AccName),
  CONSTRAINT FK_DiscussionMember_DscName FOREIGN KEY (DscName)
- REFERENCES Discussion(DscName));
+ REFERENCES Discussion(DscName),
+ CONSTRAINT AK_AccName_DscName UNIQUE (AccName, DscName));

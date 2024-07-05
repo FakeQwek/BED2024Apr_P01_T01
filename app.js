@@ -12,6 +12,7 @@ const commentsController = require("./mvc/controllers/commentsController");
 const postReportsController = require("./mvc/controllers/postReportsController");
 const discussionReportsController = require("./mvc/controllers/discussionReportsController");
 const volunteersController = require("./mvc/controllers/volunteersController");
+const discussionMembersController = require("./mvc/controllers/discussionMembersController");
 const newsController = require("./mvc/controllers/newsController");
 
 const app = express();
@@ -216,6 +217,9 @@ app.delete("/news/:newsId", newsController.deleteNews);
 app.delete("/comment/:cmtId", commentsController.deleteComment);
 app.delete("/posts/:postId", postsController.deletePost);
 app.delete("/volunteer/:volId", volunteersController.deleteVolunteer);
+
+app.get("/discussionMembers", discussionMembersController.getAllDiscussionMembers);
+app.post("/discussionMember/:dscName", discussionMembersController.createDiscussionMember);
 
 app.listen(port, async () => {
     try {

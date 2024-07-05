@@ -233,6 +233,19 @@ async function createDiscussionReport() {
     })
 }
 
+async function createDiscussionMember() {
+    console.log(discussionName);
+    await fetch("http://localhost:3000/discussionMember/" + discussionName, {
+        method: "POST",
+        body: JSON.stringify({
+            accName: "AppleTan"
+        }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    })
+}
+
 function goToCreatePost() {
     var script = document.getElementsByTagName("script");
     var url = script[script.length-1].src;
