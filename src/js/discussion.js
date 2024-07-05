@@ -197,8 +197,6 @@ async function editDiscussionDescription() {
     location.reload();
 }
 
-
-
 async function createPostReport(postId) {
     const postReportCat = document.getElementById("postReportCat" + postId);
     const postReportDesc = document.getElementById("postReportDesc" + postId);

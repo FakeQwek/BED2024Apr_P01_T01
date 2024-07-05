@@ -8,13 +8,17 @@ const postDesc = document.getElementById("postDesc");
 const postComments = document.getElementById("postComments");
 const postAccount = document.getElementById("postAccount");
 
+var discussionName;
+
 async function Discussion(dscName) { 
     const res = await fetch("http://localhost:3000/discussions/" + dscName);
     const discussion = await res.json();
+
+    discussionName = discussion.dscName;
     console.log(discussion);
 
     const discussionBannerName = document.getElementById("discussionBannerName");
-    const discussionBanerNameHTML = `<h2>` + discussion.dscName + `</h2>`;
+    const discussionBanerNameHTML = `<h2>` + discussionName + `</h2>`;
     discussionBannerName.insertAdjacentHTML("afterbegin", discussionBanerNameHTML);
 
     const discussionBannerDesc = document.getElementById("discussionBannerDesc");
@@ -175,6 +179,42 @@ commentDesc.addEventListener("keyup", ({key}) => {
         createComment();
     }
 })
+
+async function createPostReport() {
+    const postReportCat = document.getElementById("postReportCat");
+    const postReportDesc = document.getElementById("postReportDesc");
+
+    await fetch("http://localhost:3000/postReport", {
+        method: "POST",
+        body: JSON.stringify({
+            postRptCat: postReportCat.value,
+            postRptDesc: postReportDesc.value,
+            accName: "AppleTan",
+            postId: postId
+        }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    })
+}
+
+async function createDiscussionReport() {
+    const dscReportCat = document.getElementById("dscReportCat");
+    const dscReportDesc = document.getElementById("dscReportDesc");
+
+    await fetch("http://localhost:3000/discussionReport", {
+        method: "POST",
+        body: JSON.stringify({
+            dscRptCat: dscReportCat.value,
+            dscRptDesc: dscReportDesc.value,
+            accName: "AppleTan",
+            dscName: discussionName
+        }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    })
+}
 
 Post();
 Comments();
