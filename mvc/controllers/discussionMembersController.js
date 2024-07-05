@@ -6,7 +6,18 @@ const getAllDiscussionMembers = async (req, res) => {
         res.json(discussionMembers);
     } catch (error) {
         console.log(error);
-        res.status(500).send("Error retrieving discussion member");
+        res.status(500).send("Error retrieving discussion members");
+    }
+};
+
+const getDiscussionMembersByDiscussion = async (req, res) => {
+    const dscName = req.params.dscName;
+    try {
+        const discussionMembers = await DiscussionMember.getDiscussionMembersByDiscussion(dscName);
+        res.json(discussionMembers);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Error retrieving discussion members")
     }
 };
 
@@ -21,9 +32,10 @@ const createDiscussionMember = async (req, res) => {
         console.log(error);
         res.status(500).send("Error creating discussion Member");
     }
-}
+};
 
 module.exports = {
     getAllDiscussionMembers,
+    getDiscussionMembersByDiscussion,
     createDiscussionMember,
 }

@@ -219,6 +219,7 @@ app.delete("/posts/:postId", postsController.deletePost);
 app.delete("/volunteer/:volId", volunteersController.deleteVolunteer);
 
 app.get("/discussionMembers", discussionMembersController.getAllDiscussionMembers);
+app.get("/discussionMembers/:dscName", discussionMembersController.getDiscussionMembersByDiscussion);
 app.post("/discussionMember/:dscName", discussionMembersController.createDiscussionMember);
 
 app.listen(port, async () => {

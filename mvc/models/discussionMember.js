@@ -21,6 +21,21 @@ class DiscussionMember {
         return result.recordset.map((row) => new DiscussionMember(row.DscMemID, row.AccName, row.DscName));
     }
 
+    static async getDiscussionMembersByDiscussion(dscName) {
+        const connection = await sql.connect(dbConfig);
+
+        const sqlQuery = `SELECT * FROM DiscussionMember WHERE DscName = @dscName`;
+
+        const request = connection.request();
+        request.input("dscName", dscName);
+
+        const result = await request.query(sqlQuery);
+
+        connection.close();
+
+        return result.recordset.map((row) => new DiscussionMember(row.DscMemID, row.AccName, row.DscName));
+    }
+
     static async createDiscussionMember(newDiscussionMemberData, dscName) {
         const connection = await sql.connect(dbConfig);
 

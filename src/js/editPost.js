@@ -2,8 +2,6 @@ const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const discussionName = urlParams.get("discussionName");
 const postId = urlParams.get("postId");
-console.log(discussionName);
-console.log(postId);
 
 const editPostName = document.getElementById("editPostName");
 const editPostDesc = document.getElementById("editPostDesc");
@@ -71,4 +69,32 @@ async function updatePost() {
     window.location.href = url;
 }
 
+async function createDiscussionReport() {
+    const dscReportCat = document.getElementById("dscReportCat");
+    const dscReportDesc = document.getElementById("dscReportDesc");
+
+    await fetch("http://localhost:3000/discussionReport", {
+        method: "POST",
+        body: JSON.stringify({
+            dscRptCat: dscReportCat.value,
+            dscRptDesc: dscReportDesc.value,
+            accName: "AppleTan",
+            dscName: discussionName
+        }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    })
+}
+
+const memberCount = document.getElementById("memberCount");
+
+async function DiscussionMembers() {
+    const res = await fetch("http://localhost:3000/discussionMembers/" + discussionName);
+    const discussionMembers = await res.json();
+    
+    memberCount.innerHTML = `<h2 class="font-bold">` + discussionMembers.length + `</h2>`
+}
+
 Post();
+DiscussionMembers();

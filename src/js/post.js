@@ -31,6 +31,8 @@ async function Discussion(dscName) {
                                     <h2>` + discussion.accName + `</h2>
                                 </div>`;
     discussionOwners.insertAdjacentHTML("beforeend", discussionOwnersHTML);
+
+    DiscussionMembers();
 };
 
 async function Post() {
@@ -214,6 +216,15 @@ async function createDiscussionReport() {
             "Content-type": "application/json; charset=UTF-8"
         }
     })
+}
+
+const memberCount = document.getElementById("memberCount");
+
+async function DiscussionMembers() {
+    const res = await fetch("http://localhost:3000/discussionMembers/" + discussionName);
+    const discussionMembers = await res.json();
+    
+    memberCount.innerHTML = `<h2 class="font-bold">` + discussionMembers.length + `</h2>`
 }
 
 Post();

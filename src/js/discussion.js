@@ -161,6 +161,15 @@ async function Posts() {
     }
 };
 
+const memberCount = document.getElementById("memberCount");
+
+async function DiscussionMembers() {
+    const res = await fetch("http://localhost:3000/discussionMembers/" + discussionName);
+    const discussionMembers = await res.json();
+    
+    memberCount.innerHTML = `<h2 class="font-bold">` + discussionMembers.length + `</h2>`
+}
+
 async function deletePost(postId) {
     await fetch("http://localhost:3000/posts/" + postId, {
         method: "DELETE"
@@ -278,3 +287,4 @@ function goToPost(postId) {
 
 Discussion();
 Posts();
+DiscussionMembers();
