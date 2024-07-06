@@ -26,6 +26,16 @@ async function createDiscussion() {
             "Content-type": "application/json; charset=UTF-8"
         }
     });
+
+    await fetch("http://localhost:3000/discussionMember/" + discussionName.value, {
+        method: "POST",
+        body: JSON.stringify({
+            accName: "AppleTan"
+        }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    })
     
     var script = document.getElementsByTagName("script");
     var url = script[script.length-1].src;
