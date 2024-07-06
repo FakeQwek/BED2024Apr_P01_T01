@@ -59,7 +59,6 @@ async function Posts() {
                                                             <h2 class="font-bold text-2xl">Submit a report</h2>
                                                             <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                                                             <select id="postReportCat` + posts[i].postId + `" class="select select-bordered w-full mt-4">
-                                                                <option hidden>Issue</option>
                                                                 <option>Hate speech</option>
                                                                 <option>Minor abuse or sexualisation</option>
                                                                 <option>Self-harm or suicide</option>
@@ -121,7 +120,6 @@ async function Posts() {
                                                             <h2 class="font-bold text-2xl">Submit a report</h2>
                                                             <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                                                             <select id="postReportCat` + posts[i].postId + `" class="select select-bordered w-full mt-4">
-                                                                <option hidden>Issue</option>
                                                                 <option>Hate speech</option>
                                                                 <option>Minor abuse or sexualisation</option>
                                                                 <option>Self-harm or suicide</option>
