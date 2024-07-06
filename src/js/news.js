@@ -11,6 +11,7 @@ getAllNews();
 storednewsData = [];
 //lastIndex remembers where to start loading news posts
 var lastIndex = 0;
+//Populates 5 new news posts after clicking on load button
 loadButton.addEventListener("click", function (){
     
     for (i = 0; i < 5; i++){
@@ -22,10 +23,11 @@ loadButton.addEventListener("click", function (){
             break;
         }
         article = storednewsData[newsIndex];
+        console.log(article["newsId"]);
         loadContainer.insertAdjacentHTML("beforebegin",
-            `<div class="flex justify-center w-full ${currentPostIndex}">
+            `<div class="flex justify-center w-full">
                 <div class="card w-5/6 bg-white news-card">
-                    <div class="news-body">
+                    <div class="news-body" id="${article["newsId"]}">
                         <h3 class="news-source">from ${article["newsSource"]}</h3>
                         <h2 class="card-title">${article["newsId"]}</h2>
                         <img class="news-thumbnail object-scale-down" src="${article["newsImage"]}" >
@@ -38,15 +40,21 @@ loadButton.addEventListener("click", function (){
     }
     currentPostIndex += 1;
     lastIndex += 5;
-    newsPosts = document.getElementsByClassName("news-card");
-    newsPosts.addEventListener("click", function() {
-        post = event.target;
-        classes = post.className;
-        postIndex = classes[4];
-        newsId = currentPosts[postIndex];
-        localStorage.setItem("clickedNews", newsId);
-
-    });
+    newsPosts = document.getElementsByClassName("news-body");
+    postLength = newsPosts.length;
+    
+    //Adds listeners to each post for redirect to individual news page
+    for (i = 0; i < postLength; i++) {
+        console.log(newsPosts[i].id);
+        newsPosts[i].addEventListener("click", function() {
+            postTarget = event.currentTarget;
+            newsId = postTarget.id;
+            localStorage.setItem("clickedNews", newsId);
+            document.location.href = "./individual-news.html";
+           
+            //console.log(`clicked! ${newsId}, ${classes}, ${postTarget}`);
+        });
+    }
     
 
 });
@@ -54,6 +62,7 @@ console.log(url);
 //Will update the database with new news responses from api every launch
 getNewsResponse(url);
 
+//Populates 5 new news posts at the beginning
 function populateNews(news, newsContainer) {
   
     console.log(news);
@@ -67,8 +76,8 @@ function populateNews(news, newsContainer) {
         article = news[newsIndex];
         newsContainer.insertAdjacentHTML("afterbegin",
             `<div class="flex justify-center w-full">
-                <div class="card w-5/6 bg-white news-card ${currentPostIndex}">
-                    <div class="news-body">
+                <div class="card w-5/6 bg-white news-card">
+                    <div class="news-body" id="${article["newsId"]}">
                         <h3 class="news-source">from ${article["newsSource"]}</h3>
                         <h2 class="card-title">${article["newsId"]}</h2>
                         <img class="news-thumbnail object-scale-down" src="${article["newsImage"]}" >
@@ -81,16 +90,23 @@ function populateNews(news, newsContainer) {
     }
     currentPostIndex +=1;
     lastIndex += 5;
-    newsPosts = document.getElementsByClassName("news-card");
-    newsPosts.addEventListener("click", function() {
-        post = event.target;
-        classes = post.className;
-        postIndex = classes[4];
-        newsId = currentPosts[postIndex];
-        localStorage.setItem("clickedNews", newsId);
-
-    });
-  
+    newsPosts = document.getElementsByClassName("news-body");
+    postLength = newsPosts.length;
+    //Adds listeners to each post for redirect to individual news page
+    for (i = 0; i < postLength; i++) {
+        newsPosts[i].addEventListener("click", function() {
+           
+            postTarget = event.currentTarget;
+            
+            newsId = postTarget.id;
+            
+            localStorage.setItem("clickedNews", newsId);
+            document.location.href = "./individual-news.html";
+             //Does seem to work properly
+            //console.log(`clicked! ${newsId}, ${classes}, ${postTarget}`);
+        });
+    }
+   
 }
 
 //Removes illegal sql characters
@@ -103,9 +119,12 @@ function cleanText(string) {
     string = string.replace("'", '\'');
     string = string.replace(".", '\.');
     string = string.replace(",", '\,');
+    
     return string; 
 }
 
+
+//Get function retrieves all available news posts from the database
 async function getAllNews() {
     response = await fetch("http://localhost:3000/news")
     .then(response => {
@@ -117,9 +136,8 @@ async function getAllNews() {
     .then(newsData => {
     
         for (i = 0; i < newsData.length; i++) {
-           
             storednewsData.push(newsData[i]);
-            
+            console.log(newsData[i]);  
         }
     
         populateNews(storednewsData, newsContainer);
@@ -130,6 +148,7 @@ async function getAllNews() {
     });  
 }
 
+//Update function update the local database with data from the external api
 async function postNews(url, article) {
     source = article['source'];
     id = cleanText(article['title']);
@@ -138,8 +157,9 @@ async function postNews(url, article) {
     rawDate = article['publishedAt'].substring(0,10);
     
     date = cleanText(rawDate);
-    console.log(date);
     content = cleanText(article['content']);
+    newsUrl = cleanText(article['url']);
+    
 
     
     const response = await fetch(url, {
@@ -158,14 +178,16 @@ async function postNews(url, article) {
             newsImage: image,
             newsSource: source['name'],
             newsDate: date,
-            newsContent: content
+            newsContent: content,
+            newsUrl: newsUrl,
+
             }),
     });
     return response.json();
 }
 
 
-
+//Fetch function gets news data from external api
 function getNewsResponse(url) {
     fetch(url)
     .then(response => {
@@ -181,7 +203,6 @@ function getNewsResponse(url) {
        
         for (i = 0; i < 10; i++) {
             try {
-                console.log(newsData);
                 postNews(url, newsData.articles[i]);
             }
             catch (error) {

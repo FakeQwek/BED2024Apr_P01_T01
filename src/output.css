@@ -3273,6 +3273,12 @@ input.tab:checked + .tab-content,
 
 }
 
+.news-body:hover {
+  cursor: pointer;
+  background-color: lightgrey;
+  
+}
+
 .news-body p {
   margin-bottom: 0;
 }
@@ -3331,3 +3337,4 @@ input.tab:checked + .tab-content,
   margin-left: 6%;
   margin-bottom: 3%;
 }
+
