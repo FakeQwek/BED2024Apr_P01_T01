@@ -44,12 +44,12 @@ async function Volunteers() {
         } else {
             const volunteerHTML = `<div class="card w-11/12 h-fit bg-white mt-4">
                                         <div class="card-body">
-                                            <div class="card-title flex justify-between items-center">
+                                            <div class="card-title flex justify-between items-center max-[820px]:flex-col max-[820px]:items-start">
                                                 <div class="flex items-center gap-2">
                                                     <img src="../images/account-circle-outline.svg" width="30px" />
                                                     <h2 class="text-sm">` + volunteers[i].accName + `</h2>
                                                 </div>
-                                                <div class="flex gap-4">
+                                                <div class="flex gap-4 max-[820px]:gap-0">
                                                     <button class="btn btn-sm bg-white border-0 shadow-none"><img src="../images/check.svg" width="20px" onclick="approveVolunteer(` + volunteers[i].volId + `)"></button>
                                                     <button class="btn btn-sm bg-white border-0 shadow-none"><img src="../images/close.svg" width="20px" onclick="deleteVolunteer(` + volunteers[i].volId + `)"></button>
                                                 </div>
