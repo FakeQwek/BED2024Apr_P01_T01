@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         discussionNameElement.innerText = discussion.dscName;
         discussionBannerDescElement.innerHTML = `<p>${discussion.dscDesc}</p>`;
-        ownersListElement.innerHTML = `
+        adminsListElement.innerHTML = `
             <div class="flex items-center">
                 <img src="../images/account-circle-outline.svg" width="30px" />
                 <a href="#" class="ml-2 text-blue-500 hover:underline" onclick="handleUserClick('${discussion.accName}')">u:${discussion.accName}</a>

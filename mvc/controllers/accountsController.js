@@ -34,6 +34,7 @@ const bcrypt = require("bcrypt");
 const dbConfig = require("../../dbConfig");
 const Account = require("../models/account");
 
+// Controllers
 const signup = async (req, res) => {
     const { usernameOrEmail, password } = req.body;
 
@@ -110,12 +111,11 @@ const login = async (req, res) => {
 const updateProfile = async (req, res) => {
     const { username, email, phoneNumber } = req.body;
     try {
-        // Assuming you're using SQL and a pool from 'mssql' package
         const pool = await sql.connect(dbConfig);
         const result = await pool.request()
             .input('newUsername', sql.VarChar, username)
             .input('newEmail', sql.VarChar, email)
-            .input('newPhoneNumber', sql.VarChar, phoneNumber || null) // Handling NULL if no phone number
+            .input('newPhoneNumber', sql.VarChar, phoneNumber || null)
             .query('UPDATE Account SET AccName = @newUsername, AccEmail = @newEmail, PhoneNumber = @newPhoneNumber WHERE AccEmail = @newEmail');
 
         if (result.rowsAffected[0] > 0) {
@@ -128,9 +128,6 @@ const updateProfile = async (req, res) => {
         res.status(500).send('Failed to update profile');
     }
 };
-
-
-
 
 const deleteAccount = async (req, res) => {
     const { username, email } = req.body;
@@ -156,7 +153,6 @@ const deleteAccount = async (req, res) => {
         res.status(500).send('Server error');
     }
 };
-
 
 const getAllAccounts = async (req, res) => {
     try {
@@ -295,10 +291,10 @@ const demoteUser = async (req, res) => {
 };
 
 module.exports = { 
-    updateProfile,
-     deleteAccount,
     signup,
     login,
+    updateProfile,
+    deleteAccount,
     getAllAccounts,
     getAccountById,
     getAccountByName,
@@ -310,9 +306,8 @@ module.exports = {
     unmuteUser,
     promoteUser,
     demoteUser,
-    
-    
 };
+
 
 
 
