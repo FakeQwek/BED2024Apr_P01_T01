@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user'); 
 
-const JWT_SECRET = '123'; 
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const createUser = async (req, res) => {
     const newUser = req.body;
@@ -15,8 +15,8 @@ const createUser = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         newUser.passwordHash = await bcrypt.hash(newUser.password, salt);
 
-        const createdUser = await User.createUser(newUser);
-        res.status(201).json(createdUser);
+        await User.createUser(newUser);
+        res.status(201).json({ message: "User created successfully" });
     } catch (error) {
         console.log(error);
         res.status(500).send("Error creating user");
@@ -54,10 +54,9 @@ const login = async (req, res) => {
         
         const token = jwt.sign(
             { userId: user.user_id, role: user.role },
-            JWT_SECRET,
+            JWT_SECRET, // Ensure the same secret is used here
             { expiresIn: '1h' }
         );
-
 
         return res.status(200).json({ token });
     } catch (err) {
@@ -71,3 +70,4 @@ module.exports = {
     getUserByUsername,
     login
 };
+

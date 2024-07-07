@@ -10,41 +10,24 @@ class User {
     }
 
     static async createUser(newUser) {
-        try {
-            const connection = await sql.connect(dbConfig);
-            const sqlQuery = `INSERT INTO Users (username, passwordHash, role) VALUES (@new_username, @new_passwordHash, @new_role)`;
-
-            const request = connection.request();
-            request.input('new_username', sql.VarChar, newUser.username);
-            request.input('new_passwordHash', sql.VarChar, newUser.passwordHash);
-            request.input('new_role', sql.VarChar, newUser.role);
-
-            const result = await request.query(sqlQuery);
-
-            connection.close();
-            return result.recordset[0];
-        } catch (error) {
-            console.error('Error creating user:', error);
-            throw new Error('Error creating user');
-        }
+        const connection = await sql.connect(dbConfig);
+        const sqlQuery = `INSERT INTO Users (username, passwordHash, role) VALUES (@username, @passwordHash, @role)`;
+        const request = connection.request();
+        request.input('username', sql.VarChar, newUser.username);
+        request.input('passwordHash', sql.VarChar, newUser.passwordHash);
+        request.input('role', sql.VarChar, newUser.role);
+        await request.query(sqlQuery);
+        connection.close();
     }
 
     static async getUserByUsername(username) {
-        try {
-            const connection = await sql.connect(dbConfig);
-            const sqlQuery = `SELECT * FROM Users WHERE username = @username`;
-
-            const request = connection.request();
-            request.input('username', sql.VarChar, username);
-
-            const result = await request.query(sqlQuery);
-            connection.close();
-
-            return result.recordset[0]; 
-        } catch (error) {
-            console.error('Error fetching user by username:', error);
-            throw new Error('Error fetching user by username');
-        }
+        const connection = await sql.connect(dbConfig);
+        const sqlQuery = `SELECT * FROM Users WHERE username = @username`;
+        const request = connection.request();
+        request.input('username', sql.VarChar, username);
+        const result = await request.query(sqlQuery);
+        connection.close();
+        return result.recordset[0];
     }
 }
 
