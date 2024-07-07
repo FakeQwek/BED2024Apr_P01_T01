@@ -29,16 +29,10 @@ module.exports = {
     getAccountById,
 };*/
 
-
-
+const sql = require("mssql");
+const bcrypt = require("bcrypt");
+const dbConfig = require("../../dbConfig");
 const Account = require("../models/account");
-
-
-
-
-
-
-
 
 // Controllers
 const signup = async (req, res) => {
@@ -107,6 +101,52 @@ const login = async (req, res) => {
             return res.status(200).json(userData);
         } else {
             return res.status(401).send('Login failed');
+        }
+    } catch (err) {
+        console.error('Database error:', err.originalError ? err.originalError.message : err.message);
+        res.status(500).send('Server error');
+    }
+};
+
+const updateProfile = async (req, res) => {
+    const { username, email, phoneNumber } = req.body;
+    try {
+        const pool = await sql.connect(dbConfig);
+        const result = await pool.request()
+            .input('newUsername', sql.VarChar, username)
+            .input('newEmail', sql.VarChar, email)
+            .input('newPhoneNumber', sql.VarChar, phoneNumber || null)
+            .query('UPDATE Account SET AccName = @newUsername, AccEmail = @newEmail, PhoneNumber = @newPhoneNumber WHERE AccEmail = @newEmail');
+
+        if (result.rowsAffected[0] > 0) {
+            res.json({ message: 'Profile updated successfully' });
+        } else {
+            res.status(404).send('User not found');
+        }
+    } catch (err) {
+        console.error('Database error:', err);
+        res.status(500).send('Failed to update profile');
+    }
+};
+
+const deleteAccount = async (req, res) => {
+    const { username, email } = req.body;
+
+    if (!username || !email) {
+        return res.status(400).send('Username and Email are required');
+    }
+
+    try {
+        const pool = await sql.connect(dbConfig);
+        const result = await pool.request()
+            .input('AccName', sql.VarChar, username)
+            .input('AccEmail', sql.VarChar, email)
+            .query(`DELETE FROM Account WHERE AccName = @AccName AND AccEmail = @AccEmail`);
+
+        if (result.rowsAffected[0] > 0) {
+            res.status(200).send('Account deleted successfully');
+        } else {
+            res.status(404).send('Account not found');
         }
     } catch (err) {
         console.error('Database error:', err.originalError ? err.originalError.message : err.message);
@@ -250,9 +290,11 @@ const demoteUser = async (req, res) => {
     }
 };
 
-module.exports = {  
+module.exports = { 
     signup,
     login,
+    updateProfile,
+    deleteAccount,
     getAllAccounts,
     getAccountById,
     getAccountByName,
@@ -263,8 +305,12 @@ module.exports = {
     muteUser,
     unmuteUser,
     promoteUser,
-    demoteUser
+    demoteUser,
 };
+
+
+
+
 
 
 

@@ -3,7 +3,10 @@ const sql = require("mssql");
 const dbConfig = require("./dbConfig");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const helmet = require("helmet");
+const morgan = require("morgan");
 
+// Import controllers
 const accountsController = require("./mvc/controllers/accountsController");
 const postsController = require("./mvc/controllers/postsController");
 const discussionController = require("./mvc/controllers/discussionController");
@@ -18,10 +21,20 @@ const questionController = require("./mvc/controllers/questionController");
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Apply middlewares
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
+app.use(cors({
+    methods: ['GET', 'POST', 'DELETE', 'PUT', 'OPTIONS'],
+    credentials: true,
+    origin: true
+}));
+app.use(helmet());
+app.use(morgan('combined')); // HTTP request logger
 
+// Route definitions
+app.delete('/deleteAccount', accountsController.deleteAccount); // Add this line
+app.put('/updateProfile', accountsController.updateProfile);
 app.post('/signup', accountsController.signup);
 app.get('/login', accountsController.login);
 app.get('/question', questionController.getAllQuestions);
@@ -42,14 +55,13 @@ app.get("/comments/:postId", commentsController.getCommentsByPost);
 app.get("/postReports", postReportsController.getAllPostReports);
 app.get("/postReports/:postRptId", postReportsController.getPostReportById);
 app.get("/volunteers", volunteersController.getAllVolunteers);
-app.get("/volunteer/:volId", volunteersController.getVolunteerById);
 app.get("/volunteers/:postId", volunteersController.getVolunteersByPost);
 app.get("/baninfo/:accName", baninfoController.getBanInfo);
 app.get("/muteinfo/:accName", muteinfoController.getMuteInfo);
 app.get("/unapprovedposts/:dscName", postsController.getUnapprovedPostsByDiscussion);
 app.post("/question", questionController.createQuestion);
 app.post("/muteinfo", muteinfoController.addMuteInfo);
-app.post("/baninfo", baninfoController.addBanInfo); 
+app.post("/baninfo", baninfoController.addBanInfo);
 app.post("/postReport", postReportsController.createPostReport);
 app.post("/discussion", discussionController.createDiscussion);
 app.post("/comment", commentsController.createComment);
@@ -73,16 +85,15 @@ app.delete("/volunteer/:volId", volunteersController.deleteVolunteer);
 app.delete("/baninfo/:accName", baninfoController.removeBanInfo);
 app.delete("/muteinfo/:accName", muteinfoController.removeMuteInfo);
 
+// Start the server
 app.listen(port, async () => {
+    console.log(`Server listening on port ${port}`);
     try {
         await sql.connect(dbConfig);
         console.log("Database connection established successfully");
     } catch (err) {
         console.error("Database connection error:", err);
-        process.exit(1);
     }
-
-    console.log(`Server listening on port ${port}`);
 });
 
 process.on("SIGINT", async () => {
