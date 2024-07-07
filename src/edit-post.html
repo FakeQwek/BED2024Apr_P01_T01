@@ -36,9 +36,13 @@
                 <!-- Page content here -->
             </div>
             <div class="drawer-side w-2/3">
-              <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
                 <ul class="menu bg-white text-base-content min-h-full w-full items-center border-r-2">
                     <!-- Sidebar content here -->
+                    <div class="flex w-full m-2 lg:hidden">
+                        <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay">
+                            <img src="../images/chevron-left.svg" width="30px" />
+                        </label>
+                    </div>
                     <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
                         <li><a><span class="flex items-center w-full gap-2"><img src="../images/home-variant-outline.svg" width="30px" />Home</span></a></li>
                         <li><a><span class="flex items-center w-full gap-2"><img src="../images/account-circle-outline.svg" width="30px" />Profile</span></a></li>
@@ -61,7 +65,7 @@
         <!-- content -->
         <div class="flex justify-center w-5/6 max-[820px]:w-full">
             <div class="flex flex-col w-2/3 h-full max-[820px]:w-11/12">
-                <div class="flex w-full h-24 mt-4 mb-20 bg-white overflow-visible">
+                <div class="flex w-full h-24 mt-4 mb-20 bg-white rounded-xl overflow-visible">
                     <div class="ml-8 mt-12">
                         <img src="../images/account-circle-outline.svg" width="120px" />
                     </div>
