@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="output.css" rel="stylesheet">
+    <title>Document</title>
+</head>
+<body class="h-max bg-gray-100">
+    <!-- navbar -->
+    <div class="flex justify-center items-center h-12 bg-white border-b-2">
+        <div class="flex w-1/4">
+
+        </div>
+        <div class="flex justify-center w-1/2">
+            <input type="text" placeholder="Search" class="input input-sm input-bordered w-full rounded-full" />
+        </div>
+        <div class="flex justify-end w-1/4">
+            <button class="btn btn-sm mr-4">Login</button>
+            <button class="btn btn-sm mr-4">Sign Up</button>
+        </div>
+    </div>
+
+    <!-- main -->
+    <div class="flex flex-row h-full">
+        <!-- sidebar -->
+        <div class="flex flex-col items-center w-1/6 h-max bg-white border-r-2">
+            <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+                <div class="flex items-center   ">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/home-variant-outline.svg" width="30px" />Home</span></button>
+                </div>
+                <div class="flex items-center   ">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/account-circle-outline.svg" width="30px" />Profile</span></button>
+                </div>
+                <div class="flex items-center   ">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/newspaper-variant-outline.svg" width="30px" />News</span></button>
+                </div>
+            </div>
+            <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+                <h2 class="font-bold mb-2">FOR YOU</h2>
+            </div>
+            <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+                <h2 class="font-bold mb-2">LEARN MORE</h2>
+                <div class="flex items-center   ">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/information-outline.svg" width="30px" />About Us</span></button>
+                </div>
+                <div class="flex items-center   ">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/phone-in-talk.svg" width="30px" />Contact Us</span></button>
+                </div>
+                <div class="flex items-center   ">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/finance.svg" width="30px" />User Statistics</span></button>
+                </div>
+            </div>
+        </div>
+
+      
+
+        <!-- panel -->
+        <div class="flex w-4/6 flex-col h-full" id="panel-container">
+            <div class="bg-white card h-14 justify-center" id="title">
+               <h1 class="font-bold text-xl ml-8">Site Admin Panel</h1>
+              
+            </div>
+            <div class="bg-white card h-160" id="panel">
+                <div id="button-container" class="flex flex-row ml-8 mt-8">
+                    <button class="mr-4">Reported Posts</button>
+                    <button class="mr-4">Banned Users</button>
+                    <button class="mr-4">Muted Users</button>
+                </div>
+                <h1 class="font-bold text-xl ml-8 mt-4">Reported Posts</h1>
+                <div id="sort-container" class="flex flex-row ml-12 mt-4">
+                    <button class="mr-4 bg-gray-100 p-2 rounded-lg">new</button>
+                    <button class="bg-gray-100 p-2 rounded-lg">most reported</button>
+                </div>
+                <div class="bg-gray-100 card h-152 w-90per mt-8 m-auto" id="post-box">
+
+                </div>
+               
+             </div>
+        </div>
+    
+        
+        
+    </div>
+</body>
+<script src="./js/siteadmin-reportedposts.js"></script>
+</html>
