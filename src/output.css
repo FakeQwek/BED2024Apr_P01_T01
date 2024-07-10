@@ -2757,6 +2757,26 @@ html:has(.drawer-toggle:checked) {
   position: relative;
 }
 
+.sticky {
+  position: sticky;
+}
+
+.top-0 {
+  top: 0px;
+}
+
+.z-10 {
+  z-index: 10;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.relative {
+  position: relative;
+}
+
 .z-10 {
   z-index: 10;
 }
@@ -2864,6 +2884,10 @@ html:has(.drawer-toggle:checked) {
 
 .mt-16 {
   margin-top: 4rem;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
 }
 
 .mt-28 {
@@ -3242,6 +3266,18 @@ html:has(.drawer-toggle:checked) {
   padding-bottom: 2rem;
 }
 
+.pt-0 {
+  padding-top: 0px;
+}
+
+.pt-1 {
+  padding-top: 0.25rem;
+}
+
+.pt-12 {
+  padding-top: 3rem;
+}
+
 .pt-4 {
   padding-top: 1rem;
 }
@@ -3304,6 +3340,8 @@ html:has(.drawer-toggle:checked) {
 .text-base-content {
   --tw-text-opacity: 1;
   color: var(--fallback-bc,oklch(var(--bc)/var(--tw-text-opacity)));
+.font-semibold {
+  font-weight: 600;
 }
 
 .text-black {

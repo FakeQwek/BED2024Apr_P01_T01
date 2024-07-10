@@ -64,6 +64,20 @@ class Post {
         return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.OwnerID, row.DscName));
     }
 
+    static async getUnapprovedPostsByDiscussion(dscName) {
+        const connection = await sql.connect(dbConfig);
+
+        const sqlQuery = `SELECT * FROM Post WHERE DscName = @dscName AND isApproved = 0`;
+
+        const request = connection.request();
+        request.input("dscName", dscName);
+        const result = await request.query(sqlQuery);
+
+        connection.close();
+
+        return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.AccName, row.DscName));
+    }
+
     static async createPost(newPostData) {
         const connection = await sql.connect(dbConfig);
         
@@ -107,6 +121,17 @@ class Post {
         const request = connection.request();
         request.input("postId", postId);
         const result = await request.query(sqlQuery);
+
+        connection.close();
+    }
+
+    static async approvePost(postId) {
+        const connection = await sql.connect(dbConfig);
+        const sqlQuery = `UPDATE Post SET isApproved = 1 WHERE PostID = @postId`;
+
+        const request = connection.request();
+        request.input("postId", postId);
+        await request.query(sqlQuery);
 
         connection.close();
     }

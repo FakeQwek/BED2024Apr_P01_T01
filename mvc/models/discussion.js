@@ -59,6 +59,7 @@ class Discussion {
         connection.close();
     }
 
+
     static async updateDiscussionDescription(dscName, newDiscussionData) {
         const connection = await sql.connect(dbConfig);
 

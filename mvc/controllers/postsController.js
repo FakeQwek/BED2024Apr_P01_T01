@@ -35,6 +35,17 @@ const getPostsByDiscussion = async (req, res) => {
     }
 }
 
+const getUnapprovedPostsByDiscussion = async (req, res) => {
+    const dscName = req.params.dscName;
+    try {
+        const posts = await Post.getUnapprovedPostsByDiscussion(dscName);
+        res.json(posts);
+    } catch (error) {
+        console.error('Error fetching unapproved posts:', error);
+        res.status(500).send("Error fetching unapproved posts");
+    }
+};
+
 const createPost = async (req, res) => {
     const newPost = req.body;
     try {
@@ -59,7 +70,7 @@ const updatePost = async (req, res) => {
         console.log(error);
         res.status(500).send("Error updating post");
     }
-}
+};
 
 const deletePost = async (req, res) => {
     const postId = parseInt(req.params.postId);
@@ -75,6 +86,17 @@ const deletePost = async (req, res) => {
     }
 };
 
+const approvePost = async (req, res) => {
+    const postId = req.params.postId;
+    try {
+        await Post.approvePost(postId);
+        res.status(200).send("Post approved successfully");
+    } catch (error) {
+        console.error('Error approving post:', error);
+        res.status(500).send("Error approving post");
+    }
+};
+
 module.exports = {
     getAllPosts,
     getPostById,
@@ -82,4 +104,6 @@ module.exports = {
     createPost,
     deletePost,
     updatePost,
+    getUnapprovedPostsByDiscussion,
+    approvePost,
 };

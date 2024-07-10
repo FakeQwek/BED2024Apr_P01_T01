@@ -51,13 +51,15 @@ class News {
     static async createNews(newNewsData) {
         const connection = await sql.connect(dbConfig);
         
-        const sqlQuery = `INSERT INTO NewsPost (NewsID, NewsImage, NewsDesc, NewsSource) VALUES (@newsId, @newsImage, @newsDesc, @newsSource);`;
+        const sqlQuery = `INSERT INTO NewsPost (NewsID, NewsImage, NewsDesc, NewsSource, NewsContent, NewsDate) VALUES (@newsId, @newsImage, @newsDesc, @newsSource, @newsContent, @newsDate);`;
 
         const request = connection.request();
         request.input("newsId", newNewsData.newsId);
         request.input("newsImage", newNewsData.newsImage);
         request.input("newsDesc", newNewsData.newsDesc);
         request.input("newsSource", newNewsData.newsSource);
+        request.input("newsDate", newNewsData.newsDate);
+        request.input("newsContent", newNewsData.newsContent);
         const result = await request.query(sqlQuery);
 
         connection.close();
