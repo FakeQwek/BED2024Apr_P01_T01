@@ -34,7 +34,8 @@ CREATE TABLE Post (
  PostName varchar(100) NOT NULL, 
  PostDesc varchar(1000) NOT NULL, 
  isEvent varchar(5) NOT NULL, 
- isApproved varchar(5) NOT NULL, 
+ isApproved varchar(5) NOT NULL,
+ PostDate varchar(10) NOT NULL,
  OwnerID varchar(16) NOT NULL, 
  DscName varchar(16) NOT NULL 
  CONSTRAINT PK_Post PRIMARY KEY (PostID), 

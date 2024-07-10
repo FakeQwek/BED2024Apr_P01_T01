@@ -45,6 +45,7 @@ async function Posts() {
                                                 <div class="flex items-center gap-2">
                                                     <img src="../images/account-circle-outline.svg" width="30px" />
                                                     <h2 class="text-sm">` + posts[i].accName + `</h2>
+                                                    <h2 class="text-sm">` + posts[i].postDate + `</h2>
                                                 </div>
                                                 <!-- options dropdown -->
                                                 <div class="dropdown dropdown-end">
@@ -106,6 +107,7 @@ async function Posts() {
                                                 <div class="flex items-center gap-2">
                                                     <img src="../images/account-circle-outline.svg" width="30px" />
                                                     <h2 class="text-sm">` + posts[i].accName + `</h2>
+                                                    <h2 class="text-sm">` + posts[i].postDate + `</h2>
                                                 </div>
                                                 <!-- options dropdown -->
                                                 <div class="dropdown dropdown-end">

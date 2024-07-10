@@ -3,12 +3,13 @@ const dbConfig = require("../../dbConfig");
 const { request } = require("express");
 
 class Post {
-    constructor(postId, postName, postDesc, isEvent, isApproved, accName, dscName) {
+    constructor(postId, postName, postDesc, isEvent, isApproved, postDate, accName, dscName) {
         this.postId = postId;
         this.postName = postName;
         this.postDesc = postDesc;
         this.isEvent = isEvent;
         this.isApproved = isApproved;
+        this.postDate = postDate;
         this.accName = accName;
         this.dscName = dscName;
     }
@@ -23,7 +24,7 @@ class Post {
 
         connection.close();
 
-        return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.OwnerID, row.DscName));
+        return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.PostDate, row.OwnerID, row.DscName));
     }
 
     static async getPostById(postId) {
@@ -44,6 +45,7 @@ class Post {
                 result.recordset[0].PostDesc,
                 result.recordset[0].isEvent,
                 result.recordset[0].isApproved,
+                result.recordset[0].PostDate,
                 result.recordset[0].OwnerID,
                 result.recordset[0].DscName
             )
@@ -61,7 +63,7 @@ class Post {
 
         connection.close();
 
-        return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.OwnerID, row.DscName));
+        return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.PostDate, row.OwnerID, row.DscName));
     }
 
     static async getUnapprovedPostsByDiscussion(dscName) {
@@ -75,18 +77,19 @@ class Post {
 
         connection.close();
 
-        return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.AccName, row.DscName));
+        return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.PostDate, row.AccName, row.DscName));
     }
 
     static async createPost(newPostData) {
         const connection = await sql.connect(dbConfig);
         
-        const sqlQuery = `INSERT INTO Post (PostID, PostName, PostDesc, isEvent, isApproved, OwnerID, DscName) SELECT CASE WHEN COUNT(*) = 0 THEN 1 ELSE MAX(PostID) + 1 END, @postName, @postDesc, @isEvent, 'False', @accName, @dscName FROM Post;`;
+        const sqlQuery = `INSERT INTO Post (PostID, PostName, PostDesc, isEvent, isApproved, PostDate, OwnerID, DscName) SELECT CASE WHEN COUNT(*) = 0 THEN 1 ELSE MAX(PostID) + 1 END, @postName, @postDesc, @isEvent, 'False', @postDate, @accName, @dscName FROM Post;`;
 
         const request = connection.request();
         request.input("postName", newPostData.postName);
         request.input("postDesc", newPostData.postDesc);
         request.input("isEvent", newPostData.isEvent);
+        request.input("postDate", newPostData.postDate);
         request.input("accName", newPostData.accName);
         request.input("dscName", newPostData.dscName);
 

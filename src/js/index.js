@@ -64,7 +64,8 @@ async function Posts() {
                                             <div class="flex justify-between">
                                                 <div class="flex items-center gap-2">
                                                     <img src="../images/account-circle-outline.svg" width="30px" />
-                                                    <h2 class="text-sm">d:` + posts[i].dscName + `</h2>
+                                                    <h2 class="text-md">d:` + posts[i].dscName + `</h2>
+                                                    <h2 class="text-sm">` + posts[i].postDate + `</h2>
                                                 </div>
                                                 <!-- options dropdown -->
                                                 <div class="dropdown dropdown-end">

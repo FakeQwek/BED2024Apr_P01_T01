@@ -7,6 +7,7 @@ const postName = document.getElementById("postName");
 const postDesc = document.getElementById("postDesc");
 const postComments = document.getElementById("postComments");
 const postAccount = document.getElementById("postAccount");
+const postDate = document.getElementById("postDate");
 
 var discussionName;
 
@@ -48,6 +49,9 @@ async function Post() {
 
     const postAccountHTML = '<p>' + post.accName + '<p>';
     postAccount.insertAdjacentHTML("beforeend", postAccountHTML);
+
+    const postDateHTML = '<p>' + post.postDate + '<p>';
+    postDate.insertAdjacentHTML("beforeend", postDateHTML);
 
     Discussion(post.dscName);
 };
