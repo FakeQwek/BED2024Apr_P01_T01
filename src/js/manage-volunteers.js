@@ -44,14 +44,14 @@ async function Volunteers() {
         } else {
             const volunteerHTML = `<div class="card w-11/12 h-fit bg-white mt-4">
                                         <div class="card-body">
-                                            <div class="card-title flex justify-between items-center">
+                                            <div class="card-title flex justify-between items-center max-[820px]:flex-col max-[820px]:items-start">
                                                 <div class="flex items-center gap-2">
                                                     <img src="../images/account-circle-outline.svg" width="30px" />
                                                     <h2 class="text-sm">` + volunteers[i].accName + `</h2>
                                                 </div>
-                                                <div class="flex gap-4">
+                                                <div class="flex gap-4 max-[820px]:gap-0">
                                                     <button class="btn btn-sm bg-white border-0 shadow-none"><img src="../images/check.svg" width="20px" onclick="approveVolunteer(` + volunteers[i].volId + `)"></button>
-                                                    <button class="btn btn-sm bg-white border-0 shadow-none"><img src="../images/close.svg" width="20px" onclick="deleteVol(` + volunteers[i].volId + `)"></button>
+                                                    <button class="btn btn-sm bg-white border-0 shadow-none"><img src="../images/close.svg" width="20px" onclick="deleteVolunteer(` + volunteers[i].volId + `)"></button>
                                                 </div>
                                             </div>
                                         </div>
@@ -68,12 +68,14 @@ async function approveVolunteerAsync(volId) {
 };
 
 function approveVolunteer(volId) {
-    window.location.href = "http://127.0.0.1:5500/src/manage-volunteers.html?postId=" + postId;
+    location.reload();
+
     approveVolunteerAsync(volId);
 }
 
 
 async function deleteVolunteerAsync(volId) {
+    console.log("sdfdsf");
     await fetch("http://localhost:3000/volunteer/" + volId, {
         method: "DELETE"
     });
@@ -81,7 +83,8 @@ async function deleteVolunteerAsync(volId) {
 
 
 function deleteVolunteer(volId) {
-    window.location.href = "http://127.0.0.1:5500/src/manage-volunteers.html?postId=" + postId;
+    location.reload();
+    
     deleteVolunteerAsync(volId);
 };
 

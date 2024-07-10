@@ -23,7 +23,7 @@ class Post {
 
         connection.close();
 
-        return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.AccName, row.DscName));
+        return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.OwnerID, row.DscName));
     }
 
     static async getPostById(postId) {
@@ -44,7 +44,7 @@ class Post {
                 result.recordset[0].PostDesc,
                 result.recordset[0].isEvent,
                 result.recordset[0].isApproved,
-                result.recordset[0].AccName,
+                result.recordset[0].OwnerID,
                 result.recordset[0].DscName
             )
             : null;
@@ -61,7 +61,7 @@ class Post {
 
         connection.close();
 
-        return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.AccName, row.DscName));
+        return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.OwnerID, row.DscName));
     }
 
     static async getUnapprovedPostsByDiscussion(dscName) {
@@ -81,7 +81,7 @@ class Post {
     static async createPost(newPostData) {
         const connection = await sql.connect(dbConfig);
         
-        const sqlQuery = `INSERT INTO Post (PostID, PostName, PostDesc, isEvent, isApproved, AccName, DscName) SELECT CASE WHEN COUNT(*) = 0 THEN 1 ELSE MAX(PostID) + 1 END, @postName, @postDesc, @isEvent, 'False', @accName, @dscName FROM Post;`;
+        const sqlQuery = `INSERT INTO Post (PostID, PostName, PostDesc, isEvent, isApproved, OwnerID, DscName) SELECT CASE WHEN COUNT(*) = 0 THEN 1 ELSE MAX(PostID) + 1 END, @postName, @postDesc, @isEvent, 'False', @accName, @dscName FROM Post;`;
 
         const request = connection.request();
         request.input("postName", newPostData.postName);
@@ -98,16 +98,17 @@ class Post {
     static async updatePost(postId, newPostData) {
         const connection = await sql.connect(dbConfig);
 
-        const sqlQuery = `UPDATE Post SET PostName = @postName, PostDesc = @postDesc WHERE PostID = @postId`;
+        const sqlQuery = `UPDATE Post SET PostName = @postName, PostDesc = @postDesc, isEvent = @isEvent WHERE PostID = @postId`;
 
         const request = connection.request();
         request.input("postId", postId);
         request.input("postName", newPostData.postName || null);
         request.input("postDesc", newPostData.postDesc || null);
+        request.input("isEvent", newPostData.isEvent);
 
         await request.query(sqlQuery);
 
-        connection.close()
+        connection.close();
 
         return this.getPostById(postId);
     }
