@@ -1,7 +1,7 @@
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const postId = urlParams.get("postId");
-console.log(postId);
+let approvedVolunteerCount = 0;
 
 async function Post() {
     const res = await fetch("http://localhost:3000/post/" + postId);
@@ -18,7 +18,7 @@ async function Post() {
 
     postNameHTML = `<h2 class="text-2xl font-bold m-8">` + post.postName + `</h2>`;
 
-    postName.insertAdjacentHTML("beforeend", postNameHTML);
+    postName.insertAdjacentHTML("afterbegin", postNameHTML);
 };
 
 async function Volunteers() {
@@ -30,6 +30,7 @@ async function Volunteers() {
 
     for (let i = 0; i < volunteers.length; i++) {
         if (volunteers[i].isApproved == "True") {
+            approvedVolunteerCount++;
             const volunteerHTML = `<div class="card w-11/12 h-fit bg-white mt-4">
                                         <div class="card-body">
                                             <div class="card-title flex justify-between items-center">
@@ -59,6 +60,12 @@ async function Volunteers() {
             postVolunteers.insertAdjacentHTML("beforeend", volunteerHTML);
         }
     }
+
+    const postName = document.getElementById("postName");
+
+    const approvedVolunteersHTML = `<h2 class="text-md m-8">` + approvedVolunteerCount + ` Volunteers Approved</h2>`;
+
+    postName.insertAdjacentHTML("beforeend", approvedVolunteersHTML);
 };
 
 async function approveVolunteerAsync(volId) {
