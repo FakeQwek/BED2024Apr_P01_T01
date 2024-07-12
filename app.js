@@ -19,6 +19,7 @@ const newsController = require("./mvc/controllers/newsController");
 const baninfoController = require("./mvc/controllers/baninfoController");
 const muteinfoController = require("./mvc/controllers/muteinfoController");
 const questionController = require("./mvc/controllers/questionController");
+const siteadminPostReportController = require("./mvc/controllers/siteadminPostReportController");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -34,11 +35,9 @@ app.use(cors({
 app.use(helmet());
 app.use(morgan('combined')); // HTTP request logger
 
-// Route definitions
-app.delete('/deleteAccount', accountsController.deleteAccount); // Add this line
-app.put('/updateProfile', accountsController.updateProfile);
-app.post('/signup', accountsController.signup);
-app.post('/login', accountsController.login); // Changed to POST
+//Route Definitions
+app.get('/siteadminPostReport', siteadminPostReportController.getAllPostReports);
+app.get('/login', accountsController.login);
 app.get('/question', questionController.getAllQuestions);
 app.get('/question/:questionId', questionController.getQuestionById);
 app.get("/news", newsController.getAllNews);
@@ -64,6 +63,8 @@ app.get("/volunteers/:postId", volunteersController.getVolunteersByPost);
 app.get("/baninfo/:accName", baninfoController.getBanInfo);
 app.get("/muteinfo/:accName", muteinfoController.getMuteInfo);
 app.get("/unapprovedposts/:dscName", postsController.getUnapprovedPostsByDiscussion);
+app.get("/discussionMembers", discussionMembersController.getAllDiscussionMembers);
+app.get("/discussionMembers/:dscName", discussionMembersController.getDiscussionMembersByDiscussion);
 app.post("/question", questionController.createQuestion);
 app.post("/muteinfo", muteinfoController.addMuteInfo);
 app.post("/baninfo", baninfoController.addBanInfo);
@@ -73,6 +74,9 @@ app.post("/discussion", discussionController.createDiscussion);
 app.post("/comment", commentsController.createComment);
 app.post("/post", postsController.createPost);
 app.post("/volunteer", volunteersController.createVolunteer);
+app.post('/signup', accountsController.signup);
+app.post('/login', accountsController.login);
+app.post("/news", newsController.createNews);
 app.put('/promoteUser/:accName', accountsController.promoteUser);
 app.put('/demoteUser/:accName', accountsController.demoteUser);
 app.put("/accounts/mute/:accName", accountsController.muteUser);
@@ -85,7 +89,7 @@ app.put("/comment/:cmtId", commentsController.updateComment);
 app.put("/volunteer/:volId", volunteersController.approveVolunteer);
 app.put("/accounts/unban/:accName", accountsController.unbanAccount);
 app.put("/accounts/unmute/:accName", accountsController.unmuteUser);
-app.post("/news", newsController.createNews);
+app.put('/updateProfile', accountsController.updateProfile);
 app.put("/news/:newsId", newsController.updateNews);
 app.delete("/news/:newsId", newsController.deleteNews);
 app.delete("/comment/:cmtId", commentsController.deleteComment);
@@ -93,10 +97,11 @@ app.delete("/posts/:postId", postsController.deletePost);
 app.delete("/volunteer/:volId", volunteersController.deleteVolunteer);
 app.delete("/baninfo/:accName", baninfoController.removeBanInfo);
 app.delete("/muteinfo/:accName", muteinfoController.removeMuteInfo);
+app.delete("/siteadminApprove/:reportId", siteadminPostReportController.deletePostReport);
+app.delete("/siteadminDeny/:postId", siteadminPostReportController.deletePostReport);
+app.delete("/siteadminPost/:postId", siteadminPostReportController.deletePost);
+app.delete('/deleteAccount', accountsController.deleteAccount);
 
-app.get("/discussionMembers", discussionMembersController.getAllDiscussionMembers);
-app.get("/discussionMembers/:dscName", discussionMembersController.getDiscussionMembersByDiscussion);
-app.post("/discussionMember/:dscName", discussionMembersController.createDiscussionMember);
 
 // Start the server
 app.listen(port, async () => {
