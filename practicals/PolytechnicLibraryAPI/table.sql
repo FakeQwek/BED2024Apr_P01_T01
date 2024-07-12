@@ -13,3 +13,4 @@ author varchar(255) NOT NULL,
 availability varchar(1) NOT NULL,
 CONSTRAINT PK_Books PRIMARY KEY (book_id),
 CONSTRAINT  CHK_Books_availability CHECK (availability IN ('Y', 'N')));
+

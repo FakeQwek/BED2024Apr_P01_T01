@@ -37,7 +37,7 @@ async function Posts() {
 
     for (let i = 0; i < posts.length; i++) {
         if (posts[i].isEvent == "True") {
-            const postHTML = `<div class="card w-full h-fit bg-white">
+            const postHTML = `<div class="card w-full h-fit bg-white" onclick="goToPost(` + posts[i].postId + `)">
                                 <div class="card-body">
                                     <div class="card-title flex justify-between items-center">
                                         <div class="flex flex-col justify-between w-full gap-2">
@@ -58,17 +58,16 @@ async function Posts() {
                                                         <div class="modal-box flex flex-col h-2/3 rounded-3xl gap-2">
                                                             <h2 class="font-bold text-2xl">Submit a report</h2>
                                                             <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                                                            <select class="select select-bordered w-full mt-4">
-                                                                <option hidden>Issue</option>
+                                                            <select id="postReportCat` + posts[i].postId + `" class="select select-bordered w-full mt-4">
                                                                 <option>Hate speech</option>
                                                                 <option>Minor abuse or sexualisation</option>
                                                                 <option>Self-harm or suicide</option>
                                                             </select>
-                                                            <textarea class="textarea textarea-bordered h-2/3 resize-none mt-4" placeholder="Description"></textarea>
+                                                            <textarea id="postReportDesc` + posts[i].postId + `" class="textarea textarea-bordered h-2/3 resize-none mt-4" placeholder="Description"></textarea>
                                                             <div class="modal-action">
                                                                 <form class="flex gap-4" method="dialog">
                                                                     <button class="btn btn-sm">Cancel</button>
-                                                                    <button class="btn btn-sm bg-red-500 text-white">Submit</button>
+                                                                    <button class="btn btn-sm bg-red-500 text-white" onclick="createPostReport(` + posts[i].postId + `)">Submit</button>
                                                                 </form>
                                                             </div>
                                                         </div>
@@ -93,13 +92,13 @@ async function Posts() {
                                     </div>
                                     <p>` + posts[i].postDesc + `</p>
                                     <div class="flex justify-end">
-                                        <button id=` + i + ` class="btn btn-sm" onclick="createVolunteer(` + i + `)">Join</button>
+                                        <button id=` + posts[i].postId + ` class="btn btn-sm" onclick="createVolunteer(` + posts[i].postId + `)">Join</button>
                                     </div>
                                 </div>
                             </div>`;
             discussionPosts.insertAdjacentHTML("beforeend", postHTML);
         } else {
-            const postHTML = `<div class="card w-full h-fit bg-white">
+            const postHTML = `<div class="card w-full h-fit bg-white" onclick="goToPost(` + posts[i].postId + `)">
                                 <div class="card-body">
                                     <div class="card-title flex justify-between items-center">
                                         <div class="flex flex-col justify-between w-full gap-2">
@@ -120,17 +119,16 @@ async function Posts() {
                                                         <div class="modal-box flex flex-col h-2/3 rounded-3xl gap-2">
                                                             <h2 class="font-bold text-2xl">Submit a report</h2>
                                                             <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                                                            <select class="select select-bordered w-full mt-4">
-                                                                <option hidden>Issue</option>
+                                                            <select id="postReportCat` + posts[i].postId + `" class="select select-bordered w-full mt-4">
                                                                 <option>Hate speech</option>
                                                                 <option>Minor abuse or sexualisation</option>
                                                                 <option>Self-harm or suicide</option>
                                                             </select>
-                                                            <textarea class="textarea textarea-bordered h-2/3 resize-none mt-4" placeholder="Description"></textarea>
+                                                            <textarea id="postReportDesc` + posts[i].postId + `" class="textarea textarea-bordered h-2/3 resize-none mt-4" placeholder="Description"></textarea>
                                                             <div class="modal-action">
                                                                 <form class="flex gap-4" method="dialog">
                                                                     <button class="btn btn-sm">Cancel</button>
-                                                                    <button class="btn btn-sm bg-red-500 text-white">Submit</button>
+                                                                    <button class="btn btn-sm bg-red-500 text-white" onclick="createPostReport(` + posts[i].postId + `)">Submit</button>
                                                                 </form>
                                                             </div>
                                                         </div>
@@ -161,18 +159,27 @@ async function Posts() {
     }
 };
 
+const memberCount = document.getElementById("memberCount");
+
+async function DiscussionMembers() {
+    const res = await fetch("http://localhost:3000/discussionMembers/" + discussionName);
+    const discussionMembers = await res.json();
+    
+    memberCount.innerHTML = `<h2 class="font-bold">` + discussionMembers.length + `</h2>`
+}
+
 async function deletePost(postId) {
     await fetch("http://localhost:3000/posts/" + postId, {
         method: "DELETE"
     });
-    window.location.href = "http://127.0.0.1:5500/src/discussion.html?discussionName=" + discussionName;
+    location.reload();
 }
 
 async function createVolunteer(postId) {
     await fetch("http://localhost:3000/volunteer", {
         method: "POST",
         body: JSON.stringify({
-            accName: "ApplestTan",
+            accName: "AppleTan",
             isApproved: "False",
             postId: postId
         }),
@@ -182,9 +189,100 @@ async function createVolunteer(postId) {
     });
 }
 
+const editDesc = document.getElementById("editDesc");
+
+async function editDiscussionDescription() {
+    await fetch ("http://localhost:3000/discussion/" + discussionName, {
+        method: "PUT",
+        body: JSON.stringify({
+            "dscDesc": editDesc.value,
+        }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    })
+    location.reload();
+}
+
+async function createPostReport(postId) {
+    const postReportCat = document.getElementById("postReportCat" + postId);
+    const postReportDesc = document.getElementById("postReportDesc" + postId);
+
+    await fetch("http://localhost:3000/postReport", {
+        method: "POST",
+        body: JSON.stringify({
+            postRptCat: postReportCat.value,
+            postRptDesc: postReportDesc.value,
+            accName: "AppleTan",
+            postId: postId
+        }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    })
+}
+
+async function createDiscussionReport() {
+    const dscReportCat = document.getElementById("dscReportCat");
+    const dscReportDesc = document.getElementById("dscReportDesc");
+
+    await fetch("http://localhost:3000/discussionReport", {
+        method: "POST",
+        body: JSON.stringify({
+            dscRptCat: dscReportCat.value,
+            dscRptDesc: dscReportDesc.value,
+            accName: "AppleTan",
+            dscName: discussionName
+        }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    })
+}
+
+async function createDiscussionMember() {
+    console.log(discussionName);
+    await fetch("http://localhost:3000/discussionMember/" + discussionName, {
+        method: "POST",
+        body: JSON.stringify({
+            accName: "AppleTan"
+        }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    })
+}
+
 function goToCreatePost() {
-    window.location.href = "http://127.0.0.1:5500/src/create-post.html?discussionName=" + discussionName;
+    var script = document.getElementsByTagName("script");
+    var url = script[script.length-1].src;
+    for (let i = 0; i < url.length; i++) {
+        if (url.slice(-1) != "/") {
+            url = url.substring(0, url.length - 1);
+        } else {
+            break;
+        }
+    }
+    url = url.substring(0, url.length - 3);
+    url = url.concat("create-post.html?discussionName=" + discussionName);
+    window.location.href = url;
+}
+
+function goToPost(postId) {
+    // var script = document.getElementsByTagName("script");
+    // var url = script[script.length-1].src;
+    // for (let i = 0; i < url.length; i++) {
+    //     if (url.slice(-1) != "/") {
+    //         url = url.substring(0, url.length - 1);
+    //     } else {
+    //         break;
+    //     }
+    // }
+    // url = url.substring(0, url.length - 3);
+    // url = url.concat("post.html?postId=" + postId);
+    // window.location.href = url;
 }
 
 Discussion();
 Posts();
+DiscussionMembers();
