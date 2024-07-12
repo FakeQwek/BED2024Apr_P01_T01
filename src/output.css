@@ -2686,7 +2686,13 @@ input.tab:checked + .tab-content,
   margin-bottom: 2rem;
 }
 
+.ml-100 {
+  margin-left: 25rem;
+}
 
+.ml-64 {
+  margin-left: 16rem;
+}
 
 .ml-32 {
   margin-left: 8rem;
@@ -2714,6 +2720,10 @@ input.tab:checked + .tab-content,
 
 .m-auto {
   margin:auto;
+}
+
+.mr-1 {
+  margin-right: 0.25rem;
 }
 
 .mr-2 {
@@ -2804,6 +2814,10 @@ input.tab:checked + .tab-content,
   height: 10rem;
 }
 
+.h-60 {
+  height: 15rem;
+}
+
 
 .h-5\/6 {
   height: 83.333333%;
@@ -2815,6 +2829,10 @@ input.tab:checked + .tab-content,
 
 .h-80 {
   height: 20rem;
+}
+
+.h-120 {
+  height: 30rem;
 }
 
 .h-152 {
@@ -2916,9 +2934,17 @@ input.tab:checked + .tab-content,
   width: 100%;
 }
 
+.w-95per {
+  width: 95%;
+}
+
 .w-90per {
   width: 90%;
 }
+
+.w-80per {
+  width: 80%;
+} 
 
 .w-70per {
   width: 70%;
@@ -2954,6 +2980,10 @@ input.tab:checked + .tab-content,
 
 .flex-row {
   flex-direction: row;
+}
+
+.flex-end {
+  justify-content: flex-end;
 }
 
 .flex-row-reverse {

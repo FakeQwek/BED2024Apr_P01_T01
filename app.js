@@ -14,6 +14,7 @@ const newsController = require("./mvc/controllers/newsController");
 const baninfoController = require("./mvc/controllers/baninfoController");
 const muteinfoController = require("./mvc/controllers/muteinfoController");
 const questionController = require("./mvc/controllers/questionController");
+const siteadminPostReportController = require("./mvc/controllers/siteadminPostReportController");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -22,7 +23,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
-app.post('/signup', accountsController.signup);
+
+app.get('/siteadminPostReport', siteadminPostReportController.getAllPostReports);
 app.get('/login', accountsController.login);
 app.get('/question', questionController.getAllQuestions);
 app.get('/question/:questionId', questionController.getQuestionById);
@@ -55,6 +57,7 @@ app.post("/discussion", discussionController.createDiscussion);
 app.post("/comment", commentsController.createComment);
 app.post("/post", postsController.createPost);
 app.post("/volunteer", volunteersController.createVolunteer);
+app.post('/signup', accountsController.signup);
 app.put('/promoteUser/:accName', accountsController.promoteUser);
 app.put('/demoteUser/:accName', accountsController.demoteUser);
 app.put("/accounts/mute/:accName", accountsController.muteUser);
@@ -72,6 +75,9 @@ app.delete("/posts/:postId", postsController.deletePost);
 app.delete("/volunteer/:volId", volunteersController.deleteVolunteer);
 app.delete("/baninfo/:accName", baninfoController.removeBanInfo);
 app.delete("/muteinfo/:accName", muteinfoController.removeMuteInfo);
+app.delete("/siteadminApprove/:reportId", siteadminPostReportController.deletePostReport);
+app.delete("/siteadminDeny/:postId", siteadminPostReportController.deletePostReport);
+app.delete("/siteadminPost/:postId", siteadminPostReportController.deletePost);
 
 app.listen(port, async () => {
     try {

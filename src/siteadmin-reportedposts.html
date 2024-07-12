@@ -58,21 +58,21 @@
         <!-- panel -->
         <div class="flex w-4/6 flex-col h-full" id="panel-container">
             <div class="bg-white card h-14 justify-center" id="title">
-               <h1 class="font-bold text-xl ml-8">Site Admin Panel</h1>
+               <h1 class="font-bold text-xl ml-8 flex flex-row items-center">Site Admin Panel<img src="../images/account-circle-outline.svg" width="75px" height="75px" class="ml-100"></h1>
               
             </div>
-            <div class="bg-white card h-160" id="panel">
+            <div class="bg-white card p-8 mb-8" id="panel">
                 <div id="button-container" class="flex flex-row ml-8 mt-8">
-                    <button class="mr-4">Reported Posts</button>
-                    <button class="mr-4">Banned Users</button>
+                    <button class="mr-8"><u>Reported Posts</u></button>
+                    <button class="mr-8">Banned Users</button>
                     <button class="mr-4">Muted Users</button>
                 </div>
                 <h1 class="font-bold text-xl ml-8 mt-4">Reported Posts</h1>
                 <div id="sort-container" class="flex flex-row ml-12 mt-4">
-                    <button class="mr-4 bg-gray-100 p-2 rounded-lg">new</button>
-                    <button class="bg-gray-100 p-2 rounded-lg">most reported</button>
+                    <button class="mr-4 bg-gray-100 p-2 rounded-lg flex flex-row"><img src="../images/star.svg" width="25px" height="25px">new</button>
+                        <button class="bg-gray-100 p-2 rounded-lg flex flex-row"><img src="../images/flag-reports.svg" width="25px" height="25px" class="mr-1">most reported</button>
                 </div>
-                <div class="bg-gray-100 card h-152 w-90per mt-8 m-auto" id="post-box">
+                <div class="bg-gray-100 card w-90per mt-8 m-auto p-8" id="post-box">
 
                 </div>
                

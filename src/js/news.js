@@ -6,6 +6,7 @@ const loadContainer = document.getElementById("load-container");
 currentPostIndex = 0;
 currentPosts = {};
 
+
 //Gets and adds initial news posts
 getAllNews();
 storednewsData = [];
@@ -134,10 +135,10 @@ async function getAllNews() {
         return response.json();
     })
     .then(newsData => {
-    
+        
         for (i = 0; i < newsData.length; i++) {
             storednewsData.push(newsData[i]);
-            console.log(newsData[i]);  
+            console.log(storednewsData);  
         }
     
         populateNews(storednewsData, newsContainer);
@@ -179,7 +180,7 @@ async function postNews(url, article) {
             newsSource: source['name'],
             newsDate: date,
             newsContent: content,
-            newsUrl: newsUrl,
+            newsUrl: newsUrl
 
             }),
     });
