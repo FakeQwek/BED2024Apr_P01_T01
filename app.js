@@ -38,7 +38,7 @@ app.use(morgan('combined')); // HTTP request logger
 app.delete('/deleteAccount', accountsController.deleteAccount); // Add this line
 app.put('/updateProfile', accountsController.updateProfile);
 app.post('/signup', accountsController.signup);
-app.get('/login', accountsController.login);
+app.post('/login', accountsController.login); // Changed to POST
 app.get('/question', questionController.getAllQuestions);
 app.get('/question/:questionId', questionController.getQuestionById);
 app.get("/news", newsController.getAllNews);

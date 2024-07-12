@@ -68,7 +68,7 @@ const signup = async (req, res) => {
 };
 
 const login = async (req, res) => {
-    const { usernameOrEmail, password } = req.query;
+    const { usernameOrEmail, password } = req.body;
 
     if (!usernameOrEmail || !password) {
         return res.status(400).send('Both fields are required');
@@ -109,14 +109,29 @@ const login = async (req, res) => {
 };
 
 const updateProfile = async (req, res) => {
-    const { username, email, phoneNumber } = req.body;
+    const { currentEmail, username, email, phoneNumber } = req.body;
+
+    if (!currentEmail || !username || !email) {
+        return res.status(400).send('Current email, Username, and New email are required');
+    }
+
     try {
         const pool = await sql.connect(dbConfig);
+        const query = `
+            UPDATE Account
+            SET 
+                AccName = @newUsername,
+                AccEmail = @newEmail,
+                PhoneNumber = @newPhoneNumber
+            WHERE AccEmail = @currentEmail
+        `;
+
         const result = await pool.request()
             .input('newUsername', sql.VarChar, username)
             .input('newEmail', sql.VarChar, email)
             .input('newPhoneNumber', sql.VarChar, phoneNumber || null)
-            .query('UPDATE Account SET AccName = @newUsername, AccEmail = @newEmail, PhoneNumber = @newPhoneNumber WHERE AccEmail = @newEmail');
+            .input('currentEmail', sql.VarChar, currentEmail)
+            .query(query);
 
         if (result.rowsAffected[0] > 0) {
             res.json({ message: 'Profile updated successfully' });
