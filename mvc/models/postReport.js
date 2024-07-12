@@ -48,7 +48,7 @@ class PostReport {
     static async createPostReport(newPostReportData) {
         const connection = await sql.connect(dbConfig);
 
-        const sqlQuery = `INSERT INTO PostReport (PostRptID, PostRptCat, PostRptDesc, AccName, PostID) SELECT MAX(PostRptID) + 1, @postRptCat, @postRptDesc, @accName, @postId FROM PostReport;`;
+        const sqlQuery = `INSERT INTO PostReport (PostRptID, PostRptCat, PostRptDesc, AccName, PostID) SELECT CASE WHEN COUNT(*) = 0 THEN 1 ELSE MAX(PostRptID) + 1 END, @postRptCat, @postRptDesc, @accName, @postId FROM PostReport;`;
 
         const request = connection.request();
         request.input("postRptCat", newPostReportData.postRptCat);

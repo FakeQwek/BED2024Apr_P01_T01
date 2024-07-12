@@ -6,12 +6,12 @@ const getAllPosts = async (req, res) => {
         res.json(posts);
     } catch (error) {
         console.log(error);
-        res.status(500).send("Error retrieving post");
+        res.status(500).send("Error retrieving posts");
     }
 };
 
 const getPostById = async (req, res) => {
-    const postId = parseInt(req.params.postId);
+    const postId = req.params.postId;
     try {
         const post = await Post.getPostById(postId);
         if (!post) {
@@ -33,7 +33,7 @@ const getPostsByDiscussion = async (req, res) => {
         console.log(error);
         res.status(500).send("Error retrieving posts");
     }
-}
+};
 
 const getUnapprovedPostsByDiscussion = async (req, res) => {
     const dscName = req.params.dscName;
@@ -49,8 +49,8 @@ const getUnapprovedPostsByDiscussion = async (req, res) => {
 const createPost = async (req, res) => {
     const newPost = req.body;
     try {
-        const createdPost = await Post.createPost(newPost);
-        res.status(201).json(createdPost);
+        await Post.createPost(newPost);
+        res.status(201).send("Post created successfully");
     } catch (error) {
         console.log(error);
         res.status(500).send("Error creating post");
@@ -58,14 +58,14 @@ const createPost = async (req, res) => {
 };
 
 const updatePost = async (req, res) => {
-    const postId = parseInt(req.params.postId);
+    const postId = req.params.postId;
     const newPostData = req.body;
     try {
         const updatedPost = await Post.updatePost(postId, newPostData);
-        if (!updatePost) {
+        if (!updatedPost) {
             return res.status(404).send("Post not found");
         }
-        res.json(updatePost);
+        res.json(updatedPost);
     } catch (error) {
         console.log(error);
         res.status(500).send("Error updating post");
@@ -73,11 +73,11 @@ const updatePost = async (req, res) => {
 };
 
 const deletePost = async (req, res) => {
-    const postId = parseInt(req.params.postId);
+    const postId = req.params.postId;
     try {
         const success = await Post.deletePost(postId);
         if (!success) {
-            return res.status(404).send("Post not found")
+            return res.status(404).send("Post not found");
         }
         res.status(204).send();
     } catch (error) {

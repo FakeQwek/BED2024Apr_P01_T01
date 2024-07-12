@@ -39,7 +39,7 @@
     <div class="flex justify-between items-center p-4">
         <img src="../images/socialise2.png" alt="socialise" class="h-8 ml-4">
         <div class="flex justify-end w-1/4">
-            <button class="btn btn-sm mr-4">Login</button>
+            <button class="btn btn-sm mr-4" id="loginButton">Login</button>
             <button class="btn btn-sm mr-4">Sign Up</button>
         </div>
     </div>
@@ -72,6 +72,10 @@
         </div>
     </div>
     <script>
+        document.getElementById('loginButton').addEventListener('click', function() {
+            window.location.href = 'login.html';
+        });
+
         document.getElementById('signupForm').addEventListener('submit', async function(event) {
             event.preventDefault();
             
@@ -96,26 +100,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

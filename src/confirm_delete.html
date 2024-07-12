@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Account Deletion</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgba(0, 0, 0, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .modal {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .modal-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .modal-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .modal-button-yes {
+            background-color: #d9534f;
+            color: white;
+        }
+        .modal-button-no {
+            background-color: #5bc0de;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="modal">
+        <h2>Are you sure you want to delete the account?</h2>
+        <div class="modal-footer">
+            <button class="modal-button modal-button-no" onclick="cancelDelete()">No</button>
+            <button class="modal-button modal-button-yes" onclick="confirmDelete()">Yes</button>
+        </div>
+    </div>
+
+    <script>
+        function cancelDelete() {
+            window.location.href = 'profile.html';
+        }
+
+        async function confirmDelete() {
+            const username = localStorage.getItem('username');
+            const email = localStorage.getItem('email');
+
+            try {
+                const response = await fetch('http://localhost:3000/deleteAccount', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, email })
+                });
+
+                if (response.ok) {
+                    alert('Account deleted successfully');
+                    window.location.href = 'Login.html'; // Redirect to login page
+                } else {
+                    alert('Failed to delete account');
+                    window.location.href = 'profile.html'; // Redirect back to profile page
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error deleting account');
+                window.location.href = 'profile.html'; // Redirect back to profile page
+            }
+        }
+    </script>
+</body>
+</html>
