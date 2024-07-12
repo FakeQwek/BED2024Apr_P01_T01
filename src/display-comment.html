@@ -233,51 +233,45 @@
                 <div class="flex flex-col bg-white p-4 rounded-lg shadow">
                     <div class="flex justify-between items-center border-b pb-4 mb-4">
                         <div class="flex items-center gap-8">
-                            <a href="profile.html" class="underline-animation active text-gray-500 pb-2">Overview</a>
+                            <a href="profile.html" class="underline-animation text-gray-500 pb-2">Overview</a>
                             <a href="display-post.html" class="underline-animation text-gray-500 pb-2">Posts</a>
-                            <a href="display-comment.html" class="underline-animation text-gray-500 pb-2">Comments</a>
+                            <a href="display-comment.html" class="underline-animation active text-gray-500 pb-2">Comments</a>
                         </div>
                     </div>
-                    <div class="text-center text-gray-500">u/henryneofan2 hasn’t done anything</div>
+                    <div id="comments-container">
+                        <!-- Comments will be injected here -->
+                    </div>
                 </div>
             </div>
         </main>
     </div>
 
     <script>
-        const overviewButton = document.getElementById('overviewButton');
-        const postsButton = document.getElementById('postsButton');
-        const commentsButton = document.getElementById('commentsButton');
-        const overviewSection = document.getElementById('overviewSection');
-        const postsSection = document.getElementById('postsSection');
-        const commentsSection = document.getElementById('commentsSection');
+        async function fetchComments() {
+            try {
+                const response = await fetch('http://localhost:3000/comments');
+                const comments = await response.json();
+                const commentsContainer = document.getElementById('comments-container');
+                comments.forEach(comment => {
+                    const commentElement = document.createElement('div');
+                    commentElement.className = 'post-card';
+                    commentElement.innerHTML = `
+                        <div class="post-header">
+                            <img src="../images/person.png" alt="User Profile Picture">
+                            <div>
+                                <div class="post-meta">u:${comment.ownerId}</div>
+                                <div class="post-title">${comment.cmtDesc}</div>
+                            </div>
+                        </div>
+                    `;
+                    commentsContainer.appendChild(commentElement);
+                });
+            } catch (error) {
+                console.error('Error fetching comments:', error);
+            }
+        }
 
-        overviewButton.addEventListener('click', () => {
-            overviewSection.classList.remove('hidden');
-            postsSection.classList.add('hidden');
-            commentsSection.classList.add('hidden');
-            overviewButton.classList.add('active');
-            postsButton.classList.remove('active');
-            commentsButton.classList.remove('active');
-        });
-
-        postsButton.addEventListener('click', () => {
-            overviewSection.classList.add('hidden');
-            postsSection.classList.remove('hidden');
-            commentsSection.classList.add('hidden');
-            postsButton.classList.add('active');
-            overviewButton.classList.remove('active');
-            commentsButton.classList.remove('active');
-        });
-
-        commentsButton.addEventListener('click', () => {
-            overviewSection.classList.add('hidden');
-            postsSection.classList.add('hidden');
-            commentsSection.classList.remove('hidden');
-            commentsButton.classList.add('active');
-            overviewButton.classList.remove('active');
-            postsButton.classList.remove('active');
-        });
+        window.onload = fetchComments;
     </script>
 </body>
 </html>

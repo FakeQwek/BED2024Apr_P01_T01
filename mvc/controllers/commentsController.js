@@ -11,7 +11,7 @@ const getAllComments = async (req, res) => {
 };
 
 const getCommentsByPost = async (req, res) => {
-    const postId = parseInt(req.params.postId);
+    const postId = req.params.postId;
     try {
         const comments = await Comment.getCommentsByPost(postId);
         res.json(comments);
@@ -24,8 +24,8 @@ const getCommentsByPost = async (req, res) => {
 const createComment = async (req, res) => {
     const newComment = req.body;
     try {
-        const createdComment = await Comment.createComment(newComment);
-        res.status(201).json(createComment);
+        await Comment.createComment(newComment);
+        res.status(201).send("Comment created successfully");
     } catch (error) {
         console.log(error);
         res.status(500).send("Error creating comment");
