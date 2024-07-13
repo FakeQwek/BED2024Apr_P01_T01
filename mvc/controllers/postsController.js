@@ -33,7 +33,7 @@ const getPostsByDiscussion = async (req, res) => {
         console.log(error);
         res.status(500).send("Error retrieving posts");
     }
-}
+};
 
 const getUnapprovedPostsByDiscussion = async (req, res) => {
     const dscName = req.params.dscName;

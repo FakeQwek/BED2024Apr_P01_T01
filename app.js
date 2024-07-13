@@ -19,6 +19,7 @@ const newsController = require("./mvc/controllers/newsController");
 const baninfoController = require("./mvc/controllers/baninfoController");
 const muteinfoController = require("./mvc/controllers/muteinfoController");
 const questionController = require("./mvc/controllers/questionController");
+const postLikesController = require("./mvc/controllers/postLikesController");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -97,6 +98,10 @@ app.delete("/muteinfo/:accName", muteinfoController.removeMuteInfo);
 app.get("/discussionMembers", discussionMembersController.getAllDiscussionMembers);
 app.get("/discussionMembers/:dscName", discussionMembersController.getDiscussionMembersByDiscussion);
 app.post("/discussionMember/:dscName", discussionMembersController.createDiscussionMember);
+
+app.get("/postLikes", postLikesController.getAllPostLikes);
+app.get("/postLike/:postId", postLikesController.getPostLikesByPost);
+app.post("/postLike", postLikesController.createPostLike);
 
 // Start the server
 app.listen(port, async () => {

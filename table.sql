@@ -122,3 +122,13 @@ CREATE TABLE DiscussionMember (
  CONSTRAINT FK_DiscussionMember_DscName FOREIGN KEY (DscName)
  REFERENCES Discussion(DscName),
  CONSTRAINT AK_AccName_DscName UNIQUE (AccName, DscName));
+
+CREATE TABLE PostLike (
+ PostLikeID varchar(10) NOT NULL,
+ AccName varchar(16) NOT NULL,
+ PostID varchar(10) NOT NULL
+ CONSTRAINT PK_PostLike PRIMARY KEY (PostLikeID),
+ CONSTRAINT FK_PostLike_AccName FOREIGN KEY (AccName)
+ REFERENCES Account(AccName),
+ CONSTRAINT FK_PostLike_PostID FOREIGN KEY (PostID)
+ REFERENCES Post(PostID));
