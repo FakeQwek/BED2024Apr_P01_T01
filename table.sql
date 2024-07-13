@@ -113,6 +113,7 @@ CREATE TABLE NewsPost (
 
 CREATE TABLE DiscussionMember (
  DscMemID varchar(10) NOT NULL,
+ DscMemRole varchar(6) NOT NULL,
  AccName varchar(16) NOT NULL,
  DscName varchar(16) NOT NULL
  CONSTRAINT PK_DiscussionMember PRIMARY KEY (DscMemID),

@@ -9,7 +9,6 @@ const editPostDesc = document.getElementById("editPostDesc");
 async function Discussion(dscName) { 
     const res = await fetch("http://localhost:3000/discussions/" + dscName);
     const discussion = await res.json();
-    console.log(discussion);
 
     const discussionName2 = document.getElementById("discussionName");
     const discussionName2HTML = `<h2>d:` + discussion.dscName + `</h2>`;

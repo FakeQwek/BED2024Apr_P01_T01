@@ -8,6 +8,7 @@ const postDesc = document.getElementById("postDesc");
 const postComments = document.getElementById("postComments");
 const postAccount = document.getElementById("postAccount");
 const postDate = document.getElementById("postDate");
+const postOptions = document.getElementById("postOptions");
 
 var discussionName;
 
@@ -52,6 +53,11 @@ async function Post() {
 
     const postDateHTML = '<p>' + post.postDate + '<p>';
     postDate.insertAdjacentHTML("beforeend", postDateHTML);
+
+    if (post.accName == "AppleTan") {
+        const postOptionsHTML = `<li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="delete_modal.showModal()"><span class="w-full">Delete</span></button></li>`;
+        postOptions.insertAdjacentHTML("beforeend", postOptionsHTML);
+    }
 
     Discussion(post.dscName);
 };
@@ -227,7 +233,14 @@ async function DiscussionMembers() {
     const res = await fetch("http://localhost:3000/discussionMembers/" + discussionName);
     const discussionMembers = await res.json();
 
-    memberCount.innerHTML = `<h2 class="font-bold">` + discussionMembers.length + `</h2>`
+    memberCount.innerHTML = `<h2 class="font-bold">` + discussionMembers.length + `</h2>`;
+
+        for (let i = 0; i < discussionMembers.length; i++) {
+        if (discussionMembers[i].dscMemRole == "Owner" && discussionMembers[i].accName == "AppleTan") {
+            const bannerOptionsHTML = `<li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="edit_discussion_modal.showModal()"><span class="w-full">Edit</span></button></li>`;
+            bannerOptions.insertAdjacentHTML("beforeend", bannerOptionsHTML);
+        }
+    }
 }
 
 Post();
