@@ -55,7 +55,8 @@ async function Post() {
     postDate.insertAdjacentHTML("beforeend", postDateHTML);
 
     if (post.accName == "AppleTan") {
-        const postOptionsHTML = `<li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="delete_modal.showModal()"><span class="w-full">Delete</span></button></li>`;
+        const postOptionsHTML = `<li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="delete_modal.showModal()"><span class="w-full">Delete</span></button></li>
+                                <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="goToEditPost(` + postId + `)"><span class="w-full">Edit</span></button></li>`;
         postOptions.insertAdjacentHTML("beforeend", postOptionsHTML);
     }
 
@@ -241,6 +242,21 @@ async function DiscussionMembers() {
             bannerOptions.insertAdjacentHTML("beforeend", bannerOptionsHTML);
         }
     }
+}
+
+function goToEditPost(postId) {
+    var script = document.getElementsByTagName("script");
+    var url = script[script.length-1].src;
+    for (let i = 0; i < url.length; i++) {
+        if (url.slice(-1) != "/") {
+            url = url.substring(0, url.length - 1);
+        } else {
+            break;
+        }
+    }
+    url = url.substring(0, url.length - 3);
+    url = url.concat("edit-post.html?discussionName=" + discussionName + "&postId=" + postId);
+    window.location.href = url;
 }
 
 Post();
