@@ -36,8 +36,25 @@ const createPostLike = async (req, res) => {
     }
 };
 
+const deletePostLike = async (req, res) => {
+    const accName = req.params.accName;
+    const postId = parseInt(req.params.postId);
+
+    try {
+        const success = await PostLike.deletePostLike(accName, postId);
+        if (!success) {
+            return res.status(404).send("Post like not found")
+        }
+        res.status(204).send();
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Error deleting post like");
+    }
+};
+
 module.exports = {
     getAllPostLikes,
     getPostLikesByPost,
     createPostLike,
+    deletePostLike,
 }

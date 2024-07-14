@@ -102,6 +102,7 @@ app.post("/discussionMember/:dscName", discussionMembersController.createDiscuss
 app.get("/postLikes", postLikesController.getAllPostLikes);
 app.get("/postLikes/:postId", postLikesController.getPostLikesByPost);
 app.post("/postLike", postLikesController.createPostLike);
+app.delete("/postLike/:accName/:postId", postLikesController.deletePostLike);
 
 // Start the server
 app.listen(port, async () => {

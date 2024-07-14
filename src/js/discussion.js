@@ -104,7 +104,7 @@ async function Posts() {
                                         <p>` + posts[i].postDesc + `</p>
                                         <div class="flex justify-between">
                                             <div id="likeCount` + posts[i].postId + `" class="flex items-center gap-4">
-                                                <button class="btn btn-sm" onclick="createPostLike(` + posts[i].postId + `)">Like</button>
+                                                <button id="likeButton` + posts[i].postId + `" class="btn btn-sm" onclick="createPostLike(` + posts[i].postId + `)"><img src="../images/thumb-up-outline.svg" width="20px"></button>
                                             </div>
                                             <button id=` + posts[i].postId + ` class="btn btn-sm" onclick="createVolunteer(` + posts[i].postId + `)">Join</button>
                                         </div>
@@ -155,7 +155,7 @@ async function Posts() {
                                         <p>` + posts[i].postDesc + `</p>
                                         <div class="flex justify-between">
                                             <div id="likeCount` + posts[i].postId + `" class="flex items-center gap-4">
-                                                <button class="btn btn-sm" onclick="createPostLike(` + posts[i].postId + `)">Like</button>
+                                                <button id="likeButton` + posts[i].postId + `" class="btn btn-sm" onclick="createPostLike(` + posts[i].postId + `)"><img src="../images/thumb-up-outline.svg" width="20px"></button>
                                             </div>
                                             <button id=` + posts[i].postId + ` class="btn btn-sm" onclick="createVolunteer(` + posts[i].postId + `)">Join</button>
                                         </div>
@@ -221,7 +221,7 @@ async function Posts() {
                                         </div>
                                         <p>` + posts[i].postDesc + `</p>
                                         <div id="likeCount` + posts[i].postId + `" class="flex items-center gap-4">
-                                            <button class="btn btn-sm" onclick="createPostLike(` + posts[i].postId + `)">Like</button>
+                                            <button id="likeButton` + posts[i].postId + `" class="btn btn-sm" onclick="createPostLike(` + posts[i].postId + `)"><img src="../images/thumb-up-outline.svg" width="20px"></button>
                                         </div>
                                     </div>
                                 </div>`;
@@ -269,7 +269,7 @@ async function Posts() {
                                         </div>
                                         <p>` + posts[i].postDesc + `</p>
                                         <div id="likeCount` + posts[i].postId + `" class="flex items-center gap-4">
-                                            <button class="btn btn-sm" onclick="createPostLike(` + posts[i].postId + `)">Like</button>
+                                            <button id="likeButton` + posts[i].postId + `" class="btn btn-sm" onclick="createPostLike(` + posts[i].postId + `)"><img src="../images/thumb-up-outline.svg" width="20px"></button>
                                         </div>
                                     </div>
                                 </div>`;
@@ -395,7 +395,6 @@ async function createDiscussionReport() {
 }
 
 async function createDiscussionMember() {
-    console.log(discussionName);
     await fetch("http://localhost:3000/discussionMember/" + discussionName, {
         method: "POST",
         body: JSON.stringify({
@@ -408,16 +407,33 @@ async function createDiscussionMember() {
 }
 
 async function createPostLike(postId) {
-    await fetch("http://localhost:3000/postLike/", {
-        method: "POST",
-        body: JSON.stringify({
-            accName: "AppleTan",
-            postId: postId
-        }),
-        headers: {
-            "Content-type": "application/json; charset=UTF-8"
-        }
-    })
+    const likeButton = document.getElementById("likeButton" + postId);
+    console.log(likeButton.innerHTML);
+    if (likeButton.innerHTML == `<img src="../images/thumb-up-outline.svg" width="20px">`) {
+        await fetch("http://localhost:3000/postLike/", {
+            method: "POST",
+            body: JSON.stringify({
+                accName: "AppleTan",
+                postId: postId
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+        likeButton.innerHTML = `<img src="../images/thumb-up.svg" width="20px">`;
+        const postLikeCount = document.getElementById("postLikeCount" + postId);
+        let likeCount =  parseInt(postLikeCount.innerHTML) + 1;
+        postLikeCount.innerHTML = likeCount;
+    } else {
+        await fetch("http://localhost:3000/postLike/" + "AppleTan" + "/" + postId , {
+            method: "DELETE"
+        });
+        likeButton.innerHTML = `<img src="../images/thumb-up-outline.svg" width="20px">`;
+        const postLikeCount = document.getElementById("postLikeCount" + postId);
+        let likeCount =  parseInt(postLikeCount.innerHTML)- 1;
+        postLikeCount.innerHTML = likeCount;
+
+    }
 }
 
 async function getPostLikesByPost(postId) {
@@ -426,9 +442,16 @@ async function getPostLikesByPost(postId) {
 
     const likeCount = document.getElementById("likeCount" + postId);
     
-    const likeCountHTML = `<h2>` + postLikes.length + `</h2>`;
+    const likeCountHTML = `<h2 id="postLikeCount` + postId + `">` + postLikes.length + `</h2>`;
 
     likeCount.insertAdjacentHTML("beforeend", likeCountHTML);
+
+    for (let i = 0; i < postLikes.length; i++) {
+        if (postLikes[i].accName == "AppleTan") {
+            const likeButton = document.getElementById("likeButton" + postId);
+            likeButton.innerHTML = `<img src="../images/thumb-up.svg" width="20px" />`;
+        }
+    }
 }
 
 function goToCreatePost() {

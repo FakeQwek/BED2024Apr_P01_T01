@@ -49,6 +49,22 @@ class PostLike {
 
         connection.close();
     }
+
+    static async deletePostLike(accName, postId) {
+        const connection = await sql.connect(dbConfig);
+
+        const sqlQuery = `DELETE FROM PostLike WHERE AccName = @accName AND PostID = @postId;`;
+
+        const request = connection.request();
+        request.input("accName", accName);
+        request.input("postId", postId);
+
+        const result = await request.query(sqlQuery);
+
+        connection.close();
+
+        return result;
+    }
 }
 
 module.exports = PostLike;
