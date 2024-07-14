@@ -66,6 +66,24 @@ class Post {
         return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.PostDate, row.OwnerID, row.DscName));
     }
 
+    static async getPostsByDiscussionOrderByLikes(dscName) {
+        const connection = await sql.connect(dbConfig);
+
+        const sqlQuery = `SELECT Post.PostID, Post.PostName, Post.PostDesc, Post.isEvent, Post.isApproved, Post.PostDate, Post.OwnerID, Post.DscName, COUNT(PostLike.PostLikeID) AS LikeCount FROM Post
+                          LEFT JOIN PostLike ON Post.PostID = PostLike.PostID
+                          WHERE Post.DscName = 'Apple'
+                          GROUP BY Post.PostID, Post.PostName, Post.PostDesc, Post.isEvent, Post.isApproved, Post.PostDate, Post.OwnerID, Post.DscName
+                          ORDER BY LikeCount DESC;`;
+
+        const request = connection.request();
+        request.input("dscName", dscName);
+        const result = await request.query(sqlQuery);
+
+        connection.close();
+
+        return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.PostDate, row.OwnerID, row.DscName));
+    }
+
     static async getUnapprovedPostsByDiscussion(dscName) {
         const connection = await sql.connect(dbConfig);
 

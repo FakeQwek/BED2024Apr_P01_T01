@@ -50,6 +50,7 @@ app.get("/bannedaccounts", accountsController.getAccountIsBanned);
 app.get("/mutedaccounts", accountsController.getAccountsIsMuted);
 app.get("/posts", postsController.getAllPosts);
 app.get("/posts/:dscName", postsController.getPostsByDiscussion);
+app.get("/postsOrderByLikes/:dscName", postsController.getPostsByDiscussionOrderByLikes);
 app.get("/post/:postId", postsController.getPostById);
 app.get("/discussions", discussionController.getAllDiscussions);
 app.get("/discussions/search", discussionController.searchDiscussions);

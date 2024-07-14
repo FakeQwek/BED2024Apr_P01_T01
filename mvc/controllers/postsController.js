@@ -35,6 +35,17 @@ const getPostsByDiscussion = async (req, res) => {
     }
 };
 
+const getPostsByDiscussionOrderByLikes = async (req, res) => {
+    const dscName = req.params.dscName;
+    try {
+        const posts = await Post.getPostsByDiscussionOrderByLikes(dscName);
+        res.json(posts);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Error retrieving posts");
+    }
+};
+
 const getUnapprovedPostsByDiscussion = async (req, res) => {
     const dscName = req.params.dscName;
     try {
@@ -101,6 +112,7 @@ module.exports = {
     getAllPosts,
     getPostById,
     getPostsByDiscussion,
+    getPostsByDiscussionOrderByLikes,
     createPost,
     deletePost,
     updatePost,
