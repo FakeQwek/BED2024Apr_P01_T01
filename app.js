@@ -100,7 +100,7 @@ app.get("/discussionMembers/:dscName", discussionMembersController.getDiscussion
 app.post("/discussionMember/:dscName", discussionMembersController.createDiscussionMember);
 
 app.get("/postLikes", postLikesController.getAllPostLikes);
-app.get("/postLike/:postId", postLikesController.getPostLikesByPost);
+app.get("/postLikes/:postId", postLikesController.getPostLikesByPost);
 app.post("/postLike", postLikesController.createPostLike);
 
 // Start the server

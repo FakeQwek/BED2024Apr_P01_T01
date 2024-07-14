@@ -15,6 +15,9 @@ const getPostLikesByPost = async (req, res) => {
     const postId = parseInt(req.params.postId);
     try {
         const postLikes = await PostLike.getPostLikesByPost(postId);
+        if (!postLikes) {
+            return res.status(404).send("Post likes not found");
+        }
         res.json(postLikes);
     } catch (error) {
         console.log(error);

@@ -131,4 +131,5 @@ CREATE TABLE PostLike (
  CONSTRAINT FK_PostLike_AccName FOREIGN KEY (AccName)
  REFERENCES Account(AccName),
  CONSTRAINT FK_PostLike_PostID FOREIGN KEY (PostID)
- REFERENCES Post(PostID));
+ REFERENCES Post(PostID),
+ CONSTRAINT AK_AccName_PostID UNIQUE (AccName, PostID));

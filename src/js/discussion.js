@@ -102,7 +102,10 @@ async function Posts() {
                                             </div>
                                         </div>
                                         <p>` + posts[i].postDesc + `</p>
-                                        <div class="flex justify-end">
+                                        <div class="flex justify-between">
+                                            <div id="likeCount` + posts[i].postId + `" class="flex items-center gap-4">
+                                                <button class="btn btn-sm" onclick="createPostLike(` + posts[i].postId + `)">Like</button>
+                                            </div>
                                             <button id=` + posts[i].postId + ` class="btn btn-sm" onclick="createVolunteer(` + posts[i].postId + `)">Join</button>
                                         </div>
                                     </div>
@@ -150,7 +153,10 @@ async function Posts() {
                                             </div>
                                         </div>
                                         <p>` + posts[i].postDesc + `</p>
-                                        <div class="flex justify-end">
+                                        <div class="flex justify-between">
+                                            <div id="likeCount` + posts[i].postId + `" class="flex items-center gap-4">
+                                                <button class="btn btn-sm" onclick="createPostLike(` + posts[i].postId + `)">Like</button>
+                                            </div>
                                             <button id=` + posts[i].postId + ` class="btn btn-sm" onclick="createVolunteer(` + posts[i].postId + `)">Join</button>
                                         </div>
                                     </div>
@@ -214,6 +220,9 @@ async function Posts() {
                                             </div>
                                         </div>
                                         <p>` + posts[i].postDesc + `</p>
+                                        <div id="likeCount` + posts[i].postId + `" class="flex items-center gap-4">
+                                            <button class="btn btn-sm" onclick="createPostLike(` + posts[i].postId + `)">Like</button>
+                                        </div>
                                     </div>
                                 </div>`;
                 discussionPosts.insertAdjacentHTML("beforeend", postHTML);
@@ -259,11 +268,15 @@ async function Posts() {
                                             </div>
                                         </div>
                                         <p>` + posts[i].postDesc + `</p>
+                                        <div id="likeCount` + posts[i].postId + `" class="flex items-center gap-4">
+                                            <button class="btn btn-sm" onclick="createPostLike(` + posts[i].postId + `)">Like</button>
+                                        </div>
                                     </div>
                                 </div>`;
                 discussionPosts.insertAdjacentHTML("beforeend", postHTML);
             }
         }
+        getPostLikesByPost(posts[i].postId);
     }
 };
 
@@ -392,6 +405,30 @@ async function createDiscussionMember() {
             "Content-type": "application/json; charset=UTF-8"
         }
     })
+}
+
+async function createPostLike(postId) {
+    await fetch("http://localhost:3000/postLike/", {
+        method: "POST",
+        body: JSON.stringify({
+            accName: "AppleTan",
+            postId: postId
+        }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    })
+}
+
+async function getPostLikesByPost(postId) {
+    const res = await fetch("http://localhost:3000/postLikes/" + postId);
+    const postLikes = await res.json();
+
+    const likeCount = document.getElementById("likeCount" + postId);
+    
+    const likeCountHTML = `<h2>` + postLikes.length + `</h2>`;
+
+    likeCount.insertAdjacentHTML("beforeend", likeCountHTML);
 }
 
 function goToCreatePost() {
