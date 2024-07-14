@@ -99,11 +99,12 @@ app.delete("/muteinfo/:accName", muteinfoController.removeMuteInfo);
 app.get("/discussionMembers", discussionMembersController.getAllDiscussionMembers);
 app.get("/discussionMembers/:dscName", discussionMembersController.getDiscussionMembersByDiscussion);
 app.post("/discussionMember/:dscName", discussionMembersController.createDiscussionMember);
+app.delete("/discussionMember/:accName/:dscName", discussionMembersController.deleteDiscussionMember);
 
 app.get("/postLikes", postLikesController.getAllPostLikes);
 app.get("/postLikes/:postId", postLikesController.getPostLikesByPost);
 app.post("/postLike", postLikesController.createPostLike);
-app.delete("/postLike/:accName/:postId", postLikesController.deletePostLike);
+app.delete("/postLike/:accName/:dscName", postLikesController.deletePostLike);
 
 // Start the server
 app.listen(port, async () => {

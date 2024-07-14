@@ -34,8 +34,25 @@ const createDiscussionMember = async (req, res) => {
     }
 };
 
+const deleteDiscussionMember = async (req, res) => {
+    const accName = req.params.accName;
+    const dscName = req.params.dscName;
+
+    try {
+        const success = await DiscussionMember.deleteDiscussionMember(accName, dscName);
+        if (!success) {
+            return res.status(404).send("Discussion member not found")
+        }
+        res.status(204).send();
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Error deleting discussion member");
+    }
+};
+
 module.exports = {
     getAllDiscussionMembers,
     getDiscussionMembersByDiscussion,
     createDiscussionMember,
+    deleteDiscussionMember,
 }

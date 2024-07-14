@@ -49,6 +49,22 @@ class DiscussionMember {
 
         connection.close();
     }
+
+    static async deleteDiscussionMember(accName, dscName) {
+        const connection = await sql.connect(dbConfig);
+
+        const sqlQuery = `DELETE FROM DiscussionMember WHERE AccName = @accName AND DscName = @dscName;`;
+
+        const request = connection.request();
+        request.input("accName", accName);
+        request.input("dscName", dscName);
+
+        const result = await request.query(sqlQuery);
+
+        connection.close();
+
+        return result;
+    }
 }
 
 module.exports = DiscussionMember;

@@ -3,6 +3,7 @@ const urlParams = new URLSearchParams(queryString);
 const discussionName = urlParams.get("discussionName");
 
 let owners = [];
+let isMember = false;
 
 let isPublic = false;
 
@@ -290,7 +291,13 @@ async function DiscussionMembers() {
     
     memberCount.innerHTML = `<h2 class="font-bold">` + discussionMembers.length + `</h2>`;
 
-    let isMember = false;
+    const joinButton = document.getElementById("joinButton");
+
+    for (let i = 0; i < discussionMembers.length; i++) {
+        if (discussionMembers[i].accName == "AppleTan") {
+            isMember = true;
+        }
+    }
 
     for (let i = 0; i < discussionMembers.length; i++) {
         if (discussionMembers[i].dscMemRole == "Owner" && discussionMembers[i].accName == "AppleTan") {
@@ -316,8 +323,13 @@ async function DiscussionMembers() {
                             </div>`;
 
             discussionPosts.insertAdjacentHTML("beforeend", postHTML);
+        } else {
+            joinButton.innerHTML = `<img src="../images/plus.svg" width="20px" />Leave`;
         }
     } else {
+        if (isMember) {
+            joinButton.innerHTML = `<img src="../images/plus.svg" width="20px" />Leave`;
+        }
         Posts();
     }
 }
@@ -395,15 +407,26 @@ async function createDiscussionReport() {
 }
 
 async function createDiscussionMember() {
-    await fetch("http://localhost:3000/discussionMember/" + discussionName, {
-        method: "POST",
-        body: JSON.stringify({
-            accName: "AppleTan"
-        }),
-        headers: {
-            "Content-type": "application/json; charset=UTF-8"
-        }
-    })
+    const joinButton = document.getElementById("joinButton");
+    if (!isMember) {
+        await fetch("http://localhost:3000/discussionMember/" + discussionName, {
+            method: "POST",
+            body: JSON.stringify({
+                accName: "AppleTan"
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+        isMember = true;
+        joinButton.innerHTML = `<img src="../images/plus.svg" width="20px" />Leave`;
+    } else {
+        await fetch("http://localhost:3000/discussionMember/" + "AppleTan" + "/" + discussionName , {
+            method: "DELETE"
+        });
+        isMember = false;
+        joinButton.innerHTML = `<img src="../images/plus.svg" width="20px" />Join`;
+    }
 }
 
 async function createPostLike(postId) {
@@ -459,16 +482,29 @@ async function getPostsByDiscussionOrderByLikes() {
 
     const discussionPosts = document.getElementById("discussionPosts");
 
-    discussionPosts.innerHTML = `<div class="flex justify-between w-full h-fit mt-4">
-                                    <div>
-                                        <button class="btn btn-sm bg-white ml-8 max-[820px]:hidden" onclick="getPostsByDiscussionOrderByLikes()"><img src="../images/fire.svg" width="20px" />Hot</button>
-                                        <button class="btn btn-sm bg-white ml-4"><img src="../images/finance.svg" width="20px" />Trending</button>
-                                    </div>
-                                    <div>
-                                        <button class="btn btn-sm bg-white mr-4 max-[820px]:mr-2" onclick="createDiscussionMember()"><img src="../images/plus.svg" width="20px" />Join</button>
-                                        <button class="btn btn-sm bg-white mr-8" onclick="goToCreatePost()"><img src="../images/plus.svg" width="20px" />Post</button>
-                                    </div>
-                                </div>`;
+    if (isMember) {
+        discussionPosts.innerHTML = `<div class="flex justify-between w-full h-fit mt-4">
+                                        <div>
+                                            <button class="btn btn-sm bg-white ml-8 max-[820px]:hidden" onclick="getPostsByDiscussionOrderByLikes()"><img src="../images/fire.svg" width="20px" />Hot</button>
+                                            <button class="btn btn-sm bg-white ml-4"><img src="../images/finance.svg" width="20px" />Trending</button>
+                                        </div>
+                                        <div>
+                                            <button id="joinButton" class="btn btn-sm bg-white mr-4 max-[820px]:mr-2" onclick="createDiscussionMember()"><img src="../images/plus.svg" width="20px" />Leave</button>
+                                            <button class="btn btn-sm bg-white mr-8" onclick="goToCreatePost()"><img src="../images/plus.svg" width="20px" />Post</button>
+                                        </div>
+                                    </div>`;
+    } else {
+        discussionPosts.innerHTML = `<div class="flex justify-between w-full h-fit mt-4">
+                                        <div>
+                                            <button class="btn btn-sm bg-white ml-8 max-[820px]:hidden" onclick="getPostsByDiscussionOrderByLikes()"><img src="../images/fire.svg" width="20px" />Hot</button>
+                                            <button class="btn btn-sm bg-white ml-4"><img src="../images/finance.svg" width="20px" />Trending</button>
+                                        </div>
+                                        <div>
+                                            <button id="joinButton" class="btn btn-sm bg-white mr-4 max-[820px]:mr-2" onclick="createDiscussionMember()"><img src="../images/plus.svg" width="20px" />Join</button>
+                                            <button class="btn btn-sm bg-white mr-8" onclick="goToCreatePost()"><img src="../images/plus.svg" width="20px" />Post</button>
+                                        </div>
+                                    </div>`;
+    }
 
     for (let i = 0; i < posts.length; i++) {
         if (posts[i].isEvent == "True") {
