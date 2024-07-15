@@ -2,8 +2,9 @@ const sql = require("mssql");
 const dbConfig = require("../../dbConfig");
 
 class DiscussionMember {
-    constructor(dscMemID, accName, dscName) {
+    constructor(dscMemID, dscMemRole, accName, dscName) {
         this.dscMemID = dscMemID;
+        this.dscMemRole = dscMemRole;
         this.accName = accName;
         this.dscName = dscName;
     }
@@ -18,7 +19,7 @@ class DiscussionMember {
 
         connection.close();
 
-        return result.recordset.map((row) => new DiscussionMember(row.DscMemID, row.AccName, row.DscName));
+        return result.recordset.map((row) => new DiscussionMember(row.DscMemID, row.DscMemRole, row.AccName, row.DscName));
     }
 
     static async getDiscussionMembersByDiscussion(dscName) {
@@ -33,15 +34,16 @@ class DiscussionMember {
 
         connection.close();
 
-        return result.recordset.map((row) => new DiscussionMember(row.DscMemID, row.AccName, row.DscName));
+        return result.recordset.map((row) => new DiscussionMember(row.DscMemID, row.DscMemRole, row.AccName, row.DscName));
     }
 
     static async createDiscussionMember(newDiscussionMemberData, dscName) {
         const connection = await sql.connect(dbConfig);
 
-        const sqlQuery = `INSERT INTO DiscussionMember (DscMemID, AccName, DscName) SELECT CASE WHEN COUNT(*) = 0 THEN 1 ELSE MAX(DscMemID) + 1 END, @accName, @dscName FROM DiscussionMember`;
+        const sqlQuery = `INSERT INTO DiscussionMember (DscMemID, DscMemRole, AccName, DscName) SELECT CASE WHEN COUNT(*) = 0 THEN 1 ELSE MAX(DscMemID) + 1 END, @dscMemRole, @accName, @dscName FROM DiscussionMember`;
 
         const request = connection.request();
+        request.input("dscMemRole", newDiscussionMemberData.dscMemRole);
         request.input("accName", newDiscussionMemberData.accName);
         request.input("dscName", dscName);
 
@@ -53,7 +55,7 @@ class DiscussionMember {
     static async deleteDiscussionMember(accName, dscName) {
         const connection = await sql.connect(dbConfig);
 
-        const sqlQuery = `DELETE FROM DiscussionMember WHERE AccName = @accName AND DscName = @dscName;`;
+        const sqlQuery = `DELETE FROM DiscussionMember WHERE DscMemRole = 'Member' AND AccName = @accName AND DscName = @dscName;`;
 
         const request = connection.request();
         request.input("accName", accName);

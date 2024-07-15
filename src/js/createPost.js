@@ -83,4 +83,23 @@ async function createPost() {
     window.location.href = url;
 };
 
+const bannerOptions = document.getElementById("bannerOptions");
+
+const memberCount = document.getElementById("memberCount");
+
+async function DiscussionMembers() {
+    const res = await fetch("http://localhost:3000/discussionMembers/" + discussionName);
+    const discussionMembers = await res.json();
+    
+    memberCount.innerHTML = `<h2 class="font-bold">` + discussionMembers.length + `</h2>`;
+
+    for (let i = 0; i < discussionMembers.length; i++) {
+        if (discussionMembers[i].dscMemRole == "Owner" && discussionMembers[i].accName == "AppleTan") {
+            const bannerOptionsHTML = `<li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="edit_discussion_modal.showModal()"><span class="w-full">Edit</span></button></li>`;
+            bannerOptions.insertAdjacentHTML("beforeend", bannerOptionsHTML);
+        }
+    }
+}
+
 Discussion();
+DiscussionMembers();

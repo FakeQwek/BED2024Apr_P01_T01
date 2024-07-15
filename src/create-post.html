@@ -110,7 +110,7 @@
                                 <div id="discussionBannerName" class="card-title flex justify-between">
                                     <div class="dropdown dropdown-end">
                                         <div tabindex="0" role="button" class="btn btn-sm bg-white border-0 shadow-none"><img src="../images/dots-horizontal.svg" width="20px" /></div>
-                                        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                                        <ul tabindex="0" id="bannerOptions" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
                                             <li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="report_discussion_modal.showModal()"><span class="w-full">Report</span></button></li>
                                         </ul>
                                         <!-- report discussion popup -->
@@ -137,7 +137,9 @@
                                 <div class="flex flex-col">
                                     <div id="discussionBannerDesc" class="flex flex-col border-b-2 pb-8 gap-4">
                                         <div class="flex flex-col">
-                                            <h2 class="font-bold">123K</h2>
+                                            <div id="memberCount">
+
+                                            </div>
                                             <p>members</p>
                                         </div>
                                     </div>

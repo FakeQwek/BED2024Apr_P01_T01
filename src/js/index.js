@@ -30,7 +30,8 @@ async function createDiscussion() {
     await fetch("http://localhost:3000/discussionMember/" + discussionName.value, {
         method: "POST",
         body: JSON.stringify({
-            accName: "AppleTan"
+            accName: "AppleTan",
+            dscMemRole: "Owner"
         }),
         headers: {
             "Content-type": "application/json; charset=UTF-8"
