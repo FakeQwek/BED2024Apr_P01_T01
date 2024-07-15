@@ -98,6 +98,7 @@ app.delete("/muteinfo/:accName", muteinfoController.removeMuteInfo);
 
 app.get("/discussionMembers", discussionMembersController.getAllDiscussionMembers);
 app.get("/discussionMembers/:dscName", discussionMembersController.getDiscussionMembersByDiscussion);
+app.get("/discussionMemberTop3Discussions/:accName", discussionMembersController.getDiscussionMemberTop3Discussions);
 app.post("/discussionMember/:dscName", discussionMembersController.createDiscussionMember);
 app.delete("/discussionMember/:accName/:dscName", discussionMembersController.deleteDiscussionMember);
 

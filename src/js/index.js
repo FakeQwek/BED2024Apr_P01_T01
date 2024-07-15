@@ -154,6 +154,18 @@ async function createPostReport(postId) {
     })
 }
 
+async function sidebar() {
+    const res = await fetch("http://localhost:3000/discussionMemberTop3Discussions/" + "AppleTan");
+    const discussionMembers = await res.json();
+
+    const joinedDiscussions = document.getElementById("joinedDiscussions");
+    
+    for (let i = 0; i < discussionMembers.length; i++) {
+        const discussionButtonHTML = `<li><a><span class="flex items-center w-full gap-2"><img src="../images/account-circle-outline.svg" width="30px" />` + discussionMembers[i].dscName + `</span></a></li>`;
+        joinedDiscussions.insertAdjacentHTML("beforeend", discussionButtonHTML);
+    }
+}
+
 function goToPost(postId) {
     // var script = document.getElementsByTagName("script");
     // var url = script[script.length-1].src;
@@ -185,3 +197,4 @@ function goToDiscussion(dscName) {
 }
 
 Posts();
+sidebar();

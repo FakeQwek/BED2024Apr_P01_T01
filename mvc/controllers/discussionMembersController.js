@@ -21,6 +21,18 @@ const getDiscussionMembersByDiscussion = async (req, res) => {
     }
 };
 
+const getDiscussionMemberTop3Discussions = async (req, res) => {
+    const accName = req.params.accName;
+
+    try {
+        const discussionMembers = await DiscussionMember.getDiscussionMemberTop3Discussions(accName);
+        res.json(discussionMembers);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Error retrieving discussion members");
+    }
+};
+
 const createDiscussionMember = async (req, res) => {
     const newDiscussionMemberData = req.body;
     const dscName = req.params.dscName;
@@ -53,6 +65,7 @@ const deleteDiscussionMember = async (req, res) => {
 module.exports = {
     getAllDiscussionMembers,
     getDiscussionMembersByDiscussion,
+    getDiscussionMemberTop3Discussions,
     createDiscussionMember,
     deleteDiscussionMember,
 }

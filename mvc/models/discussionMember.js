@@ -37,6 +37,21 @@ class DiscussionMember {
         return result.recordset.map((row) => new DiscussionMember(row.DscMemID, row.DscMemRole, row.AccName, row.DscName));
     }
 
+    static async getDiscussionMemberTop3Discussions(accName) {
+        const connection = await sql.connect(dbConfig);
+
+        const sqlQuery = `SELECT TOP 3 * FROM DiscussionMember WHERE AccName = @accName`;
+
+        const request = connection.request();
+        request.input("accName", accName);
+
+        const result = await request.query(sqlQuery);
+
+        connection.close();
+
+        return result.recordset.map((row) => new DiscussionMember(row.DscMemID, row.DscMemRole, row.AccName, row.DscName));
+    }
+
     static async createDiscussionMember(newDiscussionMemberData, dscName) {
         const connection = await sql.connect(dbConfig);
 
