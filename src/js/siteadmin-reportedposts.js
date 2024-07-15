@@ -1,10 +1,26 @@
 reportedPosts = [];
 const reportedPostBox = document.getElementById("post-box");
-getAllReportedPosts();
+const newButton = document.getElementById("new-button");
+const reportButton = document.getElementById("report-button");
+getAllReportedPosts("http://localhost:3000/siteadmin/postreport");
+
+
+//Add event listeners to sorting buttons to get post report data - in progress
+newButton.addEventListener("click", function() {
+    getAllReportedPosts("http://localhost:3000/siteadmin/newestpostreport");
+    console.log("received");
+})
+
+reportButton.addEventListener("click", function() {
+
+})
+
+
+
 
 //Function gets all post reports from the database
-async function getAllReportedPosts() {
-    response = await fetch("http://localhost:3000/siteadminPostReport")
+async function getAllReportedPosts(url) {
+    response = await fetch(url)
     .then(response => {
         if (!response.ok) {
             throw new Error('Response invalid!');
@@ -31,14 +47,10 @@ async function getAllReportedPosts() {
 //Populates the post reports onto the page
 function populatePosts(reportedPosts) {
     length = reportedPosts.length;
+    //Displays 'no more post reports' if there are no posts remaining
     if (length == 0) {
         reportedPostBox.insertAdjacentHTML("beforeEnd",`
             <div class = "bg-white w-70per m-auto rounded-xl flex justify-center">No more Post Reports</div>
-
-
-
-
-            
             `)
     }
 
@@ -94,7 +106,7 @@ function addApproveDenyListeners() {
 
 //Function deletes post report from postreport table
 async function deletePostReport(reportId) {
-    const response = await fetch(`http://localhost:3000/siteadminApprove/${reportId}`, {
+    const response = await fetch(`http://localhost:3000/siteadmin/approve/${reportId}`, {
         method: "DELETE",
         mode: "cors",
         cache: "no-cache",
@@ -112,7 +124,7 @@ async function deletePostReport(reportId) {
 
 //Function deletes post with their post id
 async function deletePost(postId) {
-    const response = await fetch(`http://localhost:3000/siteadminPost/${postId}`, {
+    const response = await fetch(`http://localhost:3000/siteadmin/post/${postId}`, {
         method: "DELETE",
         mode: "cors",
         cache: "no-cache",

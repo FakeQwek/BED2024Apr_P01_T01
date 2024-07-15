@@ -20,6 +20,7 @@ const baninfoController = require("./mvc/controllers/baninfoController");
 const muteinfoController = require("./mvc/controllers/muteinfoController");
 const questionController = require("./mvc/controllers/questionController");
 const siteadminPostReportController = require("./mvc/controllers/siteadminPostReportController");
+const siteadminMutedUserController = require("./mvc/controllers/siteadminMutedUserController");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -36,7 +37,11 @@ app.use(helmet());
 app.use(morgan('combined')); // HTTP request logger
 
 //Route Definitions
-app.get('/siteadminPostReport', siteadminPostReportController.getAllPostReports);
+app.get('/siteadmin/postreport', siteadminPostReportController.getAllPostReports);
+app.get("/siteadmin/reportcount", siteadminPostReportController.getAllCountOfPostReports);
+app.get('/siteadmin/newestpostreport', siteadminPostReportController.getAllPostReportsByNewest);
+app.get("/siteadmin/mutedusers", siteadminMutedUserController.getAllMutedUsers);
+app.get("/siteadmin/muteduser/name", siteadminMutedUserController.getMutedUserByName);
 app.get('/login', accountsController.login);
 app.get('/question', questionController.getAllQuestions);
 app.get('/question/:questionId', questionController.getQuestionById);
@@ -91,15 +96,16 @@ app.put("/accounts/unban/:accName", accountsController.unbanAccount);
 app.put("/accounts/unmute/:accName", accountsController.unmuteUser);
 app.put('/updateProfile', accountsController.updateProfile);
 app.put("/news/:newsId", newsController.updateNews);
+app.put("siteadmin/unmute/:accId", siteadminMutedUserController.unmuteUser);
 app.delete("/news/:newsId", newsController.deleteNews);
 app.delete("/comment/:cmtId", commentsController.deleteComment);
 app.delete("/posts/:postId", postsController.deletePost);
 app.delete("/volunteer/:volId", volunteersController.deleteVolunteer);
 app.delete("/baninfo/:accName", baninfoController.removeBanInfo);
 app.delete("/muteinfo/:accName", muteinfoController.removeMuteInfo);
-app.delete("/siteadminApprove/:reportId", siteadminPostReportController.deletePostReport);
-app.delete("/siteadminDeny/:postId", siteadminPostReportController.deletePostReport);
-app.delete("/siteadminPost/:postId", siteadminPostReportController.deletePost);
+app.delete("/siteadmin/approve/:reportId", siteadminPostReportController.deletePostReport);
+app.delete("/siteadmin/deny/:postId", siteadminPostReportController.deletePostReport);
+app.delete("/siteadmin/post/:postId", siteadminPostReportController.deletePost);
 app.delete('/deleteAccount', accountsController.deleteAccount);
 
 

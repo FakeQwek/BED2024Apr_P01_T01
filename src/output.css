@@ -2858,6 +2858,10 @@ html:has(.drawer-toggle:checked) {
   margin-left: 1rem;
 }
 
+.ml-2 {
+  margin-left: 0.5rem;
+}
+
 .ml-8 {
   margin-left: 2rem;
 }
@@ -2945,6 +2949,8 @@ html:has(.drawer-toggle:checked) {
 .h-1 {
   height: 0.25rem;
 }
+
+
 
 .h-12 {
   height: 3rem;
@@ -3632,6 +3638,31 @@ html:has(.drawer-toggle:checked) {
   }
 }
 
+.news-thumbnail {
+  height: 60%;
+  width: 60%;
+  margin-left: 20%;
+  border-radius: 20px;
+
+}
+
+.news-body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  padding: var(--padding-card, 2rem);
+  gap: 1rem;
+
+}
+
+.news-body p {
+  margin-bottom: 0;
+}
+
+.news-card {
+  margin-top: 2%;
+  width: 63%;
+}
 .news-body:hover {
   cursor: pointer;
   background-color: lightgrey;
@@ -3662,10 +3693,7 @@ html:has(.drawer-toggle:checked) {
   border-radius: 10px;
 }
 
-#load-button:hover {
-  cursor: pointer;
-  background-color: rgb(187, 187, 187);
-}
+
 
 .input-box {
   width: 90%;
@@ -3716,4 +3744,61 @@ html:has(.drawer-toggle:checked) {
   display: flex;
   align-items: center;
 }
+
+#report-button:hover, #new-button:hover, #load-button:hover {
+  cursor: pointer;
+  background-color: rgb(187, 187, 187);
+}
+
+#search-button:hover {
+  cursor: pointer;
+}
+
+::placeholder {
+  padding-left: 2%;
+}
+
+
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration { display: none; };
+
+.border-solid {
+  border-style: solid;
+}
+
+
+
+.siteadmin-popup {
+  visibility: hidden;
+  width: 30%;
+  height: 80%;
+  background-color: white;
+  border-radius: 10px;
+  position: absolute;
+  z-index: 2;
+  margin: auto;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
+#background {
+  opacity: 70%;
+  width: 100%;
+  height: 115%;
+  background-color: black;
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding-bottom: 20rem;
+  visibility: hidden;
+}
+
+
+
 

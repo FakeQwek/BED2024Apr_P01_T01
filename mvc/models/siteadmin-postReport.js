@@ -57,6 +57,29 @@ class PostReport {
         connection.close();
 
     }
+
+    static async getAllPostReportsByNewest() {
+        const connection = await sql.connect(dbConfig);
+        const sqlQuery = `SELECT * FROM PostReport ORDER BY PostRptID DESC`;
+        const request = connection.request();
+        const result = await request.query(sqlQuery);
+
+        connection.close();
+
+        return result.recordset.map((row) => new PostReport(row.PostRptID, row.PostRptCat, row.PostRptDesc, row.AccName, row.PostID));
+    }
+
+    static async getAllCountOfPostReports() {
+        const connection = await sql.connect(dbConfig);
+        const sqlQuery = `SELECT COUNT(PostID) AS 'Count', PostId From PostReport GROUP BY PostID ORDER BY PostID DESC`;
+        const request = connection.request();
+        const result = await request.query(sqlQuery);   
+
+        connection.close();
+
+        return result.recordset.map((row) => new PostReport(row.Count, row.PostID));
+
+    }
 }
 
 module.exports = PostReport;

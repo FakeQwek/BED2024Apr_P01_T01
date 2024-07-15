@@ -39,14 +39,34 @@ const deletePost = async (req, res) => {
         console.log(error);
         res.status(500).send("Error deleting post or post report");
     }
-        
-
-
 };
+
+const getAllPostReportsByNewest = async (req, res) => {
+    try {
+        const postreport = await PostReport.getAllPostReportsByNewest();
+        res.json(postreport);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Error retrieving post reports");
+    }
+};
+
+const getAllCountOfPostReports = async (req, res) => {
+    try {
+        const postreport = await PostReport.getAllCountOfPostReports();
+        res.json(postreport);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Error retrieving post reports");
+    }
+};
+
 
 
 module.exports = {
     getAllPostReports,
     deletePostReport,
-    deletePost
+    deletePost,
+    getAllPostReportsByNewest,
+    getAllCountOfPostReports
 };
