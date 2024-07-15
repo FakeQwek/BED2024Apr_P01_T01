@@ -299,13 +299,6 @@ async function DiscussionMembers() {
         }
     }
 
-    for (let i = 0; i < discussionMembers.length; i++) {
-        if (discussionMembers[i].dscMemRole == "Owner" && discussionMembers[i].accName == "AppleTan") {
-            const bannerOptionsHTML = `<li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="edit_discussion_modal.showModal()"><span class="w-full">Edit</span></button></li>`;
-            bannerOptions.insertAdjacentHTML("beforeend", bannerOptionsHTML);
-        }
-    }
-
     if (!isPublic) {
         for (let i = 0; i < discussionMembers.length; i++) {
             if (discussionMembers[i].accName == "AppleTan" && discussionMembers[i].dscName == discussionName) {
@@ -331,6 +324,15 @@ async function DiscussionMembers() {
             joinButton.innerHTML = `<img src="../images/plus.svg" width="20px" />Leave`;
         }
         Posts();
+    }
+
+    for (let i = 0; i < discussionMembers.length; i++) {
+        console.log(discussionMembers[i].dscMemRole);
+        if (discussionMembers[i].dscMemRole == "Owner" && discussionMembers[i].accName == "AppleTan") {
+            const bannerOptionsHTML = `<li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="edit_discussion_modal.showModal()"><span class="w-full">Edit</span></button></li>`;
+            bannerOptions.insertAdjacentHTML("beforeend", bannerOptionsHTML);
+            joinButton.remove();
+        }
     }
 }
 
