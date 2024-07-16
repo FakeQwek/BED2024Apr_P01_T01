@@ -21,6 +21,7 @@ const muteinfoController = require("./mvc/controllers/muteinfoController");
 const questionController = require("./mvc/controllers/questionController");
 const siteadminPostReportController = require("./mvc/controllers/siteadminPostReportController");
 const siteadminMutedUserController = require("./mvc/controllers/siteadminMutedUserController");
+const siteadminBannedUserController = require("./mvc/controllers/siteadminBannedUserController.js");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -41,7 +42,9 @@ app.get('/siteadmin/postreport', siteadminPostReportController.getAllPostReports
 app.get("/siteadmin/reportcount", siteadminPostReportController.getAllCountOfPostReports);
 app.get('/siteadmin/newestpostreport', siteadminPostReportController.getAllPostReportsByNewest);
 app.get("/siteadmin/mutedusers", siteadminMutedUserController.getAllMutedUsers);
-app.get("/siteadmin/muteduser/name", siteadminMutedUserController.getMutedUserByName);
+app.get("/siteadmin/mutedusers/:name", siteadminMutedUserController.getMutedUsersByName);
+app.get("/siteadmin/bannedusers", siteadminBannedUserController.getAllBannedUsers);
+app.get("/siteadmin/bannedusers/:name", siteadminBannedUserController.getBannedUsersByName);
 app.get('/login', accountsController.login);
 app.get('/question', questionController.getAllQuestions);
 app.get('/question/:questionId', questionController.getQuestionById);
@@ -96,7 +99,8 @@ app.put("/accounts/unban/:accName", accountsController.unbanAccount);
 app.put("/accounts/unmute/:accName", accountsController.unmuteUser);
 app.put('/updateProfile', accountsController.updateProfile);
 app.put("/news/:newsId", newsController.updateNews);
-app.put("siteadmin/unmute/:accId", siteadminMutedUserController.unmuteUser);
+app.put("/siteadmin/unmute/:accId", siteadminMutedUserController.unmuteUser);
+app.put("/siteadmin/unban/:accId", siteadminBannedUserController.unbanUser);
 app.delete("/news/:newsId", newsController.deleteNews);
 app.delete("/comment/:cmtId", commentsController.deleteComment);
 app.delete("/posts/:postId", postsController.deletePost);

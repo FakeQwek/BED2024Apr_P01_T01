@@ -10,19 +10,21 @@ const getAllMutedUsers = async (req, res) => {
     }
 };
 
-const getMutedUserByName = async (req,res) => {
+const getMutedUsersByName = async (req,res) => {
     try {
-        const mutedusers = await MutedUsers.getMutedUserByName();
+        const accName = req.params.name;
+        const mutedusers = await MutedUsers.getMutedUsersByName(accName);
         res.json(mutedusers);
     } catch (error) {
         console.log(error);
-        res.status(500).send("Error retrieving muted user by name");
+        res.status(500).send("Error retrieving muted users by name");
     }
 };
 
 const unmuteUser = async (req, res) => {
     try {
-        const unmute = await MutedUsers.unmuteUser();
+        const accId = req.params.accId;
+        const unmute = await MutedUsers.unmuteUser(accId);
         res.json(unmute);
     } catch (error) {
         console.log(error);
@@ -32,7 +34,7 @@ const unmuteUser = async (req, res) => {
 
 module.exports = {
     getAllMutedUsers,
-    getMutedUserByName,
+    getMutedUsersByName,
     unmuteUser
 
 }

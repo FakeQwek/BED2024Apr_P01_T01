@@ -1,3 +1,5 @@
+
+
 const searchButton = document.getElementById("search-button");
 const searchBox = document.getElementById("search-box");
 const userBox = document.getElementById("user-box");
@@ -5,6 +7,10 @@ const muteBox = document.getElementById("mute-box");
 const unmuteBox = document.getElementById("unmute-box");
 const cancel = document.getElementById("cancel");
 const confirm = document.getElementById("confirm");
+const mutedPage = document.getElementById("muted-button");
+const bannedPage = document.getElementById("banned-button");
+const reportedPostPage = document.getElementById("reported-button");
+
 var selection = "none";
 var data = [];
 mutedUsers = [];
@@ -15,10 +21,32 @@ addPopupListeners();
 
 searchButton.addEventListener("click", function(e) {
     query = searchBox.value;
+    mutedUsers = [];
+    getMutedUsersByName(query);
 })
 
+mutedPage.addEventListener("click", function(e) {
+    window.location.href= "./siteadmin-mutedusers.html";
+})
+
+bannedPage.addEventListener("click", function(e) {
+    window.location.href= "./siteadmin-bannedusers.html";
+})
+
+reportedPostPage.addEventListener("click", function(e) {
+    window.location.href= "./siteadmin-reportedposts.html";
+})
+
+
 function populateUsers(mutedUsers) {
-    for (i = 0; i < mutedUsers.length; i++ ) {
+    userBox.innerHTML = "";
+    length = mutedUsers.length;
+    if (length == 0) {
+        userBox.insertAdjacentHTML("beforeEnd",`
+            <div class = "bg-white w-70per m-auto rounded-xl flex justify-center">No more Muted Users</div>
+            `)
+    }
+    for (i = 0; i < length; i++ ) {
         currentUser = mutedUsers[i];
         userBox.insertAdjacentHTML("beforeend", `
             <div class="bg-white rounded-xl w-90per mt-4 h-12 flex flex-row items-center user" id="${currentUser["accId"]},${currentUser["accName"]}">
@@ -53,8 +81,8 @@ async function getMutedUsers() {
 
 }
 
-async function unmuteUser() {
-    response = await fetch("http://localhost:3000/siteadmin/mutedusers")
+async function getMutedUsersByName(accName) {
+    response = await fetch(`http://localhost:3000/siteadmin/mutedusers/${accName}`)
     .then(response => {
         if(!response.ok) {
             throw new Error('Response invalid!');
@@ -77,6 +105,23 @@ async function unmuteUser() {
 
 }
 
+
+async function unmuteUser(accId) {
+    const response = await fetch(`http://localhost:3000/siteadmin/unmute/${accId}`, {
+        method: "PUT",
+        mode: "cors",
+        cache: "no-cache",
+        credentials: "same-origin",
+        headers: {
+            'Content-type': "application/json",
+        },
+        redirect: "follow",
+        referrerPolicy: "no-referrer"
+    });
+    
+
+}
+
 function addUserListeners() {
     const users = document.getElementsByClassName('user');
     const popup = document.getElementById("popup");
@@ -87,12 +132,13 @@ function addUserListeners() {
         
         users[i].addEventListener("click", function(e) {
             console.log("clicked");
-            values = event.target.id.split(",");
+            values = event.currentTarget.id.split(",");
             accId = values[0];
             accName = values[1];
             popup.style.visibility = "visible";
             background.style.visibility = "visible";
             namebox.innerHTML = `<b>u:${accName}</b>`;
+            data = [];
             data.push(accId);
             data.push(accName);
         })
@@ -102,11 +148,13 @@ function addUserListeners() {
 function addPopupListeners() {
     muteBox.addEventListener("click", function(e) {
         muteBox.style.backgroundColor = "lightgray";
+        unmuteBox.style.backgroundColor = "white";
         selection = "mute";
 
     });
     unmuteBox.addEventListener('click', function(e) {
         unmuteBox.style.backgroundColor = "lightgray";
+        muteBox.style.backgroundColor = "white";
         selection = "unmute";
     });
     cancel.addEventListener('click', function(e) {
@@ -118,8 +166,10 @@ function addPopupListeners() {
         accName = data[1];
         console.log(accId + " " + accName + "Confirmed selection");
         if (selection == "unmute") {
-
+            unmuteUser(accId);
+            alert("User unmuted!");
         }
+        window.location.reload();
     })
 
 }

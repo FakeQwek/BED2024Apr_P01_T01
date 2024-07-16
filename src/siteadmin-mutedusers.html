@@ -6,7 +6,7 @@
     <link href="output.css" rel="stylesheet">
     <title>Document</title>
 </head>
-<body class="h-screen bg-gray-100">
+<body class="h-max bg-gray-100">
     <!-- navbar -->
     <div class="flex justify-center items-center h-12 bg-white border-b-2">
         <div class="flex w-1/4">
@@ -63,9 +63,9 @@
             </div>
             <div class="bg-white card p-8 mb-8" id="panel">
                 <div id="button-container" class="flex flex-row ml-8 mt-8">
-                    <button class="mr-8">Reported Posts</button>
-                    <button class="mr-8">Banned Users</button>
-                    <button class="mr-4"><u>Muted Users</u></button>
+                    <button class="mr-8" id="reported-button">Reported Posts</button>
+                    <button class="mr-8" id="banned-button">Banned Users</button>
+                    <button class="mr-4" id="muted-button"><u>Muted Users</u></button>
                 </div>
                 <h1 class="font-bold text-xl ml-8 mt-4">Muted Users</h1>
                 
@@ -98,7 +98,7 @@
            
         </div>
         <p class="ml-4 mt-8"><b>Punishment</b></p>
-        <div id="mute-box" class="flex flex-col mt-4">
+        <div id="mute-box" class="flex flex-col mt-4 pb-4">
             <div class="flex flex-row mt-4 ml-4">
                 <img src="../images/mutedmicrophone.png" width="20px" height="20px">
                 <p class="ml-2"><b>Mute</b></p>
@@ -108,7 +108,7 @@
             
         </div>
       
-        <div id="unmute-box" class="flex flex-col mt-4">
+        <div id="unmute-box" class="flex flex-col mt-4 pb-4">
             <div class="flex flex-row mt-4 ml-4 items-center">
                 <img src="../images/microphone.png" width="20px" height="20px">
                 <p class="ml-2"><b>Unmute</b></p>
@@ -126,6 +126,6 @@
   
     
 </body>
-<div id="background" ></div>
+<div id="background" class="h-max" ></div>
 <script src="./js/siteadmin-mutedusers.js"></script>
 </html>

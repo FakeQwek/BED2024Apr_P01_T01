@@ -2,6 +2,9 @@ reportedPosts = [];
 const reportedPostBox = document.getElementById("post-box");
 const newButton = document.getElementById("new-button");
 const reportButton = document.getElementById("report-button");
+const mutedPage = document.getElementById("muted-button");
+const bannedPage = document.getElementById("banned-button");
+const reportedPostPage = document.getElementById("reported-button");
 getAllReportedPosts("http://localhost:3000/siteadmin/postreport");
 
 
@@ -16,7 +19,17 @@ reportButton.addEventListener("click", function() {
 })
 
 
+mutedPage.addEventListener("click", function(e) {
+    window.location.href= "./siteadmin-mutedusers.html";
+})
 
+bannedPage.addEventListener("click", function(e) {
+    window.location.href= "./siteadmin-bannedusers.html";
+})
+
+reportedPostPage.addEventListener("click", function(e) {
+    window.location.href= "./siteadmin-reportedposts.html";
+})
 
 //Function gets all post reports from the database
 async function getAllReportedPosts(url) {
@@ -78,7 +91,7 @@ function addApproveDenyListeners() {
         //Adds event listeners to the approve and deny buttons respectively. Approve deletes the report while deny deletes both post and report
         console.log(allTicks[i]);
         allTicks[i].addEventListener("click", function() {
-                reportId = event.target.id;
+                reportId = event.currentTarget.id;
                 deletePostReport(reportId);
                 console.log(reportId + " approved");
                 alert("Post approved!");
@@ -87,14 +100,14 @@ function addApproveDenyListeners() {
         )
         console.log(allCrosses[i]);
         allCrosses[i].addEventListener("click", function() {
-            ids = event.target.id.split(',');
+            ids = event.currentTarget.id.split(',');
             postId = ids[0];
             reportId = ids[1];
             deletePostReport(reportId);
             deletePost(postId);
            
             console.log(postId + reportId + " denied");
-            alert("Post rejected!")
+            alert("Post rejected!");
             window.location.reload();
         }
     )
