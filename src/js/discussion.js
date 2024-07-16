@@ -7,6 +7,8 @@ let isMember = false;
 
 let isPublic = false;
 
+let discussionType;
+
 async function Discussion() { 
     const res = await fetch("http://localhost:3000/discussions/" + discussionName);
     const discussion = await res.json();
@@ -31,6 +33,8 @@ async function Discussion() {
     discussionOwners.insertAdjacentHTML("beforeend", discussionOwnersHTML);
 
     DiscussionMembers();
+
+    discussionType = discussion.dscType;
 
     if (discussion.dscType == "Public") {
         isPublic = true;
@@ -319,6 +323,10 @@ async function DiscussionMembers() {
         } else {
             joinButton.innerHTML = `<img src="../images/plus.svg" width="20px" />Leave`;
         }
+
+        if (joinButton) {
+            joinButton.remove();
+        }
     } else {
         if (isMember) {
             joinButton.innerHTML = `<img src="../images/plus.svg" width="20px" />Leave`;
@@ -329,9 +337,21 @@ async function DiscussionMembers() {
     for (let i = 0; i < discussionMembers.length; i++) {
         console.log(discussionMembers[i].dscMemRole);
         if (discussionMembers[i].dscMemRole == "Owner" && discussionMembers[i].accName == "AppleTan") {
-            const bannerOptionsHTML = `<li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="edit_discussion_modal.showModal()"><span class="w-full">Edit</span></button></li>`;
+
+            let bannerOptionsHTML;
+
+            if (discussionType == "Restricted") {
+                bannerOptionsHTML = `<li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="edit_discussion_modal.showModal()"><span class="w-full">Edit</span></button></li>
+                                        <li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="invite_modal.showModal()"><span class="w-full">Invite</span></button></li>`;
+            } else {
+                bannerOptionsHTML = `<li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="edit_discussion_modal.showModal()"><span class="w-full">Edit</span></button></li>`;
+            }
+
             bannerOptions.insertAdjacentHTML("beforeend", bannerOptionsHTML);
-            joinButton.remove();
+            
+            if (joinButton) {
+                joinButton.remove();
+            }
         }
     }
 }
@@ -757,6 +777,19 @@ async function sidebar() {
         const discussionButtonHTML = `<li><a><span class="flex items-center w-full gap-2"><img src="../images/account-circle-outline.svg" width="30px" />` + discussionMembers[i].dscName + `</span></a></li>`;
         joinedDiscussions.insertAdjacentHTML("beforeend", discussionButtonHTML);
     }
+}
+
+async function createInvite() {
+    await fetch("http://localhost:3000/invite", {
+        method: "POST",
+        body: JSON.stringify({
+            accName: "AppleTan",
+            dscName: discussionName
+        }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    });
 }
 
 function goToCreatePost() {

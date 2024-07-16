@@ -143,4 +143,4 @@ CREATE TABLE Invite (
  REFERENCES Account(AccName),
  CONSTRAINT FK_Invite FOREIGN KEY (DscName)
  REFERENCES Discussion(DscName),
- CONSTRAINT AK_AccName_DscName UNIQUE (AccName, DscName));
+ CONSTRAINT AK_Invite_AccName_DscName UNIQUE (AccName, DscName));

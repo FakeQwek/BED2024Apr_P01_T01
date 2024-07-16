@@ -17,7 +17,7 @@ const getInvitesByDiscussion = async (req, res) => {
         res.json(invites);
     } catch (error) {
         console.log(error);
-        res.status(500).send("Error retrieving posts");
+        res.status(500).send("Error retrieving invites");
     }
 };
 

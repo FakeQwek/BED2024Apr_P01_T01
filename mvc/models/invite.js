@@ -42,8 +42,8 @@ class Invite {
         const sqlQuery = `INSERT INTO Invite (InvID, AccName, DscName) SELECT CASE WHEN COUNT(*) = 0 THEN 1 ELSE MAX(InvID) + 1 END, @accName, @dscName FROM Invite`;
 
         const request = connection.request();
-        request.input("accName", newPostData.accName);
-        request.input("dscName", newPostData.dscName);
+        request.input("accName", newInviteData.accName);
+        request.input("dscName", newInviteData.dscName);
 
         const result = await request.query(sqlQuery);
 
