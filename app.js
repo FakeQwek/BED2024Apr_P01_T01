@@ -20,6 +20,7 @@ const baninfoController = require("./mvc/controllers/baninfoController");
 const muteinfoController = require("./mvc/controllers/muteinfoController");
 const questionController = require("./mvc/controllers/questionController");
 const postLikesController = require("./mvc/controllers/postLikesController");
+const invitesController = require("./mvc/controllers/invitesController");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -106,6 +107,11 @@ app.get("/postLikes", postLikesController.getAllPostLikes);
 app.get("/postLikes/:postId", postLikesController.getPostLikesByPost);
 app.post("/postLike", postLikesController.createPostLike);
 app.delete("/postLike/:accName/:dscName", postLikesController.deletePostLike);
+
+app.get("/invites", invitesController.getAllInvites);
+app.get("/invites/:dscName", invitesController.getInvitesByDiscussion);
+app.post("/invite", invitesController.createInvite);
+app.delete("/invite/:invId", invitesController.deleteInvite);
 
 // Start the server
 app.listen(port, async () => {

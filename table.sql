@@ -133,3 +133,14 @@ CREATE TABLE PostLike (
  CONSTRAINT FK_PostLike_PostID FOREIGN KEY (PostID)
  REFERENCES Post(PostID),
  CONSTRAINT AK_AccName_PostID UNIQUE (AccName, PostID));
+
+CREATE TABLE Invite (
+ InvID varchar(10) NOT NULL,
+ AccName varchar(16) NOT NULL,
+ DscName varchar(16) NOT NULL,
+ CONSTRAINT PK_Invite PRIMARY KEY (InvID),
+ CONSTRAINT FK_Invite_AccName FOREIGN KEY (AccName)
+ REFERENCES Account(AccName),
+ CONSTRAINT FK_Invite FOREIGN KEY (DscName)
+ REFERENCES Discussion(DscName),
+ CONSTRAINT AK_AccName_DscName UNIQUE (AccName, DscName));
