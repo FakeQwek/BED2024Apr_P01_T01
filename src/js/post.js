@@ -236,10 +236,17 @@ async function DiscussionMembers() {
 
     memberCount.innerHTML = `<h2 class="font-bold">` + discussionMembers.length + `</h2>`;
 
-        for (let i = 0; i < discussionMembers.length; i++) {
+    for (let i = 0; i < discussionMembers.length; i++) {
         if (discussionMembers[i].dscMemRole == "Owner" && discussionMembers[i].accName == "AppleTan") {
             const bannerOptionsHTML = `<li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="edit_discussion_modal.showModal()"><span class="w-full">Edit</span></button></li>`;
             bannerOptions.insertAdjacentHTML("beforeend", bannerOptionsHTML);
+        } else if (discussionMembers[i].dscMemRole == "Admin") {
+            const discussionAdmins = document.getElementById("discussionAdmins");
+            const discussionAdminsHTML = `<div class="flex items-center gap-2">
+                                            <img src="../images/account-circle-outline.svg" width="30px" />
+                                            <h2>` + discussionMembers[i].accName + `</h2>
+                                        </div>`;
+            discussionAdmins.insertAdjacentHTML("beforeend", discussionAdminsHTML);
         }
     }
 }

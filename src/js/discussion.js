@@ -352,6 +352,13 @@ async function DiscussionMembers() {
             if (joinButton) {
                 joinButton.remove();
             }
+        } else if (discussionMembers[i].dscMemRole == "Admin") {
+            const discussionAdmins = document.getElementById("discussionAdmins");
+            const discussionAdminsHTML = `<div class="flex items-center gap-2">
+                                            <img src="../images/account-circle-outline.svg" width="30px" />
+                                            <h2>` + discussionMembers[i].accName + `</h2>
+                                        </div>`;
+            discussionAdmins.insertAdjacentHTML("beforeend", discussionAdminsHTML);
         }
     }
 }
