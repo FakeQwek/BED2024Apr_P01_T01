@@ -94,6 +94,14 @@ async function DiscussionMembers() {
     memberCount.innerHTML = `<h2 class="font-bold">` + discussionMembers.length + `</h2>`;
 
     for (let i = 0; i < discussionMembers.length; i++) {
+        if (discussionMembers[i].accName == "AppleTan" && discussionMembers[i].isMuted == "True") {
+            const postCard = document.getElementById("postCard");
+            postCard.innerHTML = `<div class="flex flex-col justify-center items-center h-full">
+                                    <img src="../images/microphone-off.svg" width="100px" />
+                                    <h2 class="text-2xl font-bold">You are muted and are no longer allowed to make posts</h2>
+                                </div>`;
+        }
+
         if (discussionMembers[i].dscMemRole == "Owner" && discussionMembers[i].accName == "AppleTan") {
             const bannerOptionsHTML = `<li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="edit_discussion_modal.showModal()"><span class="w-full">Edit</span></button></li>`;
             bannerOptions.insertAdjacentHTML("beforeend", bannerOptionsHTML);

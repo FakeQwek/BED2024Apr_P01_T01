@@ -101,7 +101,7 @@ isApproved varchar(5) NOT NULL,
  REFERENCES Account(AccName), 
  CONSTRAINT FK_Volunteer_PostID FOREIGN KEY (PostID) 
  REFERENCES Post(PostID), 
-CONSTRAINT CHK_Volunteer_isApproved CHECK (isApproved IN ('True', 'False')));
+ CONSTRAINT CHK_Volunteer_isApproved CHECK (isApproved IN ('True', 'False')));
 
 CREATE TABLE NewsPost (
  NewsID varchar(100) NOT NULL,
@@ -114,6 +114,8 @@ CREATE TABLE NewsPost (
 CREATE TABLE DiscussionMember (
  DscMemID varchar(10) NOT NULL,
  DscMemRole varchar(6) NOT NULL,
+ isMuted varchar(5) NOT NULL,
+ isBanned varchar(5) NOT NULL,
  AccName varchar(16) NOT NULL,
  DscName varchar(16) NOT NULL
  CONSTRAINT PK_DiscussionMember PRIMARY KEY (DscMemID),
@@ -121,6 +123,8 @@ CREATE TABLE DiscussionMember (
  REFERENCES Account(AccName),
  CONSTRAINT FK_DiscussionMember_DscName FOREIGN KEY (DscName)
  REFERENCES Discussion(DscName),
+ CONSTRAINT CHK_DiscussionMember_isMuted CHECK (isMuted IN ('True', 'False')),
+ CONSTRAINT CHK_DiscussionMember_isBanned CHECK (isBanned IN ('True', 'False')),
  CONSTRAINT AK_AccName_DscName UNIQUE (AccName, DscName));
 
 CREATE TABLE PostLike (

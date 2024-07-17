@@ -4,6 +4,8 @@ const discussionName = urlParams.get("discussionName");
 
 let owners = [];
 let isMember = false;
+let isMuted = false;
+let isBanned = false;
 
 let isPublic = false;
 
@@ -298,46 +300,62 @@ async function DiscussionMembers() {
     const joinButton = document.getElementById("joinButton");
 
     for (let i = 0; i < discussionMembers.length; i++) {
-        if (discussionMembers[i].accName == "AppleTan") {
+        if (discussionMembers[i].accName == "AppleTan" && discussionMembers[i].dscName == discussionName) {
             isMember = true;
+            
+            if (discussionMembers[i].isMuted == "True") {
+                isMuted = "True";
+            }
+
+            if (discussionMembers[i].isBanned == "True") {
+                isBanned = "True";
+            }
         }
     }
 
-    if (!isPublic) {
-        for (let i = 0; i < discussionMembers.length; i++) {
-            if (discussionMembers[i].accName == "AppleTan" && discussionMembers[i].dscName == discussionName) {
-                Posts();
-                isMember = true;
+    if (!isBanned) {
+        if (!isPublic) {
+            for (let i = 0; i < discussionMembers.length; i++) {
+                if (discussionMembers[i].accName == "AppleTan" && discussionMembers[i].dscName == discussionName) {
+                    Posts();
+                    isMember = true;
+                }
             }
-        }
+        
+            if (!isMember) {
+                const discussionPosts = document.getElementById("discussionPosts");
     
-        if (!isMember) {
-            const discussionPosts = document.getElementById("discussionPosts");
-
-            const postHTML = `<div class="flex flex-col justify-center items-center h-full">
-                                <img src="../images/lock-outline.svg" width="100px" />
-                                <h2 class="text-2xl font-bold">You do not have access to this discussion</h2>
-                            </div>`;
-
-            discussionPosts.insertAdjacentHTML("beforeend", postHTML);
+                const postHTML = `<div class="flex flex-col justify-center items-center h-full">
+                                    <img src="../images/lock-outline.svg" width="100px" />
+                                    <h2 class="text-2xl font-bold">You do not have access to this discussion</h2>
+                                </div>`;
+    
+                discussionPosts.insertAdjacentHTML("beforeend", postHTML);
+            } else {
+                joinButton.innerHTML = `<img src="../images/plus.svg" width="20px" />Leave`;
+            }
+    
+            if (joinButton) {
+                joinButton.remove();
+            }
         } else {
-            joinButton.innerHTML = `<img src="../images/plus.svg" width="20px" />Leave`;
+            if (isMember) {
+                joinButton.innerHTML = `<img src="../images/plus.svg" width="20px" />Leave`;
+            }
+            Posts();
         }
-
-        if (joinButton) {
-            joinButton.remove();
-        }
-    } else {
-        if (isMember) {
-            joinButton.innerHTML = `<img src="../images/plus.svg" width="20px" />Leave`;
-        }
-        Posts();
     }
 
     for (let i = 0; i < discussionMembers.length; i++) {
-        console.log(discussionMembers[i].dscMemRole);
-        if (discussionMembers[i].dscMemRole == "Owner" && discussionMembers[i].accName == "AppleTan") {
+        if (isBanned) {
+            const discussionPosts = document.getElementById("discussionPosts");
+            discussionPosts.innerHTML = `<div class="flex flex-col justify-center items-center h-full">
+                                            <img src="../images/cancel.svg" width="100px" />
+                                            <h2 class="text-2xl font-bold">You are banned from this discussion</h2>
+                                        </div>`;
+        }
 
+        if (discussionMembers[i].dscMemRole == "Owner" && discussionMembers[i].accName == "AppleTan") {
             let bannerOptionsHTML;
 
             if (discussionType == "Restricted") {

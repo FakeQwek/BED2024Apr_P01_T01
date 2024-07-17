@@ -2,9 +2,11 @@ const sql = require("mssql");
 const dbConfig = require("../../dbConfig");
 
 class DiscussionMember {
-    constructor(dscMemID, dscMemRole, accName, dscName) {
+    constructor(dscMemID, dscMemRole, isMuted, isBanned, accName, dscName) {
         this.dscMemID = dscMemID;
         this.dscMemRole = dscMemRole;
+        this.isMuted = isMuted,
+        this.isBanned = isBanned,
         this.accName = accName;
         this.dscName = dscName;
     }
@@ -19,7 +21,7 @@ class DiscussionMember {
 
         connection.close();
 
-        return result.recordset.map((row) => new DiscussionMember(row.DscMemID, row.DscMemRole, row.AccName, row.DscName));
+        return result.recordset.map((row) => new DiscussionMember(row.DscMemID, row.DscMemRole, row.isMuted, row.isBanned, row.AccName, row.DscName));
     }
 
     static async getDiscussionMembersByDiscussion(dscName) {
@@ -34,7 +36,7 @@ class DiscussionMember {
 
         connection.close();
 
-        return result.recordset.map((row) => new DiscussionMember(row.DscMemID, row.DscMemRole, row.AccName, row.DscName));
+        return result.recordset.map((row) => new DiscussionMember(row.DscMemID, row.DscMemRole, row.isMuted, row.isBanned, row.AccName, row.DscName));
     }
 
     static async getDiscussionMemberTop3Discussions(accName) {
@@ -49,13 +51,13 @@ class DiscussionMember {
 
         connection.close();
 
-        return result.recordset.map((row) => new DiscussionMember(row.DscMemID, row.DscMemRole, row.AccName, row.DscName));
+        return result.recordset.map((row) => new DiscussionMember(row.DscMemID, row.DscMemRole, row.isMuted, row.isBanned, row.AccName, row.DscName));
     }
 
     static async createDiscussionMember(newDiscussionMemberData, dscName) {
         const connection = await sql.connect(dbConfig);
 
-        const sqlQuery = `INSERT INTO DiscussionMember (DscMemID, DscMemRole, AccName, DscName) SELECT CASE WHEN COUNT(*) = 0 THEN 1 ELSE MAX(DscMemID) + 1 END, @dscMemRole, @accName, @dscName FROM DiscussionMember`;
+        const sqlQuery = `INSERT INTO DiscussionMember (DscMemID, DscMemRole, isMuted, isBanned, AccName, DscName) SELECT CASE WHEN COUNT(*) = 0 THEN 1 ELSE MAX(DscMemID) + 1 END, @dscMemRole, 'False', 'False', @accName, @dscName FROM DiscussionMember`;
 
         const request = connection.request();
         request.input("dscMemRole", newDiscussionMemberData.dscMemRole);

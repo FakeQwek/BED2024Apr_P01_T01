@@ -17,7 +17,6 @@ async function Discussion(dscName) {
     const discussion = await res.json();
 
     discussionName = discussion.dscName;
-    console.log(discussion);
 
     const discussionBannerName = document.getElementById("discussionBannerName");
     const discussionBanerNameHTML = `<h2>` + discussionName + `</h2>`;
@@ -40,7 +39,6 @@ async function Discussion(dscName) {
 async function Post() {
     const res = await fetch("http://localhost:3000/post/" + postId);
     const post = await res.json();
-    console.log(post);
 
     const postNameHTML = `<h2>` + post.postName + '</h2>';
     postName.insertAdjacentHTML("afterbegin", postNameHTML);
@@ -66,7 +64,6 @@ async function Post() {
 async function Comments() {
     const res = await fetch("http://localhost:3000/comments/" + postId);
     const comments = await res.json();
-    console.log(comments);
 
     for (let i = 0; i < comments.length; i++) {
         const postCommentHTML = `<div class="card w-full h-fit bg-white">
