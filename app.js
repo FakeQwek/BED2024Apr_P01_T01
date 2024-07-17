@@ -1,10 +1,11 @@
 const express = require("express");
 const sql = require("mssql");
-const dbConfig = require("./dbConfig");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
+const jwt = require("jsonwebtoken");
+const dbConfig = require("./dbConfig");
 
 // Import controllers
 const accountsController = require("./mvc/controllers/accountsController");
@@ -24,6 +25,24 @@ const siteadminPostReportController = require("./mvc/controllers/siteadminPostRe
 const app = express();
 const port = process.env.PORT || 3000;
 
+const JWT_SECRET = '3f3a94e1c0b5f11a8e0f2747d2a5e2f7a9a1c3b7d4d6e1e2f7b8c9d1a3e4f6a2'; // Replace with your own secret
+
+const authenticateJWT = (req, res, next) => {
+    const authHeader = req.header('Authorization');
+    if (!authHeader) return res.status(401).send('Access denied. No token provided.');
+
+    const token = authHeader.split(' ')[1]; // Assuming the format is "Bearer TOKEN"
+    if (!token) return res.status(401).send('Access denied. Invalid token format.');
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        req.user = decoded;
+        next();
+    } catch (ex) {
+        res.status(400).send('Invalid token.');
+    }
+};
+
 // Apply middlewares
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -35,7 +54,13 @@ app.use(cors({
 app.use(helmet());
 app.use(morgan('combined')); // HTTP request logger
 
-//Route Definitions
+// Route definitions
+app.delete('/deleteAccount', accountsController.deleteAccount);
+app.put('/updateProfile', accountsController.updateProfile);
+app.post('/signup', accountsController.signup);
+app.post('/login', accountsController.login);
+app.get('/ping', (req, res) => res.send('Server is running')); // Simple ping endpoint
+
 app.get('/siteadminPostReport', siteadminPostReportController.getAllPostReports);
 app.get('/login', accountsController.login);
 app.get('/question', questionController.getAllQuestions);
@@ -101,7 +126,15 @@ app.delete("/siteadminApprove/:reportId", siteadminPostReportController.deletePo
 app.delete("/siteadminDeny/:postId", siteadminPostReportController.deletePostReport);
 app.delete("/siteadminPost/:postId", siteadminPostReportController.deletePost);
 app.delete('/deleteAccount', accountsController.deleteAccount);
+app.get("/discussionMembers", discussionMembersController.getAllDiscussionMembers);
+app.get("/discussionMembers/:dscName", discussionMembersController.getDiscussionMembersByDiscussion);
+app.post("/discussionMember/:dscName", discussionMembersController.createDiscussionMember);
+app.delete("/discussionReports/:dscRptId", discussionReportsController.deleteDiscussionReport);
 
+// Example protected route
+app.get('/protected', authenticateJWT, (req, res) => {
+    res.send('This is a protected route');
+});
 
 // Start the server
 app.listen(port, async () => {

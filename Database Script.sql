@@ -21,6 +21,26 @@ isBanned varchar(6) NOT NULL,
 CONSTRAINT PK_Account PRIMARY KEY (AccName),  
 CONSTRAINT CHK_Account_isAdmin CHECK (isAdmin IN ('True', 'False')),     CONSTRAINT CHK_Account_isMuted CHECK (isMuted IN ('True', 'False')),
 CONSTRAINT CHK_Account_isBanned CHECK (isBanned IN ('True', 'False'))); 
+
+CREATE TABLE Account (      
+    AccName varchar(16) NOT NULL,  
+    AccEmail varchar(64) NOT NULL,      
+    Password varchar(255) NOT NULL, 
+    PhoneNumber varchar(15),
+    isAdmin varchar(5) NOT NULL,     
+    isMuted varchar(5) NOT NULL,  
+    isBanned varchar(6) NOT NULL,
+    EmailNotification varchar(20) NOT NULL DEFAULT 'Not allowed',
+    Gender varchar(10) NOT NULL DEFAULT 'NIL',
+    Language varchar(20) NOT NULL DEFAULT 'English',     
+    CONSTRAINT PK_Account PRIMARY KEY (AccName),  
+    CONSTRAINT CHK_Account_isAdmin CHECK (isAdmin IN ('True', 'False')),     
+    CONSTRAINT CHK_Account_isMuted CHECK (isMuted IN ('True', 'False')),
+    CONSTRAINT CHK_Account_isBanned CHECK (isBanned IN ('True', 'False')),
+    CONSTRAINT CHK_Account_EmailNotification CHECK (EmailNotification IN ('allowed', 'Not allowed')),
+    CONSTRAINT CHK_Account_Gender CHECK (Gender IN ('Male', 'Female', 'NIL'))
+);
+
  
 CREATE TABLE Discussion ( 
  DscName varchar(16) NOT NULL, 

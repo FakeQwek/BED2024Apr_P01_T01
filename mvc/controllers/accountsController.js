@@ -31,10 +31,11 @@ module.exports = {
 
 const sql = require("mssql");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const dbConfig = require("../../dbConfig");
-const Account = require("../models/account");
 
-// Controllers
+const JWT_SECRET = '3f3a94e1c0b5f11a8e0f2747d2a5e2f7a9a1c3b7d4d6e1e2f7b8c9d1a3e4f6a2'; // Replace with your own secret
+
 const signup = async (req, res) => {
     const { usernameOrEmail, password } = req.body;
 
@@ -87,20 +88,17 @@ const login = async (req, res) => {
             .query(`SELECT * FROM Account WHERE (AccName = @AccName OR AccEmail = @AccEmail)`);
 
         if (result.recordset.length === 0) {
-            return res.status(404).send('Your username/email did not sign up');
+            return res.status(404).send('User not found');
         }
 
         const user = result.recordset[0];
         const passwordMatch = await bcrypt.compare(password, user.Password);
 
         if (passwordMatch) {
-            const userData = {
-                username: user.AccName,
-                email: user.AccEmail
-            };
-            return res.status(200).json(userData);
+            const token = jwt.sign({ username: user.AccName, email: user.AccEmail }, JWT_SECRET, { expiresIn: '1h' });
+            res.status(200).json({ token, username: user.AccName, email: user.AccEmail });
         } else {
-            return res.status(401).send('Login failed');
+            return res.status(401).send('Invalid credentials');
         }
     } catch (err) {
         console.error('Database error:', err.originalError ? err.originalError.message : err.message);
@@ -109,10 +107,20 @@ const login = async (req, res) => {
 };
 
 const updateProfile = async (req, res) => {
-    const { currentEmail, username, email, phoneNumber } = req.body;
+    const { currentEmail, username, email, phoneNumber, emailNotification, gender } = req.body;
 
     if (!currentEmail || !username || !email) {
         return res.status(400).send('Current email, Username, and New email are required');
+    }
+
+    const allowedEmailNotifications = ['allowed', 'Not allowed'];
+    if (emailNotification && !allowedEmailNotifications.includes(emailNotification)) {
+        return res.status(400).send('Invalid value for email notifications. Allowed values are "allowed" and "Not allowed".');
+    }
+
+    const allowedGenders = ['Male', 'Female'];
+    if (gender && !allowedGenders.includes(gender)) {
+        return res.status(400).send('Invalid value for gender. Allowed values are "Male" and "Female".');
     }
 
     try {
@@ -122,7 +130,9 @@ const updateProfile = async (req, res) => {
             SET 
                 AccName = @newUsername,
                 AccEmail = @newEmail,
-                PhoneNumber = @newPhoneNumber
+                PhoneNumber = @newPhoneNumber,
+                EmailNotification = @newEmailNotification,
+                Gender = @newGender
             WHERE AccEmail = @currentEmail
         `;
 
@@ -130,6 +140,8 @@ const updateProfile = async (req, res) => {
             .input('newUsername', sql.VarChar, username)
             .input('newEmail', sql.VarChar, email)
             .input('newPhoneNumber', sql.VarChar, phoneNumber || null)
+            .input('newEmailNotification', sql.VarChar, emailNotification || 'Not allowed')
+            .input('newGender', sql.VarChar, gender || 'NIL')
             .input('currentEmail', sql.VarChar, currentEmail)
             .query(query);
 
@@ -168,6 +180,8 @@ const deleteAccount = async (req, res) => {
         res.status(500).send('Server error');
     }
 };
+
+
 
 const getAllAccounts = async (req, res) => {
     try {
@@ -305,6 +319,7 @@ const demoteUser = async (req, res) => {
     }
 };
 
+
 module.exports = { 
     signup,
     login,
@@ -322,14 +337,6 @@ module.exports = {
     promoteUser,
     demoteUser,
 };
-
-
-
-
-
-
-
-
 
 /*const Account = require("../models/account");
 

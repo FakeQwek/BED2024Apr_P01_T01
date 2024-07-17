@@ -3635,7 +3635,6 @@ html:has(.drawer-toggle:checked) {
 .news-body:hover {
   cursor: pointer;
   background-color: lightgrey;
-  
 }
 
 .news-body p {
@@ -3680,7 +3679,6 @@ html:has(.drawer-toggle:checked) {
   width: 70%;
   padding: 5%;
   margin-left: 15%;
-
 }
 
 .query-box {
