@@ -70,9 +70,10 @@ CREATE TABLE Post (
 	NewsID varchar(1000) NOT NULL,
 	NewsDesc varchar(1000) NOT NULL,
 	NewsSource varchar(1000) NOT NULL,
-	NewsImage varchar(1000),
+	NewsImage varchar(1000) NOT NULL,
     NewsDate varchar(10) NOT NULL,
     NewsContent varchar(2500) NOT NULL,
+    NewsUrl varchar(1000) NOT NULL,
 	CONSTRAINT PK_NewsPost PRIMARY KEY (NewsID));
  
 CREATE TABLE Comment ( 
@@ -103,7 +104,9 @@ CREATE TABLE PostReport (
  PostRptCat varchar(100) NOT NULL, 
  PostRptDesc varchar(100) NOT NULL, 
  AccName varchar(16) NOT NULL, 
- PostID varchar(10) NOT NULL 
+ PostID varchar(10) NOT NULL,
+
+
  CONSTRAINT PK_PostReport PRIMARY KEY (PostRptID), 
  CONSTRAINT FK_PostReport_AccName FOREIGN KEY (AccName) 
  REFERENCES Account(AccName), 
