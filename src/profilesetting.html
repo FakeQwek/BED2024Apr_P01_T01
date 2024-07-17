@@ -6,6 +6,11 @@
     <title>Socialise</title>
     <link href="output.css" rel="stylesheet">
     <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
         .button-black-text {
             background-color: #e5e7eb;
             color: black;
@@ -86,6 +91,8 @@
         .sidebar {
             flex: 1;
             padding: 1rem;
+            background-color: white;
+            height: 100vh; /* Full viewport height */
         }
 
         .create-discussion-card {
@@ -154,30 +161,32 @@
     <div class="flex flex-row h-full">
         <!-- Sidebar -->
         <div class="flex flex-col items-center w-1/6 h-full bg-white border-r-2">
-            <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
-                <div class="flex items-center">
-                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/home-variant-outline.svg" width="30px" />Home</span></button>
+            <div class="sidebar">
+                <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+                    <div class="flex items-center">
+                        <button class="btn w-full bg-white border-0 text-left shadow-none" onclick="window.location.href='index.html';"><span class="flex items-center w-full gap-2"><img src="../images/home-variant-outline.svg" width="30px" />Home</span></button>
+                    </div>
+                    <div class="flex items-center">
+                        <button class="btn w-full bg-white border-0 text-left shadow-none" onclick="window.location.href='profilesetting.html';"><span class="flex items-center w-full gap-2"><img src="../images/account-circle-outline.svg" width="30px" />Profile</span></button>
+                    </div>
+                    <div class="flex items-center">
+                        <button class="btn w-full bg-white border-0 text-left shadow-none" onclick="window.location.href='news.html';"><span class="flex items-center w-full gap-2"><img src="../images/newspaper-variant-outline.svg" width="30px" />News</span></button>
+                    </div>
                 </div>
-                <div class="flex items-center">
-                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/account-circle-outline.svg" width="30px" />Profile</span></button>
+                <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+                    <h2 class="font-bold mb=2">FOR YOU</h2>
                 </div>
-                <div class="flex items-center">
-                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/newspaper-variant-outline.svg" width="30px" />News</span></button>
-                </div>
-            </div>
-            <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
-                <h2 class="font-bold mb-2">FOR YOU</h2>
-            </div>
-            <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
-                <h2 class="font-bold mb-2">LEARN MORE</h2>
-                <div class="flex items-center">
-                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span the="flex items-center w-full gap-2"><img src="../images/information-outline.svg" width="30px" />About Us</span></button>
-                </div>
-                <div class="flex items-center">
-                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/phone-in-talk.svg" width="30px" />Contact Us</span></button>
-                </div>
-                <div class="flex items-center">
-                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/finance.svg" width="30px" />User Statistics</span></button>
+                <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+                    <h2 class="font-bold mb-2">LEARN MORE</h2>
+                    <div class="flex items-center">
+                        <button class="btn w-full bg-white border-0 text-left shadow-none" onclick="window.location.href='about.html';"><span the="flex items-center w-full gap-2"><img src="../images/information-outline.svg" width="30px" />About Us</span></button>
+                    </div>
+                    <div class="flex items-center">
+                        <button class="btn w-full bg-white border-0 text-left shadow-none" onclick="window.location.href='contact-us.html';"><span class="flex items-center w-full gap-2"><img src="../images/phone-in-talk.svg" width="30px" />Contact Us</span></button>
+                    </div>
+                    <div class="flex items-center">
+                        <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/finance.svg" width="30px" />User Statistics</span></button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -217,23 +226,23 @@
                         <div class="flex justify-between items-center">
                             <div>
                                 <p class="text-gray-600">Email notifications</p>
-                                <p>Not allowed</p>
+                                <p id="profileEmailNotification">Not allowed</p>
                             </div>
-                            <button class="text-blue-500 hover:underline">change</button>
+                            <button onclick="changeEmailNotification()" class="text-blue-500 hover:underline">change</button>
                         </div>
                         <div class="flex justify-between items-center">
                             <div>
                                 <p class="text-gray-600">Gender</p>
-                                <p>NIL</p>
+                                <p id="profileGender">NIL</p>
                             </div>
-                            <button class="text-blue-500 hover:underline">change</button>
+                            <button onclick="changeGender()" class="text-blue-500 hover:underline">change</button>
                         </div>
                         <div class="flex justify-between items-center">
                             <div>
                                 <p class="text-gray-600">Display language</p>
-                                <p>English</p>
+                                <p id="profileLanguage">English</p>
                             </div>
-                            <button class="text-blue-500 hover:underline">change</button>
+                            <button onclick="changeLanguage()" class="text-blue-500 hover:underline">change</button>
                         </div>
                     </div>
                 </div>
@@ -251,10 +260,18 @@
         document.addEventListener('DOMContentLoaded', function() {
             const username = localStorage.getItem('username') || 'banana';
             const email = localStorage.getItem('email') || 'banana@gmail.com';
+            const emailNotification = localStorage.getItem('emailNotification') || 'Not allowed';
+            const gender = localStorage.getItem('gender') || 'NIL';
+            const language = localStorage.getItem('language') || 'English';
+            const phoneNumber = localStorage.getItem('phoneNumber') || '123-456-7890';
 
             document.getElementById('profileUsername').textContent = `u:${username}`;
             document.getElementById('profileUsernameDisplay').textContent = username;
             document.getElementById('profileEmail').textContent = email;
+            document.getElementById('profileEmailNotification').textContent = emailNotification;
+            document.getElementById('profileGender').textContent = gender;
+            document.getElementById('profileLanguage').textContent = language;
+            document.getElementById('profilePhoneNumber').textContent = phoneNumber;
         });
 
         function navigateToConfirmDelete() {
@@ -263,23 +280,57 @@
 
         function changeUsername() {
             var newUsername = prompt("Please enter your new username:");
-            if (newUsername) {
+            if (newUsername.length <= 12) {
                 document.getElementById('profileUsername').textContent = `u:${newUsername}`;
                 document.getElementById('profileUsernameDisplay').textContent = newUsername;
+            } else {
+                alert("Username cannot be more than 12 characters.");
             }
         }
 
         function changeEmail() {
             var newEmail = prompt("Please enter your new email address:");
-            if (newEmail !== null && newEmail.trim() !== "") {
+            var emailPattern = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+            if (emailPattern.test(newEmail)) {
                 document.getElementById('profileEmail').textContent = newEmail;
+            } else {
+                alert("Invalid email address. It must be in the format '......@gmail.com'.");
             }
         }
 
         function changePhoneNumber() {
             var newPhoneNumber = prompt("Please enter your new phone number:");
-            if (newPhoneNumber !== null && newPhoneNumber.trim() !== "") {
+            if (/^\d{8}$/.test(newPhoneNumber)) {
                 document.getElementById('profilePhoneNumber').textContent = newPhoneNumber;
+            } else {
+                alert("Invalid phone number. It must be 8 digits and contain no letters.");
+            }
+        }
+
+        function changeEmailNotification() {
+            var newEmailNotification = prompt("Please enter 'allowed' or 'Not allowed':");
+            if (newEmailNotification === 'allowed' || newEmailNotification === 'Not allowed') {
+                document.getElementById('profileEmailNotification').textContent = newEmailNotification;
+            } else {
+                alert("Invalid value for email notifications. Allowed values are 'allowed' and 'Not allowed'.");
+            }
+        }
+
+        function changeGender() {
+            var newGender = prompt("Please enter 'Male' or 'Female':");
+            if (newGender === 'Male' || newGender === 'Female') {
+                document.getElementById('profileGender').textContent = newGender;
+            } else {
+                alert("Invalid value for gender. Allowed values are 'Male' and 'Female'.");
+            }
+        }
+
+        function changeLanguage() {
+            var newLanguage = prompt("Please enter the new language (must be 'English'):");
+            if (newLanguage === 'English') {
+                document.getElementById('profileLanguage').textContent = newLanguage;
+            } else {
+                alert("Invalid value for language. Allowed value is 'English'.");
             }
         }
 
@@ -287,14 +338,27 @@
             const username = document.getElementById('profileUsernameDisplay').textContent;
             const email = document.getElementById('profileEmail').textContent;
             const phoneNumber = document.getElementById('profilePhoneNumber').textContent;
+            const emailNotification = document.getElementById('profileEmailNotification').textContent;
+            const gender = document.getElementById('profileGender').textContent;
+            const language = document.getElementById('profileLanguage').textContent;
             const currentEmail = localStorage.getItem('email');
+
+            const allowedEmailNotifications = ['allowed', 'Not allowed'];
+            const allowedGenders = ['Male', 'Female'];
+            const allowedLanguages = ['English'];
+            const emailPattern = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+
+            if (!allowedEmailNotifications.includes(emailNotification) || !allowedGenders.includes(gender) || !allowedLanguages.includes(language) || !/^\d{8}$/.test(phoneNumber) || !emailPattern.test(email) || username.length > 12) {
+                alert('Input field for gender, email notification, language, phone number, email, or username is not correct');
+                return;
+            }
 
             fetch('http://localhost:3000/updateProfile', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ currentEmail, username, email, phoneNumber })
+                body: JSON.stringify({ currentEmail, username, email, phoneNumber, emailNotification, gender, language })
             })
             .then(response => {
                 if (!response.ok) {
@@ -306,6 +370,10 @@
                 alert('Profile updated successfully!');
                 localStorage.setItem('username', username);
                 localStorage.setItem('email', email);
+                localStorage.setItem('emailNotification', emailNotification);
+                localStorage.setItem('gender', gender);
+                localStorage.setItem('language', language);
+                localStorage.setItem('phoneNumber', phoneNumber);
             })
             .catch(error => {
                 console.error('Error updating profile:', error);
