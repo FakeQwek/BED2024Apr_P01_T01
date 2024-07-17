@@ -9,17 +9,19 @@
         html, body {
             height: 100%;
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         body {
             display: flex;
             flex-direction: column;
+            background-color: #f7fafc; /* Update the background color to match the content */
         }
         .content {
             display: flex;
             justify-content: center;
-            align-items: flex-start; /* Align items to the start */
+            align-items: center; /* Align items to the center */
             flex: 1;
-            padding-top: 50px; /* Add padding to move the content down */
         }
         input.input-bordered, button.btn-primary {
             border-color: #ddd;
@@ -33,13 +35,20 @@
             outline: none;
             box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.6);
         }
+        .header {
+            flex: 0 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+        }
     </style>
 </head>
-<body class="h-max bg-gray-100">
-    <div class="flex justify-between items-center p-4">
+<body>
+    <div class="header">
         <img src="../images/socialise2.png" alt="socialise" class="h-8 ml-4">
         <div class="flex justify-end w-1/4">
-            <button class="btn btn-sm mr-4">Login</button>
+            <button class="btn btn-sm mr-4" id="loginButton">Login</button>
             <button class="btn btn-sm mr-4">Sign Up</button>
         </div>
     </div>
@@ -72,12 +81,36 @@
         </div>
     </div>
     <script>
+        document.getElementById('loginButton').addEventListener('click', function() {
+            window.location.href = 'login.html';
+        });
+
         document.getElementById('signupForm').addEventListener('submit', async function(event) {
             event.preventDefault();
             
             const usernameOrEmail = document.getElementById('usernameOrEmail').value;
             const password = document.getElementById('password').value;
             const messageDiv = document.getElementById('message');
+
+            // Email validation regex for @gmail.com addresses only
+            const emailRegex = /^[^\s@]+@gmail\.com$/;
+            // Password length validation
+            const isPasswordValid = password.length >= 8 && password.length <= 12;
+
+            if (!emailRegex.test(usernameOrEmail)) {
+                messageDiv.innerHTML = '<p class="text-red-600">Invalid email format. Must be in the format "test1@gmail.com".</p>';
+                return;
+            }
+
+            if (password.length > 12) {
+                messageDiv.innerHTML = '<p class="text-red-600">Password cannot be more than 12 characters.</p>';
+                return;
+            }
+
+            if (!isPasswordValid) {
+                messageDiv.innerHTML = '<p class="text-red-600">Password must be between 8 and 12 characters.</p>';
+                return;
+            }
 
             const response = await fetch('http://localhost:3000/signup', {
                 method: 'POST',
@@ -96,26 +129,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

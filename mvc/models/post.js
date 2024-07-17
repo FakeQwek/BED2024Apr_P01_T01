@@ -1,6 +1,5 @@
-const sql =  require("mssql");
+const sql = require("mssql");
 const dbConfig = require("../../dbConfig");
-const { request } = require("express");
 
 class Post {
     constructor(postId, postName, postDesc, isEvent, isApproved, postDate, postEventDate, accName, dscName) {
@@ -17,12 +16,8 @@ class Post {
 
     static async getAllPosts() {
         const connection = await sql.connect(dbConfig);
-
         const sqlQuery = `SELECT * FROM Post`;
-
-        const request = connection.request();
-        const result = await request.query(sqlQuery);
-
+        const result = await connection.request().query(sqlQuery);
         connection.close();
 
         return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.PostDate, row.PostEventDate, row.OwnerID, row.DscName));
@@ -30,13 +25,10 @@ class Post {
 
     static async getPostById(postId) {
         const connection = await sql.connect(dbConfig);
-
         const sqlQuery = `SELECT * FROM Post WHERE PostID = @postId`;
-
         const request = connection.request();
         request.input("postId", postId);
         const result = await request.query(sqlQuery);
-
         connection.close();
 
         return result.recordset[0]
@@ -56,13 +48,10 @@ class Post {
 
     static async getPostsByDiscussion(dscName) {
         const connection = await sql.connect(dbConfig);
-
         const sqlQuery = `SELECT * FROM Post WHERE DscName = @dscName`;
-
         const request = connection.request();
         request.input("dscName", dscName);
         const result = await request.query(sqlQuery);
-
         connection.close();
 
         return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.PostDate, row.PostEventDate, row.OwnerID, row.DscName));
@@ -88,13 +77,10 @@ class Post {
 
     static async getUnapprovedPostsByDiscussion(dscName) {
         const connection = await sql.connect(dbConfig);
-
-        const sqlQuery = `SELECT * FROM Post WHERE DscName = @dscName AND isApproved = 0`;
-
+        const sqlQuery = `SELECT * FROM Post WHERE DscName = @dscName AND isApproved = 'False'`;
         const request = connection.request();
         request.input("dscName", dscName);
         const result = await request.query(sqlQuery);
-
         connection.close();
 
         return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.PostDate, row.PostEventDate, row.OwnerID, row.DscName));
@@ -113,9 +99,7 @@ class Post {
         request.input("postEventDate", newPostData.postEventDate);
         request.input("accName", newPostData.accName);
         request.input("dscName", newPostData.dscName);
-
-        const result = await request.query(sqlQuery);
-
+        await request.query(sqlQuery);
         connection.close();
     }
 
@@ -132,7 +116,6 @@ class Post {
         request.input("postEventDate", newPostData.postEventDate);
 
         await request.query(sqlQuery);
-
         connection.close();
 
         return this.getPostById(postId);
@@ -140,24 +123,19 @@ class Post {
 
     static async deletePost(postId) {
         const connection = await sql.connect(dbConfig);
-
-        const sqlQuery = `DELETE FROM Comment WHERE PostID = @postId; DELETE FROM PostReport WHERE PostID = @postId; DELETE FROM Volunteer WHERE PostID = @postId; DELETE FROM Post WHERE PostID = @postId`;
-
+        const sqlQuery = `DELETE FROM Post WHERE PostID = @postId`;
         const request = connection.request();
         request.input("postId", postId);
-        const result = await request.query(sqlQuery);
-
+        await request.query(sqlQuery);
         connection.close();
     }
 
     static async approvePost(postId) {
         const connection = await sql.connect(dbConfig);
-        const sqlQuery = `UPDATE Post SET isApproved = 1 WHERE PostID = @postId`;
-
+        const sqlQuery = `UPDATE Post SET isApproved = 'True' WHERE PostID = @postId`;
         const request = connection.request();
         request.input("postId", postId);
         await request.query(sqlQuery);
-
         connection.close();
     }
 }

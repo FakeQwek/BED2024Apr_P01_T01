@@ -5,16 +5,19 @@ const dbConfig = require("../../dbConfig");
 const { request } = require("express");
 
 class News {
-    constructor(newsId, newsImage, newsDesc, newsSource) {
+    constructor(newsId, newsImage, newsDesc, newsSource, newsContent, newsUrl, newsDate) {
         this.newsId = newsId;
         this.newsImage = newsImage;
         this.newsDesc = newsDesc;
         this.newsSource = newsSource;
+        this.newsContent = newsContent;
+        this.newsUrl = newsUrl;
+        this.newsDate = newsDate;
     }
 
     static async getAllNews() {
         const connection = await sql.connect(dbConfig);
-
+       
         const sqlQuery = `SELECT * FROM NewsPost`;
 
         const request = connection.request();
@@ -27,7 +30,7 @@ class News {
 
     static async getNewsById(newsId) {
         const connection = await sql.connect(dbConfig);
-
+     
         const sqlQuery = `SELECT * FROM NewsPost WHERE NewsID = @newsId`;
 
         const request = connection.request();
@@ -36,14 +39,7 @@ class News {
 
         connection.close();
 
-        return result.recordset[0]
-            ? new News(
-                result.recordset[0].NewsID,
-                result.recordset[0].NewsImage,
-                result.recordset[0].NewsDesc,
-                result.recordset[0].NewsSource,
-            )
-            : null;
+        return result.recordset.map((row) => new News(row.NewsID, row.NewsImage, row.NewsDesc, row.NewsSource, row.NewsContent, row.NewsUrl, row.NewsDate));
     }
 
     
@@ -51,7 +47,7 @@ class News {
     static async createNews(newNewsData) {
         const connection = await sql.connect(dbConfig);
         
-        const sqlQuery = `INSERT INTO NewsPost (NewsID, NewsImage, NewsDesc, NewsSource, NewsContent, NewsDate) VALUES (@newsId, @newsImage, @newsDesc, @newsSource, @newsContent, @newsDate);`;
+        const sqlQuery = `INSERT INTO NewsPost (NewsID, NewsImage, NewsDesc, NewsSource, NewsContent, NewsDate, NewsUrl) VALUES (@newsId, @newsImage, @newsDesc, @newsSource, @newsContent, @newsDate, @newsUrl);`;
 
         const request = connection.request();
         request.input("newsId", newNewsData.newsId);
@@ -60,6 +56,7 @@ class News {
         request.input("newsSource", newNewsData.newsSource);
         request.input("newsDate", newNewsData.newsDate);
         request.input("newsContent", newNewsData.newsContent);
+        request.input("newsUrl", newNewsData.newsUrl);
         const result = await request.query(sqlQuery);
 
         connection.close();

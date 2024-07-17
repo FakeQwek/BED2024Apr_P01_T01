@@ -53,7 +53,7 @@
 
     <script>
         function cancelDelete() {
-            window.location.href = 'profile.html';
+            window.location.href = 'profilesetting.html';
         }
 
         async function confirmDelete() {
@@ -74,12 +74,12 @@
                     window.location.href = 'Login.html'; // Redirect to login page
                 } else {
                     alert('Failed to delete account');
-                    window.location.href = 'profile.html'; // Redirect back to profile page
+                    window.location.href = 'profilesetting.html'; // Redirect back to profile page
                 }
             } catch (error) {
                 console.error('Error:', error);
                 alert('Error deleting account');
-                window.location.href = 'profile.html'; // Redirect back to profile page
+                window.location.href = 'profilesetting.html'; // Redirect back to profile page
             }
         }
     </script>

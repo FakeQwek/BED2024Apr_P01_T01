@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socialise</title>
+    <link href="output.css" rel="stylesheet">
+    <style>
+        .button-black-text {
+            background-color: #e5e7eb; /* Light gray background */
+            color: black; /* Black text */
+            padding: 0.5rem; /* Padding */
+            border-radius: 0.375rem; /* Rounded corners */
+            display: block; /* Ensure the button takes the full width of the link */
+            text-align: center; /* Center text inside the button */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+    <!-- Navbar -->
+    <header class="flex items-center p-4 bg-white shadow-md w-full">
+        <img src="../images/socialise2.png" alt="Socialise Logo" class="h-12 w-auto">
+    </header>
+
+    <!-- main -->
+    <div class="flex flex-row h-full">
+        <!-- sidebar -->
+        <div class="flex flex-col items-center w-1/6 h-full bg-white border-r-2">
+            <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+                <div class="flex items-center">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/home-variant-outline.svg" width="30px" />Home</span></button>
+                </div>
+                <div class="flex items-center">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/account-circle-outline.svg" width="30px" />Profile</span></button>
+                </div>
+                <div class="flex items-center">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/newspaper-variant-outline.svg" width="30px" />News</span></button>
+                </div>
+            </div>
+            <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+                <h2 class="font-bold mb-2">FOR YOU</h2>
+            </div>
+            <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+                <h2 class="font-bold mb-2">LEARN MORE</h2>
+                <div class="flex items-center">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/information-outline.svg" width="30px" />About Us</span></button>
+                </div>
+                <div class="flex items-center">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/phone-in-talk.svg" width="30px" />Contact Us</span></button>
+                </div>
+                <div class="flex items-center">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/finance.svg" width="30px" />User Statistics</span></button>
+                </div>
+            </div>
+        </div>
+            </nav>
+        </aside>
+        <!-- Main Content -->
+        <main class="flex-1 flex items-center justify-center p-8 bg-gray-100">
+            <div class="w-full max-w-md p-8 bg-white shadow rounded-2xl text-center">
+                <img src="../images/socialise2.png" alt="Socialise Logo" class="h-20 mx-auto mb-4">
+                
+                <p class="text-gray-700 mb-8">Join Us in the Discussion!<br>Login/Sign Up as</p>
+                <div class="flex flex-col space-y-4">
+                    <a href="signup.html" class="button-black-text">User</a>
+                    <button class="button-black-text">Admin</button>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
