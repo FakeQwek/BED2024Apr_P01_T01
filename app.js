@@ -20,7 +20,10 @@ const newsController = require("./mvc/controllers/newsController");
 const baninfoController = require("./mvc/controllers/baninfoController");
 const muteinfoController = require("./mvc/controllers/muteinfoController");
 const questionController = require("./mvc/controllers/questionController");
+const postLikesController = require("./mvc/controllers/postLikesController");
+const invitesController = require("./mvc/controllers/invitesController");
 const siteadminPostReportController = require("./mvc/controllers/siteadminPostReportController");
+
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -73,6 +76,7 @@ app.get("/bannedaccounts", accountsController.getAccountIsBanned);
 app.get("/mutedaccounts", accountsController.getAccountsIsMuted);
 app.get("/posts", postsController.getAllPosts);
 app.get("/posts/:dscName", postsController.getPostsByDiscussion);
+app.get("/postsOrderByLikes/:dscName", postsController.getPostsByDiscussionOrderByLikes);
 app.get("/post/:postId", postsController.getPostById);
 app.get("/discussions", discussionController.getAllDiscussions);
 app.get("/discussions/search", discussionController.searchDiscussions);
@@ -128,13 +132,28 @@ app.delete("/siteadminPost/:postId", siteadminPostReportController.deletePost);
 app.delete('/deleteAccount', accountsController.deleteAccount);
 app.get("/discussionMembers", discussionMembersController.getAllDiscussionMembers);
 app.get("/discussionMembers/:dscName", discussionMembersController.getDiscussionMembersByDiscussion);
+app.get("/discussionMemberTop3Discussions/:accName", discussionMembersController.getDiscussionMemberTop3Discussions);
 app.post("/discussionMember/:dscName", discussionMembersController.createDiscussionMember);
+
+app.delete("/discussionMember/:accName/:dscName", discussionMembersController.deleteDiscussionMember);
+
+app.get("/postLikes", postLikesController.getAllPostLikes);
+app.get("/postLikes/:postId", postLikesController.getPostLikesByPost);
+app.post("/postLike", postLikesController.createPostLike);
+app.delete("/postLike/:accName/:dscName", postLikesController.deletePostLike);
+
+app.get("/invites", invitesController.getAllInvites);
+app.get("/invites/:dscName", invitesController.getInvitesByDiscussion);
+app.post("/invite", invitesController.createInvite);
+app.delete("/invite/:invId", invitesController.deleteInvite);
+
 app.delete("/discussionReports/:dscRptId", discussionReportsController.deleteDiscussionReport);
 
 // Example protected route
 app.get('/protected', authenticateJWT, (req, res) => {
     res.send('This is a protected route');
 });
+
 
 // Start the server
 app.listen(port, async () => {

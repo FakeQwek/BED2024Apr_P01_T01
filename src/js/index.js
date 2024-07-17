@@ -30,7 +30,8 @@ async function createDiscussion() {
     await fetch("http://localhost:3000/discussionMember/" + discussionName.value, {
         method: "POST",
         body: JSON.stringify({
-            accName: "AppleTan"
+            accName: "AppleTan",
+            dscMemRole: "Owner"
         }),
         headers: {
             "Content-type": "application/json; charset=UTF-8"
@@ -64,7 +65,8 @@ async function Posts() {
                                             <div class="flex justify-between">
                                                 <div class="flex items-center gap-2">
                                                     <img src="../images/account-circle-outline.svg" width="30px" />
-                                                    <h2 class="text-sm">d:` + posts[i].dscName + `</h2>
+                                                    <h2 class="text-md">d:` + posts[i].dscName + `</h2>
+                                                    <h2 class="text-sm">` + posts[i].postDate + `</h2>
                                                 </div>
                                                 <!-- options dropdown -->
                                                 <div class="dropdown dropdown-end">
@@ -152,6 +154,18 @@ async function createPostReport(postId) {
     })
 }
 
+async function sidebar() {
+    const res = await fetch("http://localhost:3000/discussionMemberTop3Discussions/" + "AppleTan");
+    const discussionMembers = await res.json();
+
+    const joinedDiscussions = document.getElementById("joinedDiscussions");
+    
+    for (let i = 0; i < discussionMembers.length; i++) {
+        const discussionButtonHTML = `<li><a><span class="flex items-center w-full gap-2"><img src="../images/account-circle-outline.svg" width="30px" />` + discussionMembers[i].dscName + `</span></a></li>`;
+        joinedDiscussions.insertAdjacentHTML("beforeend", discussionButtonHTML);
+    }
+}
+
 function goToPost(postId) {
     // var script = document.getElementsByTagName("script");
     // var url = script[script.length-1].src;
@@ -183,3 +197,4 @@ function goToDiscussion(dscName) {
 }
 
 Posts();
+sidebar();
