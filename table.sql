@@ -36,6 +36,7 @@ CREATE TABLE Post (
  isEvent varchar(5) NOT NULL, 
  isApproved varchar(5) NOT NULL,
  PostDate varchar(10) NOT NULL,
+ PostEventDate varchar(10) NULL,
  OwnerID varchar(16) NOT NULL, 
  DscName varchar(16) NOT NULL 
  CONSTRAINT PK_Post PRIMARY KEY (PostID), 
@@ -72,7 +73,7 @@ CREATE TABLE DiscussionReport (
 CREATE TABLE PostReport ( 
  PostRptID varchar(10) NOT NULL, 
  PostRptCat varchar(100) NOT NULL, 
- PostRptDesc varchar(100) NOT NULL, 
+ PostRptDesc varchar(100) NOT NULL,
  AccName varchar(16) NOT NULL, 
  PostID varchar(10) NOT NULL 
  CONSTRAINT PK_PostReport PRIMARY KEY (PostRptID), 

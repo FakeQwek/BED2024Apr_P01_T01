@@ -33,8 +33,11 @@ async function Discussion() {
 };
 
 async function createPost() {
+    let dateInput = null;
+
     if (isEventRadio.checked) {
         var isEvent = "True";
+        dateInput = document.getElementById("dateInput");
     } else {
         var isEvent = "False";
     }
@@ -127,6 +130,13 @@ async function sidebar() {
         joinedDiscussions.insertAdjacentHTML("beforeend", discussionButtonHTML);
     }
 }
+
+const eventContainer = document.getElementById("eventContainer");
+
+isEventRadio.addEventListener("change", () => {
+    const dateInputHTML = `<input id="dateInput" type="text" placeholder="Date" class="input input-bordered" />`;
+    eventContainer.insertAdjacentHTML("afterbegin", dateInputHTML);
+})
 
 Discussion();
 DiscussionMembers();
