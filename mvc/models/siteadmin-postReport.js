@@ -15,6 +15,8 @@ class PostReport {
        this.postId = postId;
     }
 
+   
+
     static async getAllPostReports() {
         
         const connection = await sql.connect(dbConfig);
@@ -60,24 +62,46 @@ class PostReport {
 
     static async getAllPostReportsByNewest() {
         const connection = await sql.connect(dbConfig);
-        const sqlQuery = `SELECT * FROM PostReport ORDER BY PostRptID DESC`;
+        const sqlQuery = `SELECT PostRptID, PostRptDesc, PostName, AccName, Post.PostID
+            FROM PostReport
+            INNER JOIN Post 
+            ON PostReport.PostID = Post.PostID
+            INNER JOIN Account
+            ON PostReport.AccID = Account.AccID
+            ORDER BY PostRptID DESC`;
         const request = connection.request();
         const result = await request.query(sqlQuery);
 
         connection.close();
 
-        return result.recordset.map((row) => new PostReport(row.PostRptID, row.PostRptCat, row.PostRptDesc, row.AccName, row.PostID));
+        return result.recordset.map((row) => new PostReport(row.PostRptID, row.AccName, row.PostRptDesc, row.PostName, row.PostID));
+    }
+
+    static async getPostReportById(postId) {
+        const connection = await sql.connect(dbConfig);
+        const sqlQuery = `SELECT PostRptID, PostRptDesc, PostName, AccName, Post.PostID
+            FROM PostReport
+            INNER JOIN Post 
+            ON PostReport.PostID = Post.PostID
+            INNER JOIN Account
+            ON PostReport.AccID = Account.AccID
+            WHERE PostReport.PostID = @postId`;
+        const request = connection.request();
+        request.input("postId", postId);
+        const result = await request.query(sqlQuery);
+        connection.close();
+        return result.recordset.map((row) => new PostReport(row.PostRptID, row.AccName, row.PostRptDesc, row.PostName, row.PostID));
     }
 
     static async getAllCountOfPostReports() {
         const connection = await sql.connect(dbConfig);
-        const sqlQuery = `SELECT COUNT(PostID) AS 'Count', PostId From PostReport GROUP BY PostID ORDER BY PostID DESC`;
+        const sqlQuery = `SELECT COUNT(PostID) AS 'Count', PostId From PostReport GROUP BY PostID ORDER BY Count ASC`;
         const request = connection.request();
         const result = await request.query(sqlQuery);   
 
         connection.close();
-
-        return result.recordset.map((row) => new PostReport(row.Count, row.PostID));
+        console.log(result.recordset);
+        return result.recordset;
 
     }
 }

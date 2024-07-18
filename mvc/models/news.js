@@ -18,7 +18,7 @@ class News {
     static async getAllNews() {
         const connection = await sql.connect(dbConfig);
        
-        const sqlQuery = `SELECT * FROM NewsPost`;
+        const sqlQuery = `SELECT * FROM NewsPost ORDER BY NewsDate DESC`;
 
         const request = connection.request();
         const result = await request.query(sqlQuery);

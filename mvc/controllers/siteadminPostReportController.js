@@ -61,6 +61,23 @@ const getAllCountOfPostReports = async (req, res) => {
     }
 };
 
+const getPostReportById = async (req,res) => {
+    const postId = parseInt(req.params.postId);
+    try {
+        const postreport = await PostReport.getPostReportById(postId);
+        if (!postreport) {
+            return res.status(404).send("Post report not found")
+        }
+      
+        res.json(postreport);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Error retrieving post report");
+    }
+};
+
+
+
 
 
 module.exports = {
@@ -68,5 +85,6 @@ module.exports = {
     deletePostReport,
     deletePost,
     getAllPostReportsByNewest,
-    getAllCountOfPostReports
+    getAllCountOfPostReports,
+    getPostReportById
 };

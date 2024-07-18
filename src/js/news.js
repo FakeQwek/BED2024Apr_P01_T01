@@ -138,9 +138,9 @@ async function getAllNews() {
         
         for (i = 0; i < newsData.length; i++) {
             storednewsData.push(newsData[i]);
-            console.log(storednewsData);  
+            
         }
-    
+        console.log(storednewsData); 
         populateNews(storednewsData, newsContainer);
 
     })

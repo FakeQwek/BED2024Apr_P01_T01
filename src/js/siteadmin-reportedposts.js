@@ -1,24 +1,36 @@
 reportedPosts = [];
+countData = [];
 const reportedPostBox = document.getElementById("post-box");
 const newButton = document.getElementById("new-button");
 const reportButton = document.getElementById("report-button");
 const mutedPage = document.getElementById("muted-button");
 const bannedPage = document.getElementById("banned-button");
 const reportedPostPage = document.getElementById("reported-button");
+//Begins by getting all reported posts from local database
 getAllReportedPosts("http://localhost:3000/siteadmin/postreport");
 
 
-//Add event listeners to sorting buttons to get post report data - in progress
+//Adds event listener to new button to repopulate report box with reports ordered by newest to oldest
 newButton.addEventListener("click", function() {
+    //Reset post box and data to empty
+    reportedPostBox.innerHTML = ""; 
+    reportedPosts = [];
     getAllReportedPosts("http://localhost:3000/siteadmin/newestpostreport");
     console.log("received");
 })
 
+//Adds event listener to report button to repopulate report box with reports ordered by most reported
 reportButton.addEventListener("click", function() {
+    //Reset post box and data to empty
+    reportedPostBox.innerHTML = ""; 
+    reportedPosts = [];
+    countData = [];
+    getPostsSortedByMostReported();
+   
 
 })
 
-
+//Set of buttons for different site admin panel pages
 mutedPage.addEventListener("click", function(e) {
     window.location.href= "./siteadmin-mutedusers.html";
 })
@@ -31,34 +43,11 @@ reportedPostPage.addEventListener("click", function(e) {
     window.location.href= "./siteadmin-reportedposts.html";
 })
 
-//Function gets all post reports from the database
-async function getAllReportedPosts(url) {
-    response = await fetch(url)
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Response invalid!');
-        }
-        
-        return response.json();
-    })
-    .then(reportedPostData => {
-       
-        for(i = 0; i < reportedPostData.length; i++) 
-        {
-            reportedPosts.push(reportedPostData[i]);
-        }
-        console.log(reportedPosts);
-        //returns reported posts in dictionary format
-        populatePosts(reportedPosts);
-    })
-    .catch(error => {
-        console.error("Error:", error);
-    }); 
 
-}
 
 //Populates the post reports onto the page
 function populatePosts(reportedPosts) {
+    console.log("populating posts");
     length = reportedPosts.length;
     //Displays 'no more post reports' if there are no posts remaining
     if (length == 0) {
@@ -66,7 +55,7 @@ function populatePosts(reportedPosts) {
             <div class = "bg-white w-70per m-auto rounded-xl flex justify-center">No more Post Reports</div>
             `)
     }
-
+    //Creates html for a post for every post in reportedPosts
     for (i = 0; i < length; i++) {
         currentPost = reportedPosts[i];
         reportedPostBox.insertAdjacentHTML("beforeEnd",
@@ -98,7 +87,7 @@ function addApproveDenyListeners() {
                 window.location.reload();
             }
         )
-        console.log(allCrosses[i]);
+       
         allCrosses[i].addEventListener("click", function() {
             ids = event.currentTarget.id.split(',');
             postId = ids[0];
@@ -115,6 +104,94 @@ function addApproveDenyListeners() {
 }
 
 
+//Function gets all post reports from the database
+async function getAllReportedPosts(url) {
+    response = await fetch(url)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Response invalid!');
+        }
+        
+        return response.json();
+    })
+    .then(reportedPostData => {
+       
+        for(i = 0; i < reportedPostData.length; i++) 
+        {
+            reportedPosts.push(reportedPostData[i]);
+        }
+        console.log(reportedPosts);
+        //returns reported posts in dictionary format
+        populatePosts(reportedPosts);
+    })
+    .catch(error => {
+        console.error("Error:", error);
+    }); 
+}
+
+//Function gets and populates the post by most reported
+async function getPostsSortedByMostReported() {
+    //Fetch gets the count of all post reports grouped by post from the database
+    response = await fetch("http://localhost:3000/siteadmin/reportcount")
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Response invalid!');
+        }
+        
+        return response.json();
+    })
+    .then(countPostData => {
+       
+        for(i = 0; i < countPostData.length; i++) 
+        {
+             //Sends count data into countdata array
+            countData.push(countPostData[i]);
+        }
+       
+        countLength = countData.length;
+        //For each set of data counts, get a post report by id
+        for (i = 0; i < countLength; i++) {
+            reportInstance = countData[i];
+            console.log(reportInstance);
+            postId = reportInstance["PostId"];
+            console.log(postId);
+            getPostReportById(postId);
+    
+        }
+        console.log(countLength, reportedPosts );
+        //Populates post report box with each of the posts gotten by id
+       
+       
+    })
+    .catch(error => {
+        console.error("Error:", error);
+    }); 
+}
+
+async function getPostReportById(postId) {
+    response = await fetch(`http://localhost:3000/siteadmin/postreport/${postId}`)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Response invalid!');
+        }
+        
+        return response.json();
+    })
+    .then(reportedPostData => {
+            //Sends single post report into reported posts
+            console.log(reportedPostData[0]);
+            //Pushes each post report data into reported posts
+            reportedPosts.push(reportedPostData[0]);
+            console.log(reportedPosts);
+            //Resets the html every time this function is called to avoid duplicate reports
+            reportedPostBox.innerHTML = "";
+            //Finally creates the html for each post report
+            populatePosts(reportedPosts);
+    })
+    .catch(error => {
+        console.error("Error:", error);
+    }); 
+}
 
 
 //Function deletes post report from postreport table

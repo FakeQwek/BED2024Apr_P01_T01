@@ -41,6 +41,7 @@ app.use(morgan('combined')); // HTTP request logger
 app.get('/siteadmin/postreport', siteadminPostReportController.getAllPostReports);
 app.get("/siteadmin/reportcount", siteadminPostReportController.getAllCountOfPostReports);
 app.get('/siteadmin/newestpostreport', siteadminPostReportController.getAllPostReportsByNewest);
+app.get('/siteadmin/postreport/:postId', siteadminPostReportController.getPostReportById);
 app.get("/siteadmin/mutedusers", siteadminMutedUserController.getAllMutedUsers);
 app.get("/siteadmin/mutedusers/:name", siteadminMutedUserController.getMutedUsersByName);
 app.get("/siteadmin/bannedusers", siteadminBannedUserController.getAllBannedUsers);
