@@ -10,6 +10,7 @@ const confirm = document.getElementById("confirm");
 const mutedPage = document.getElementById("muted-button");
 const bannedPage = document.getElementById("banned-button");
 const reportedPostPage = document.getElementById("reported-button");
+const discussionPage = document.getElementById("discussion-button");
 
 var selection = "none";
 var data = [];
@@ -35,6 +36,10 @@ bannedPage.addEventListener("click", function(e) {
 
 reportedPostPage.addEventListener("click", function(e) {
     window.location.href= "./siteadmin-reportedposts.html";
+})
+
+discussionPage.addEventListener("click", function(e) {
+    window.location.href= "./siteadmin.html";
 })
 
 

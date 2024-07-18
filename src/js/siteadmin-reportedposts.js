@@ -6,6 +6,7 @@ const reportButton = document.getElementById("report-button");
 const mutedPage = document.getElementById("muted-button");
 const bannedPage = document.getElementById("banned-button");
 const reportedPostPage = document.getElementById("reported-button");
+const discussionPage = document.getElementById("discussion-button");
 //Begins by getting all reported posts from local database
 getAllReportedPosts("http://localhost:3000/siteadmin/postreport");
 
@@ -43,6 +44,9 @@ reportedPostPage.addEventListener("click", function(e) {
     window.location.href= "./siteadmin-reportedposts.html";
 })
 
+discussionPage.addEventListener("click", function(e) {
+    window.location.href= "./siteadmin.html";
+})
 
 
 //Populates the post reports onto the page
