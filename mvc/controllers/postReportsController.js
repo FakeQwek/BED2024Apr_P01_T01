@@ -10,6 +10,8 @@ const getAllPostReports = async (req, res) => {
     }
 };
 
+
+
 const getPostReportById = async (req, res) => {
     const postRptId = parseInt(req.params.postRptId);
     try {
@@ -38,5 +40,5 @@ const createPostReport = async (req, res) => {
 module.exports = {
     getAllPostReports,
     getPostReportById,
-    createPostReport,
+    createPostReport
 };

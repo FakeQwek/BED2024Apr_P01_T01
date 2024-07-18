@@ -60,6 +60,8 @@ class PostReport {
 
         connection.close();
     }
+
+   
 }
 
 module.exports = PostReport;

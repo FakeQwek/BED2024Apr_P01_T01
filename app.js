@@ -23,6 +23,8 @@ const questionController = require("./mvc/controllers/questionController");
 const postLikesController = require("./mvc/controllers/postLikesController");
 const invitesController = require("./mvc/controllers/invitesController");
 const siteadminPostReportController = require("./mvc/controllers/siteadminPostReportController");
+const siteadminMutedUserController = require("./mvc/controllers/siteadminMutedUserController");
+const siteadminBannedUserController = require("./mvc/controllers/siteadminBannedUserController.js");
 
 
 const app = express();
@@ -57,14 +59,20 @@ app.use(cors({
 app.use(helmet());
 app.use(morgan('combined')); // HTTP request logger
 
-// Route definitions
-app.delete('/deleteAccount', accountsController.deleteAccount);
-app.put('/updateProfile', accountsController.updateProfile);
-app.post('/signup', accountsController.signup);
-app.post('/login', accountsController.login);
-app.get('/ping', (req, res) => res.send('Server is running')); // Simple ping endpoint
 
-app.get('/siteadminPostReport', siteadminPostReportController.getAllPostReports);
+
+
+
+//Route Definitions
+app.get('/ping', (req, res) => res.send('Server is running')); // Simple ping endpoint
+app.get('/siteadmin/postreport', siteadminPostReportController.getAllPostReports);
+app.get("/siteadmin/reportcount", siteadminPostReportController.getAllCountOfPostReports);
+app.get('/siteadmin/newestpostreport', siteadminPostReportController.getAllPostReportsByNewest);
+app.get('/siteadmin/postreport/:postId', siteadminPostReportController.getPostReportById);
+app.get("/siteadmin/mutedusers", siteadminMutedUserController.getAllMutedUsers);
+app.get("/siteadmin/mutedusers/:name", siteadminMutedUserController.getMutedUsersByName);
+app.get("/siteadmin/bannedusers", siteadminBannedUserController.getAllBannedUsers);
+app.get("/siteadmin/bannedusers/:name", siteadminBannedUserController.getBannedUsersByName);
 app.get('/login', accountsController.login);
 app.get('/question', questionController.getAllQuestions);
 app.get('/question/:questionId', questionController.getQuestionById);
@@ -120,15 +128,17 @@ app.put("/accounts/unban/:accName", accountsController.unbanAccount);
 app.put("/accounts/unmute/:accName", accountsController.unmuteUser);
 app.put('/updateProfile', accountsController.updateProfile);
 app.put("/news/:newsId", newsController.updateNews);
+app.put("/siteadmin/unmute/:accId", siteadminMutedUserController.unmuteUser);
+app.put("/siteadmin/unban/:accId", siteadminBannedUserController.unbanUser);
 app.delete("/news/:newsId", newsController.deleteNews);
 app.delete("/comment/:cmtId", commentsController.deleteComment);
 app.delete("/posts/:postId", postsController.deletePost);
 app.delete("/volunteer/:volId", volunteersController.deleteVolunteer);
 app.delete("/baninfo/:accName", baninfoController.removeBanInfo);
 app.delete("/muteinfo/:accName", muteinfoController.removeMuteInfo);
-app.delete("/siteadminApprove/:reportId", siteadminPostReportController.deletePostReport);
-app.delete("/siteadminDeny/:postId", siteadminPostReportController.deletePostReport);
-app.delete("/siteadminPost/:postId", siteadminPostReportController.deletePost);
+app.delete("/siteadmin/approve/:reportId", siteadminPostReportController.deletePostReport);
+app.delete("/siteadmin/deny/:postId", siteadminPostReportController.deletePostReport);
+app.delete("/siteadmin/post/:postId", siteadminPostReportController.deletePost);
 app.delete('/deleteAccount', accountsController.deleteAccount);
 app.get("/discussionMembers", discussionMembersController.getAllDiscussionMembers);
 app.get("/discussionMembers/:dscName", discussionMembersController.getDiscussionMembersByDiscussion);

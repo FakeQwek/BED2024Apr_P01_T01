@@ -22,7 +22,7 @@
     </div>
 
     <!-- main -->
-    <div class="flex flex-row h-full">
+    <div class="flex flex-row">
         <!-- sidebar -->
         <div class="flex flex-col items-center w-1/6 h-max bg-white border-r-2">
             <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
@@ -56,35 +56,76 @@
       
 
         <!-- panel -->
-        <div class="flex w-4/6 flex-col h-full mb-6" id="panel-container">
-            <div class="bg-white card h-14 justify-center p-2" id="title">
-               <h1 class="font-bold text-xl ml-8">Site Admin Panel</h1>
+        <div class="flex w-4/6 flex-col h-full" id="panel-container">
+            <div class="bg-white card h-14 justify-center" id="title">
+               <h1 class="font-bold text-xl ml-8 flex flex-row items-center">Site Admin Panel<img src="../images/account-circle-outline.svg" width="75px" height="75px" class="ml-100"></h1>
               
             </div>
-            <div class="bg-white card h-full" id="panel">
+            <div class="bg-white card p-8 mb-8" id="panel">
                 <div id="button-container" class="flex flex-row ml-8 mt-8">
-                    <button class="mr-8">Reported Posts</button>
-                    <button class="mr-8">Banned Users</button>
-                    <button class="mr-8">Muted Users</button>
+                    <button class="mr-8" id="reported-button">Reported Posts</button>
+                    <button class="mr-8" id="banned-button">Banned Users</button>
+                    <button class="mr-4" id="muted-button"><u>Muted Users</u></button>
                 </div>
                 <h1 class="font-bold text-xl ml-8 mt-4">Muted Users</h1>
                 
-                    
-                <div id="search-container" class="mt-8">
-                    <img src ="../images/account-search.svg" width="50px" height="50px" class="ml-8">
-                    <input type="search" class="bg-gray-100 w-90per ml-4 h-12 mt-2 rounded-lg w-70per" id="search" placeholder="Search for a user">
-                    
+                <div class="flex flex-row items-center justify-center">
+                    <img src="../images/search.svg" width="35px" height="35px" class="mt-4" id="search-button">
+                    <input type="search" class="bg-gray-100 w-80per rounded-xl ml-4 mt-4 h-8" placeholder="Search User" id="search-box">
                 </div>
-                <div class="bg-gray-100 card h-152 w-90per mt-8 m-auto" id="post-box">
+                <div class="bg-gray-100 card w-90per mt-8 m-auto p-8 flex flex-col justify-center" id="user-box">
+                    
+                    
 
                 </div>
+              
                
              </div>
         </div>
-    
+       
         
         
     </div>
+    <div class="siteadmin-popup flex flex-col p-8" id="popup">
+        <div class="flex flex-row items-center">
+            <img src="../images/account-circle-outline.svg" width="40px" height="40px">
+            <h1 class="font-bold text-xl ml-4">Mute/Unmute User</h1>
+        </div>
+        <p class="text-left mt-4">Continue to mute the user or unmute them to remove them from the list of muted users</p>
+        <div class="flex flex-row items-center mt-8 ml-4" >
+            <img src="../images/account-circle-outline.svg" width="40px" height="40px">
+            <p class="ml-4" id="name-box"></p>
+           
+        </div>
+        <p class="ml-4 mt-8"><b>Punishment</b></p>
+        <div id="mute-box" class="flex flex-col mt-4 pb-4">
+            <div class="flex flex-row mt-4 ml-4">
+                <img src="../images/mutedmicrophone.png" width="20px" height="20px">
+                <p class="ml-2"><b>Mute</b></p>
+
+            </div>
+            <p class="mt-2 text-sm ml-4">Prevents user from posting or commenting on the site</p>
+            
+        </div>
+      
+        <div id="unmute-box" class="flex flex-col mt-4 pb-4">
+            <div class="flex flex-row mt-4 ml-4 items-center">
+                <img src="../images/microphone.png" width="20px" height="20px">
+                <p class="ml-2"><b>Unmute</b></p>
+            </div>
+            <p class="mt-2 text-sm ml-4">Allows user to post and comment on the site</p>
+            
+        </div>
+        <div id="button-container" class="flex flex-row mt-12 justify-end ">
+            <div class="rounded-xl bg-gray-100 w-20 h-8 text-center" id="cancel"><b>Cancel</b></div>
+            <div class="rounded-xl ml-8 bg-gray-100 w-20 h-8 text-center" id="confirm"><b>Confirm</b></div>
+        </div>
+       
+    </div>
+   
+  
+    
 </body>
+<div id="background" class="h-max" ></div>
 <script src="./js/siteadmin-mutedusers.js"></script>
 </html>
