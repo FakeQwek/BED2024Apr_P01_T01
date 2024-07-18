@@ -1,7 +1,6 @@
 const DiscussionReport = require("../models/discussionReport");
-const { getPostById } = require("../models/post");
 
-const getAllDiscussionReports = async(req, res) => {
+const getAllDiscussionReports = async (req, res) => {
     try {
         const discussionReports = await DiscussionReport.getAllDiscussionReports();
         res.json(discussionReports);
@@ -14,10 +13,11 @@ const getAllDiscussionReports = async(req, res) => {
 const getDiscussionReportById = async (req, res) => {
     const dscRptId = parseInt(req.params.dscRptId);
     try {
-        const discussionReport = DiscussionReport.getDiscussionReportById(dscRptId);
+        const discussionReport = await DiscussionReport.getDiscussionReportById(dscRptId);
         if (!discussionReport) {
             return res.status(404).send("Discussion Report not found");
-        } res.json(discussionReport);
+        }
+        res.json(discussionReport);
     } catch (error) {
         console.log(error);
         res.status(500).send("Error retrieving discussion report");
@@ -28,10 +28,33 @@ const createDiscussionReport = async (req, res) => {
     const newDiscussionReport = req.body;
     try {
         const createdDiscussionReport = await DiscussionReport.createDiscussionReport(newDiscussionReport);
-        res.status(201).json(createDiscussionReport);
+        res.status(201).json(createdDiscussionReport);
     } catch (error) {
         console.log(error);
         res.status(500).send("Error creating discussion report");
+    }
+};
+
+const deleteDiscussionReport = async (req, res) => {
+    const dscRptId = parseInt(req.params.dscRptId);
+    try {
+        console.log(`Attempting to delete discussion report with ID: ${dscRptId}`);
+        const discussionReport = await DiscussionReport.getDiscussionReportById(dscRptId);
+        
+        // Log the retrieved discussion report
+        console.log(`Retrieved Discussion Report: `, discussionReport);
+
+        if (!discussionReport) {
+            console.log(`Discussion Report with ID: ${dscRptId} not found`);
+            return res.status(404).send("Discussion Report not found");
+        }
+
+        await DiscussionReport.deleteDiscussionReport(dscRptId);
+        console.log(`Successfully deleted discussion report with ID: ${dscRptId}`);
+        res.status(200).send("Discussion Report deleted successfully");
+    } catch (error) {
+        console.log(`Error deleting discussion report with ID: ${dscRptId}`, error);
+        res.status(500).send("Error deleting discussion report");
     }
 };
 
@@ -39,4 +62,5 @@ module.exports = {
     getAllDiscussionReports,
     getDiscussionReportById,
     createDiscussionReport,
+    deleteDiscussionReport,
 };

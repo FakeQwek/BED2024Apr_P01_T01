@@ -7,6 +7,8 @@ const postName = document.getElementById("postName");
 const postDesc = document.getElementById("postDesc");
 const postComments = document.getElementById("postComments");
 const postAccount = document.getElementById("postAccount");
+const postDate = document.getElementById("postDate");
+const postOptions = document.getElementById("postOptions");
 
 var discussionName;
 
@@ -15,7 +17,6 @@ async function Discussion(dscName) {
     const discussion = await res.json();
 
     discussionName = discussion.dscName;
-    console.log(discussion);
 
     const discussionBannerName = document.getElementById("discussionBannerName");
     const discussionBanerNameHTML = `<h2>` + discussionName + `</h2>`;
@@ -38,7 +39,6 @@ async function Discussion(dscName) {
 async function Post() {
     const res = await fetch("http://localhost:3000/post/" + postId);
     const post = await res.json();
-    console.log(post);
 
     const postNameHTML = `<h2>` + post.postName + '</h2>';
     postName.insertAdjacentHTML("afterbegin", postNameHTML);
@@ -49,13 +49,21 @@ async function Post() {
     const postAccountHTML = '<p>' + post.accName + '<p>';
     postAccount.insertAdjacentHTML("beforeend", postAccountHTML);
 
+    const postDateHTML = '<p>' + post.postDate + '<p>';
+    postDate.insertAdjacentHTML("beforeend", postDateHTML);
+
+    if (post.accName == "AppleTan") {
+        const postOptionsHTML = `<li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="delete_modal.showModal()"><span class="w-full">Delete</span></button></li>
+                                <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="goToEditPost(` + postId + `)"><span class="w-full">Edit</span></button></li>`;
+        postOptions.insertAdjacentHTML("beforeend", postOptionsHTML);
+    }
+
     Discussion(post.dscName);
 };
 
 async function Comments() {
     const res = await fetch("http://localhost:3000/comments/" + postId);
     const comments = await res.json();
-    console.log(comments);
 
     for (let i = 0; i < comments.length; i++) {
         const postCommentHTML = `<div class="card w-full h-fit bg-white">
@@ -223,8 +231,50 @@ async function DiscussionMembers() {
     const res = await fetch("http://localhost:3000/discussionMembers/" + discussionName);
     const discussionMembers = await res.json();
 
-    memberCount.innerHTML = `<h2 class="font-bold">` + discussionMembers.length + `</h2>`
+    memberCount.innerHTML = `<h2 class="font-bold">` + discussionMembers.length + `</h2>`;
+
+    for (let i = 0; i < discussionMembers.length; i++) {
+        if (discussionMembers[i].dscMemRole == "Owner" && discussionMembers[i].accName == "AppleTan") {
+            const bannerOptionsHTML = `<li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="edit_discussion_modal.showModal()"><span class="w-full">Edit</span></button></li>`;
+            bannerOptions.insertAdjacentHTML("beforeend", bannerOptionsHTML);
+        } else if (discussionMembers[i].dscMemRole == "Admin") {
+            const discussionAdmins = document.getElementById("discussionAdmins");
+            const discussionAdminsHTML = `<div class="flex items-center gap-2">
+                                            <img src="../images/account-circle-outline.svg" width="30px" />
+                                            <h2>` + discussionMembers[i].accName + `</h2>
+                                        </div>`;
+            discussionAdmins.insertAdjacentHTML("beforeend", discussionAdminsHTML);
+        }
+    }
+}
+
+async function sidebar() {
+    const res = await fetch("http://localhost:3000/discussionMemberTop3Discussions/" + "AppleTan");
+    const discussionMembers = await res.json();
+
+    const joinedDiscussions = document.getElementById("joinedDiscussions");
+    
+    for (let i = 0; i < discussionMembers.length; i++) {
+        const discussionButtonHTML = `<li><a><span class="flex items-center w-full gap-2"><img src="../images/account-circle-outline.svg" width="30px" />` + discussionMembers[i].dscName + `</span></a></li>`;
+        joinedDiscussions.insertAdjacentHTML("beforeend", discussionButtonHTML);
+    }
+}
+
+function goToEditPost(postId) {
+    var script = document.getElementsByTagName("script");
+    var url = script[script.length-1].src;
+    for (let i = 0; i < url.length; i++) {
+        if (url.slice(-1) != "/") {
+            url = url.substring(0, url.length - 1);
+        } else {
+            break;
+        }
+    }
+    url = url.substring(0, url.length - 3);
+    url = url.concat("edit-post.html?discussionName=" + discussionName + "&postId=" + postId);
+    window.location.href = url;
 }
 
 Post();
 Comments();
+sidebar();

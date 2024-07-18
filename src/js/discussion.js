@@ -1,12 +1,19 @@
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const discussionName = urlParams.get("discussionName");
-console.log(discussionName);
+
+let owners = [];
+let isMember = false;
+let isMuted = false;
+let isBanned = false;
+
+let isPublic = false;
+
+let discussionType;
 
 async function Discussion() { 
     const res = await fetch("http://localhost:3000/discussions/" + discussionName);
     const discussion = await res.json();
-    console.log(discussion);
 
     const discussionName2 = document.getElementById("discussionName");
     const discussionName2HTML = `<h2>d:` + discussion.dscName + `</h2>`;
@@ -26,146 +33,352 @@ async function Discussion() {
                                     <h2>` + discussion.accName + `</h2>
                                 </div>`;
     discussionOwners.insertAdjacentHTML("beforeend", discussionOwnersHTML);
+
+    DiscussionMembers();
+
+    discussionType = discussion.dscType;
+
+    if (discussion.dscType == "Public") {
+        isPublic = true;
+    }
 };
 
 async function Posts() {
     const res = await fetch("http://localhost:3000/posts/" + discussionName);
     const posts = await res.json();
-    console.log(posts);
 
     const discussionPosts = document.getElementById("discussionPosts");
 
     for (let i = 0; i < posts.length; i++) {
         if (posts[i].isEvent == "True") {
-            const postHTML = `<div class="card w-full h-fit bg-white" onclick="goToPost(` + posts[i].postId + `)">
-                                <div class="card-body">
-                                    <div class="card-title flex justify-between items-center">
-                                        <div class="flex flex-col justify-between w-full gap-2">
-                                            <div class="flex justify-between">
-                                                <div class="flex items-center gap-2">
-                                                    <img src="../images/account-circle-outline.svg" width="30px" />
-                                                    <h2 class="text-sm">` + posts[i].accName + `</h2>
-                                                </div>
-                                                <!-- options dropdown -->
-                                                <div class="dropdown dropdown-end">
-                                                    <div tabindex="0" role="button" class="btn btn-sm bg-white border-0 shadow-none"><img src="../images/dots-horizontal.svg" width="20px" /></div>
-                                                    <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                                                        <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="report_post_modal` + i + `.showModal()"><span class="w-full">Report</span></button></li>
-                                                        <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="delete_modal` + i + `.showModal()"><span class="w-full">Delete</span></button></li>
-                                                    </ul>
-                                                    <!-- report post popup -->
-                                                    <dialog id="report_post_modal` + i + `" class="modal">
-                                                        <div class="modal-box flex flex-col h-2/3 rounded-3xl gap-2">
-                                                            <h2 class="font-bold text-2xl">Submit a report</h2>
-                                                            <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                                                            <select id="postReportCat` + posts[i].postId + `" class="select select-bordered w-full mt-4">
-                                                                <option>Hate speech</option>
-                                                                <option>Minor abuse or sexualisation</option>
-                                                                <option>Self-harm or suicide</option>
-                                                            </select>
-                                                            <textarea id="postReportDesc` + posts[i].postId + `" class="textarea textarea-bordered h-2/3 resize-none mt-4" placeholder="Description"></textarea>
-                                                            <div class="modal-action">
-                                                                <form class="flex gap-4" method="dialog">
-                                                                    <button class="btn btn-sm">Cancel</button>
-                                                                    <button class="btn btn-sm bg-red-500 text-white" onclick="createPostReport(` + posts[i].postId + `)">Submit</button>
-                                                                </form>
+            if (posts[i].accName == "AppleTan") {
+                const postHTML = `<div class="card w-full h-fit bg-white" onclick="goToPost(` + posts[i].postId + `)">
+                                    <div class="card-body">
+                                        <div class="card-title flex justify-between items-center">
+                                            <div class="flex flex-col justify-between w-full gap-2">
+                                                <div class="flex justify-between">
+                                                    <div class="flex items-center gap-2">
+                                                        <img src="../images/account-circle-outline.svg" width="30px" />
+                                                        <h2 class="text-sm">` + posts[i].accName + `</h2>
+                                                        <h2 class="text-sm">` + posts[i].postDate + `</h2>
+                                                    </div>
+                                                    <!-- options dropdown -->
+                                                    <div class="dropdown dropdown-end">
+                                                        <div tabindex="0" role="button" class="btn btn-sm bg-white border-0 shadow-none"><img src="../images/dots-horizontal.svg" width="20px" /></div>
+                                                        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                                                            <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="report_post_modal` + i + `.showModal()"><span class="w-full">Report</span></button></li>
+                                                            <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="delete_modal` + i + `.showModal()"><span class="w-full">Delete</span></button></li>
+                                                            <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="goToEditPost(` + posts[i].postId + `)"><span class="w-full">Edit</span></button></li>
+                                                        </ul>
+                                                        <!-- report post popup -->
+                                                        <dialog id="report_post_modal` + i + `" class="modal">
+                                                            <div class="modal-box flex flex-col h-2/3 rounded-3xl gap-2">
+                                                                <h2 class="font-bold text-2xl">Submit a report</h2>
+                                                                <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                                                <select id="postReportCat` + posts[i].postId + `" class="select select-bordered w-full mt-4">
+                                                                    <option>Hate speech</option>
+                                                                    <option>Minor abuse or sexualisation</option>
+                                                                    <option>Self-harm or suicide</option>
+                                                                </select>
+                                                                <textarea id="postReportDesc` + posts[i].postId + `" class="textarea textarea-bordered h-2/3 resize-none mt-4" placeholder="Description"></textarea>
+                                                                <div class="modal-action">
+                                                                    <form class="flex gap-4" method="dialog">
+                                                                        <button class="btn btn-sm">Cancel</button>
+                                                                        <button class="btn btn-sm bg-red-500 text-white" onclick="createPostReport(` + posts[i].postId + `)">Submit</button>
+                                                                    </form>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </dialog>
-                                                    <!-- delete popup -->
-                                                    <dialog id="delete_modal` + i + `" class="modal">
-                                                        <div class="modal-box flex flex-col rounded-3xl gap-2">
-                                                            <h2 class="font-bold text-2xl">Delete this post</h2>
-                                                            <p class="text-sm">Are you sure you want to delete this post? Once deleted this post will be gone forever.</p>
-                                                            <div class="modal-action">
-                                                                <form class="flex gap-4" method="dialog">
-                                                                    <button class="btn btn-sm">Cancel</button>
-                                                                    <button class="btn btn-sm bg-red-500 text-white" onclick="deletePost(` + posts[i].postId + `)">Delete</button>
-                                                                </form>
+                                                        </dialog>
+                                                        <!-- delete popup -->
+                                                        <dialog id="delete_modal` + i + `" class="modal">
+                                                            <div class="modal-box flex flex-col rounded-3xl gap-2">
+                                                                <h2 class="font-bold text-2xl">Delete this post</h2>
+                                                                <p class="text-sm">Are you sure you want to delete this post? Once deleted this post will be gone forever.</p>
+                                                                <div class="modal-action">
+                                                                    <form class="flex gap-4" method="dialog">
+                                                                        <button class="btn btn-sm">Cancel</button>
+                                                                        <button class="btn btn-sm bg-red-500 text-white" onclick="deletePost(` + posts[i].postId + `)">Delete</button>
+                                                                    </form>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </dialog>
+                                                        </dialog>
+                                                    </div>
                                                 </div>
+                                                <h2>` + posts[i].postName + `</h2>
                                             </div>
-                                            <h2>` + posts[i].postName + `</h2>
+                                        </div>
+                                        <p>` + posts[i].postDesc + `</p>
+                                        <div class="flex justify-between">
+                                            <div id="likeCount` + posts[i].postId + `" class="flex items-center gap-4">
+                                                <button id="likeButton` + posts[i].postId + `" class="btn btn-sm" onclick="createPostLike(` + posts[i].postId + `)"><img src="../images/thumb-up-outline.svg" width="20px"></button>
+                                            </div>
+                                            <button id=` + posts[i].postId + ` class="btn btn-sm" onclick="createVolunteer(` + posts[i].postId + `)">Join</button>
                                         </div>
                                     </div>
-                                    <p>` + posts[i].postDesc + `</p>
-                                    <div class="flex justify-end">
-                                        <button id=` + posts[i].postId + ` class="btn btn-sm" onclick="createVolunteer(` + posts[i].postId + `)">Join</button>
+                                </div>`;
+                discussionPosts.insertAdjacentHTML("beforeend", postHTML);
+            } else {
+                const postHTML = `<div class="card w-full h-fit bg-white" onclick="goToPost(` + posts[i].postId + `)">
+                                    <div class="card-body">
+                                        <div class="card-title flex justify-between items-center">
+                                            <div class="flex flex-col justify-between w-full gap-2">
+                                                <div class="flex justify-between">
+                                                    <div class="flex items-center gap-2">
+                                                        <img src="../images/account-circle-outline.svg" width="30px" />
+                                                        <h2 class="text-sm">` + posts[i].accName + `</h2>
+                                                        <h2 class="text-sm">` + posts[i].postDate + `</h2>
+                                                    </div>
+                                                    <!-- options dropdown -->
+                                                    <div class="dropdown dropdown-end">
+                                                        <div tabindex="0" role="button" class="btn btn-sm bg-white border-0 shadow-none"><img src="../images/dots-horizontal.svg" width="20px" /></div>
+                                                        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                                                            <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="report_post_modal` + i + `.showModal()"><span class="w-full">Report</span></button></li>
+                                                        </ul>
+                                                        <!-- report post popup -->
+                                                        <dialog id="report_post_modal` + i + `" class="modal">
+                                                            <div class="modal-box flex flex-col h-2/3 rounded-3xl gap-2">
+                                                                <h2 class="font-bold text-2xl">Submit a report</h2>
+                                                                <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                                                <select id="postReportCat` + posts[i].postId + `" class="select select-bordered w-full mt-4">
+                                                                    <option>Hate speech</option>
+                                                                    <option>Minor abuse or sexualisation</option>
+                                                                    <option>Self-harm or suicide</option>
+                                                                </select>
+                                                                <textarea id="postReportDesc` + posts[i].postId + `" class="textarea textarea-bordered h-2/3 resize-none mt-4" placeholder="Description"></textarea>
+                                                                <div class="modal-action">
+                                                                    <form class="flex gap-4" method="dialog">
+                                                                        <button class="btn btn-sm">Cancel</button>
+                                                                        <button class="btn btn-sm bg-red-500 text-white" onclick="createPostReport(` + posts[i].postId + `)">Submit</button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </dialog>
+                                                    </div>
+                                                </div>
+                                                <h2>` + posts[i].postName + `</h2>
+                                            </div>
+                                        </div>
+                                        <p>` + posts[i].postDesc + `</p>
+                                        <div class="flex justify-between">
+                                            <div id="likeCount` + posts[i].postId + `" class="flex items-center gap-4">
+                                                <button id="likeButton` + posts[i].postId + `" class="btn btn-sm" onclick="createPostLike(` + posts[i].postId + `)"><img src="../images/thumb-up-outline.svg" width="20px"></button>
+                                            </div>
+                                            <button id=` + posts[i].postId + ` class="btn btn-sm" onclick="createVolunteer(` + posts[i].postId + `)">Join</button>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>`;
-            discussionPosts.insertAdjacentHTML("beforeend", postHTML);
+                                </div>`;
+                discussionPosts.insertAdjacentHTML("beforeend", postHTML);
+            }
         } else {
-            const postHTML = `<div class="card w-full h-fit bg-white" onclick="goToPost(` + posts[i].postId + `)">
-                                <div class="card-body">
-                                    <div class="card-title flex justify-between items-center">
-                                        <div class="flex flex-col justify-between w-full gap-2">
-                                            <div class="flex justify-between">
-                                                <div class="flex items-center gap-2">
-                                                    <img src="../images/account-circle-outline.svg" width="30px" />
-                                                    <h2 class="text-sm">` + posts[i].accName + `</h2>
-                                                </div>
-                                                <!-- options dropdown -->
-                                                <div class="dropdown dropdown-end">
-                                                    <div tabindex="0" role="button" class="btn btn-sm bg-white border-0 shadow-none"><img src="../images/dots-horizontal.svg" width="20px" /></div>
-                                                    <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                                                        <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="report_post_modal` + i + `.showModal()"><span class="w-full">Report</span></button></li>
-                                                        <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="delete_modal` + i + `.showModal()"><span class="w-full">Delete</span></button></li>
-                                                    </ul>
-                                                    <!-- report post popup -->
-                                                    <dialog id="report_post_modal` + i + `" class="modal">
-                                                        <div class="modal-box flex flex-col h-2/3 rounded-3xl gap-2">
-                                                            <h2 class="font-bold text-2xl">Submit a report</h2>
-                                                            <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                                                            <select id="postReportCat` + posts[i].postId + `" class="select select-bordered w-full mt-4">
-                                                                <option>Hate speech</option>
-                                                                <option>Minor abuse or sexualisation</option>
-                                                                <option>Self-harm or suicide</option>
-                                                            </select>
-                                                            <textarea id="postReportDesc` + posts[i].postId + `" class="textarea textarea-bordered h-2/3 resize-none mt-4" placeholder="Description"></textarea>
-                                                            <div class="modal-action">
-                                                                <form class="flex gap-4" method="dialog">
-                                                                    <button class="btn btn-sm">Cancel</button>
-                                                                    <button class="btn btn-sm bg-red-500 text-white" onclick="createPostReport(` + posts[i].postId + `)">Submit</button>
-                                                                </form>
+            if (posts[i].accName == "AppleTan") {
+                const postHTML = `<div class="card w-full h-fit bg-white" onclick="goToPost(` + posts[i].postId + `)">
+                                    <div class="card-body">
+                                        <div class="card-title flex justify-between items-center">
+                                            <div class="flex flex-col justify-between w-full gap-2">
+                                                <div class="flex justify-between">
+                                                    <div class="flex items-center gap-2">
+                                                        <img src="../images/account-circle-outline.svg" width="30px" />
+                                                        <h2 class="text-sm">` + posts[i].accName + `</h2>
+                                                        <h2 class="text-sm">` + posts[i].postDate + `</h2>
+                                                    </div>
+                                                    <!-- options dropdown -->
+                                                    <div class="dropdown dropdown-end">
+                                                        <div tabindex="0" role="button" class="btn btn-sm bg-white border-0 shadow-none"><img src="../images/dots-horizontal.svg" width="20px" /></div>
+                                                        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                                                            <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="report_post_modal` + i + `.showModal()"><span class="w-full">Report</span></button></li>
+                                                            <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="delete_modal` + i + `.showModal()"><span class="w-full">Delete</span></button></li>
+                                                            <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="goToEditPost(` + posts[i].postId + `)"><span class="w-full">Edit</span></button></li>
+                                                        </ul>
+                                                        <!-- report post popup -->
+                                                        <dialog id="report_post_modal` + i + `" class="modal">
+                                                            <div class="modal-box flex flex-col h-2/3 rounded-3xl gap-2">
+                                                                <h2 class="font-bold text-2xl">Submit a report</h2>
+                                                                <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                                                <select id="postReportCat` + posts[i].postId + `" class="select select-bordered w-full mt-4">
+                                                                    <option>Hate speech</option>
+                                                                    <option>Minor abuse or sexualisation</option>
+                                                                    <option>Self-harm or suicide</option>
+                                                                </select>
+                                                                <textarea id="postReportDesc` + posts[i].postId + `" class="textarea textarea-bordered h-2/3 resize-none mt-4" placeholder="Description"></textarea>
+                                                                <div class="modal-action">
+                                                                    <form class="flex gap-4" method="dialog">
+                                                                        <button class="btn btn-sm">Cancel</button>
+                                                                        <button class="btn btn-sm bg-red-500 text-white" onclick="createPostReport(` + posts[i].postId + `)">Submit</button>
+                                                                    </form>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </dialog>
-                                                    <!-- delete popup -->
-                                                    <dialog id="delete_modal` + i + `" class="modal">
-                                                        <div class="modal-box flex flex-col rounded-3xl gap-2">
-                                                            <h2 class="font-bold text-2xl">Delete this post</h2>
-                                                            <p class="text-sm">Are you sure you want to delete this post? Once deleted this post will be gone forever.</p>
-                                                            <div class="modal-action">
-                                                                <form class="flex gap-4" method="dialog">
-                                                                    <button class="btn btn-sm">Cancel</button>
-                                                                    <button class="btn btn-sm bg-red-500 text-white" onclick="deletePost(` + posts[i].postId + `)">Delete</button>
-                                                                </form>
+                                                        </dialog>
+                                                        <!-- delete popup -->
+                                                        <dialog id="delete_modal` + i + `" class="modal">
+                                                            <div class="modal-box flex flex-col rounded-3xl gap-2">
+                                                                <h2 class="font-bold text-2xl">Delete this post</h2>
+                                                                <p class="text-sm">Are you sure you want to delete this post? Once deleted this post will be gone forever.</p>
+                                                                <div class="modal-action">
+                                                                    <form class="flex gap-4" method="dialog">
+                                                                        <button class="btn btn-sm">Cancel</button>
+                                                                        <button class="btn btn-sm bg-red-500 text-white" onclick="deletePost(` + posts[i].postId + `)">Delete</button>
+                                                                    </form>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </dialog>
+                                                        </dialog>
+                                                    </div>
                                                 </div>
+                                                <h2>` + posts[i].postName + `</h2>
                                             </div>
-                                            <h2>` + posts[i].postName + `</h2>
+                                        </div>
+                                        <p>` + posts[i].postDesc + `</p>
+                                        <div id="likeCount` + posts[i].postId + `" class="flex items-center gap-4">
+                                            <button id="likeButton` + posts[i].postId + `" class="btn btn-sm" onclick="createPostLike(` + posts[i].postId + `)"><img src="../images/thumb-up-outline.svg" width="20px"></button>
                                         </div>
                                     </div>
-                                    <p>` + posts[i].postDesc + `</p>
-                                </div>
-                            </div>`;
-            discussionPosts.insertAdjacentHTML("beforeend", postHTML);
+                                </div>`;
+                discussionPosts.insertAdjacentHTML("beforeend", postHTML);
+            } else {
+                const postHTML = `<div class="card w-full h-fit bg-white" onclick="goToPost(` + posts[i].postId + `)">
+                                    <div class="card-body">
+                                        <div class="card-title flex justify-between items-center">
+                                            <div class="flex flex-col justify-between w-full gap-2">
+                                                <div class="flex justify-between">
+                                                    <div class="flex items-center gap-2">
+                                                        <img src="../images/account-circle-outline.svg" width="30px" />
+                                                        <h2 class="text-sm">` + posts[i].accName + `</h2>
+                                                        <h2 class="text-sm">` + posts[i].postDate + `</h2>
+                                                    </div>
+                                                    <!-- options dropdown -->
+                                                    <div class="dropdown dropdown-end">
+                                                        <div tabindex="0" role="button" class="btn btn-sm bg-white border-0 shadow-none"><img src="../images/dots-horizontal.svg" width="20px" /></div>
+                                                        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                                                            <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="report_post_modal` + i + `.showModal()"><span class="w-full">Report</span></button></li>
+                                                        </ul>
+                                                        <!-- report post popup -->
+                                                        <dialog id="report_post_modal` + i + `" class="modal">
+                                                            <div class="modal-box flex flex-col h-2/3 rounded-3xl gap-2">
+                                                                <h2 class="font-bold text-2xl">Submit a report</h2>
+                                                                <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                                                <select id="postReportCat` + posts[i].postId + `" class="select select-bordered w-full mt-4">
+                                                                    <option>Hate speech</option>
+                                                                    <option>Minor abuse or sexualisation</option>
+                                                                    <option>Self-harm or suicide</option>
+                                                                </select>
+                                                                <textarea id="postReportDesc` + posts[i].postId + `" class="textarea textarea-bordered h-2/3 resize-none mt-4" placeholder="Description"></textarea>
+                                                                <div class="modal-action">
+                                                                    <form class="flex gap-4" method="dialog">
+                                                                        <button class="btn btn-sm">Cancel</button>
+                                                                        <button class="btn btn-sm bg-red-500 text-white" onclick="createPostReport(` + posts[i].postId + `)">Submit</button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </dialog>
+                                                    </div>
+                                                </div>
+                                                <h2>` + posts[i].postName + `</h2>
+                                            </div>
+                                        </div>
+                                        <p>` + posts[i].postDesc + `</p>
+                                        <div id="likeCount` + posts[i].postId + `" class="flex items-center gap-4">
+                                            <button id="likeButton` + posts[i].postId + `" class="btn btn-sm" onclick="createPostLike(` + posts[i].postId + `)"><img src="../images/thumb-up-outline.svg" width="20px"></button>
+                                        </div>
+                                    </div>
+                                </div>`;
+                discussionPosts.insertAdjacentHTML("beforeend", postHTML);
+            }
         }
+        getPostLikesByPost(posts[i].postId);
     }
 };
 
 const memberCount = document.getElementById("memberCount");
 
+const bannerOptions = document.getElementById("bannerOptions");
+
 async function DiscussionMembers() {
     const res = await fetch("http://localhost:3000/discussionMembers/" + discussionName);
     const discussionMembers = await res.json();
     
-    memberCount.innerHTML = `<h2 class="font-bold">` + discussionMembers.length + `</h2>`
+    memberCount.innerHTML = `<h2 class="font-bold">` + discussionMembers.length + `</h2>`;
+
+    const joinButton = document.getElementById("joinButton");
+
+    for (let i = 0; i < discussionMembers.length; i++) {
+        if (discussionMembers[i].accName == "AppleTan" && discussionMembers[i].dscName == discussionName) {
+            isMember = true;
+            
+            if (discussionMembers[i].isMuted == "True") {
+                isMuted = "True";
+            }
+
+            if (discussionMembers[i].isBanned == "True") {
+                isBanned = "True";
+            }
+        }
+    }
+
+    if (!isBanned) {
+        if (!isPublic) {
+            for (let i = 0; i < discussionMembers.length; i++) {
+                if (discussionMembers[i].accName == "AppleTan" && discussionMembers[i].dscName == discussionName) {
+                    Posts();
+                    isMember = true;
+                }
+            }
+        
+            if (!isMember) {
+                const discussionPosts = document.getElementById("discussionPosts");
+    
+                const postHTML = `<div class="flex flex-col justify-center items-center h-full">
+                                    <img src="../images/lock-outline.svg" width="100px" />
+                                    <h2 class="text-2xl font-bold">You do not have access to this discussion</h2>
+                                </div>`;
+    
+                discussionPosts.insertAdjacentHTML("beforeend", postHTML);
+            } else {
+                joinButton.innerHTML = `<img src="../images/plus.svg" width="20px" />Leave`;
+            }
+    
+            if (joinButton) {
+                joinButton.remove();
+            }
+        } else {
+            if (isMember) {
+                joinButton.innerHTML = `<img src="../images/plus.svg" width="20px" />Leave`;
+            }
+            Posts();
+        }
+    }
+
+    for (let i = 0; i < discussionMembers.length; i++) {
+        if (isBanned) {
+            const discussionPosts = document.getElementById("discussionPosts");
+            discussionPosts.innerHTML = `<div class="flex flex-col justify-center items-center h-full">
+                                            <img src="../images/cancel.svg" width="100px" />
+                                            <h2 class="text-2xl font-bold">You are banned from this discussion</h2>
+                                        </div>`;
+        }
+
+        if (discussionMembers[i].dscMemRole == "Owner" && discussionMembers[i].accName == "AppleTan") {
+            let bannerOptionsHTML;
+
+            if (discussionType == "Restricted") {
+                bannerOptionsHTML = `<li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="edit_discussion_modal.showModal()"><span class="w-full">Edit</span></button></li>
+                                        <li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="invite_modal.showModal()"><span class="w-full">Invite</span></button></li>`;
+            } else {
+                bannerOptionsHTML = `<li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="edit_discussion_modal.showModal()"><span class="w-full">Edit</span></button></li>`;
+            }
+
+            bannerOptions.insertAdjacentHTML("beforeend", bannerOptionsHTML);
+            
+            if (joinButton) {
+                joinButton.remove();
+            }
+        } else if (discussionMembers[i].dscMemRole == "Admin") {
+            const discussionAdmins = document.getElementById("discussionAdmins");
+            const discussionAdminsHTML = `<div class="flex items-center gap-2">
+                                            <img src="../images/account-circle-outline.svg" width="30px" />
+                                            <h2>` + discussionMembers[i].accName + `</h2>
+                                        </div>`;
+            discussionAdmins.insertAdjacentHTML("beforeend", discussionAdminsHTML);
+        }
+    }
 }
 
 async function deletePost(postId) {
@@ -241,16 +454,367 @@ async function createDiscussionReport() {
 }
 
 async function createDiscussionMember() {
-    console.log(discussionName);
-    await fetch("http://localhost:3000/discussionMember/" + discussionName, {
+    const joinButton = document.getElementById("joinButton");
+    if (!isMember) {
+        await fetch("http://localhost:3000/discussionMember/" + discussionName, {
+            method: "POST",
+            body: JSON.stringify({
+                accName: "AppleTan",
+                dscMemRole: "Member"
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+        isMember = true;
+        joinButton.innerHTML = `<img src="../images/plus.svg" width="20px" />Leave`;
+    } else {
+        await fetch("http://localhost:3000/discussionMember/" + "AppleTan" + "/" + discussionName , {
+            method: "DELETE"
+        });
+        isMember = false;
+        joinButton.innerHTML = `<img src="../images/plus.svg" width="20px" />Join`;
+    }
+}
+
+async function createPostLike(postId) {
+    const likeButton = document.getElementById("likeButton" + postId);
+    if (likeButton.innerHTML == `<img src="../images/thumb-up-outline.svg" width="20px">`) {
+        await fetch("http://localhost:3000/postLike/", {
+            method: "POST",
+            body: JSON.stringify({
+                accName: "AppleTan",
+                postId: postId
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+        likeButton.innerHTML = `<img src="../images/thumb-up.svg" width="20px">`;
+        const postLikeCount = document.getElementById("postLikeCount" + postId);
+        let likeCount =  parseInt(postLikeCount.innerHTML) + 1;
+        postLikeCount.innerHTML = likeCount;
+    } else {
+        await fetch("http://localhost:3000/postLike/" + "AppleTan" + "/" + postId , {
+            method: "DELETE"
+        });
+        likeButton.innerHTML = `<img src="../images/thumb-up-outline.svg" width="20px">`;
+        const postLikeCount = document.getElementById("postLikeCount" + postId);
+        let likeCount =  parseInt(postLikeCount.innerHTML)- 1;
+        postLikeCount.innerHTML = likeCount;
+
+    }
+}
+
+async function getPostLikesByPost(postId) {
+    const res = await fetch("http://localhost:3000/postLikes/" + postId);
+    const postLikes = await res.json();
+
+    const likeCount = document.getElementById("likeCount" + postId);
+    
+    const likeCountHTML = `<h2 id="postLikeCount` + postId + `">` + postLikes.length + `</h2>`;
+
+    likeCount.insertAdjacentHTML("beforeend", likeCountHTML);
+
+    for (let i = 0; i < postLikes.length; i++) {
+        if (postLikes[i].accName == "AppleTan") {
+            const likeButton = document.getElementById("likeButton" + postId);
+            likeButton.innerHTML = `<img src="../images/thumb-up.svg" width="20px" />`;
+        }
+    }
+}
+
+async function getPostsByDiscussionOrderByLikes() {
+    const res = await fetch("http://localhost:3000/postsOrderByLikes/" + discussionName);
+    const posts = await res.json();
+
+    const discussionPosts = document.getElementById("discussionPosts");
+
+    if (isMember) {
+        discussionPosts.innerHTML = `<div class="flex justify-between w-full h-fit mt-4">
+                                        <div>
+                                            <button class="btn btn-sm bg-white ml-8 max-[820px]:hidden" onclick="getPostsByDiscussionOrderByLikes()"><img src="../images/fire.svg" width="20px" />Hot</button>
+                                            <button class="btn btn-sm bg-white ml-4"><img src="../images/finance.svg" width="20px" />Trending</button>
+                                        </div>
+                                        <div>
+                                            <button id="joinButton" class="btn btn-sm bg-white mr-4 max-[820px]:mr-2" onclick="createDiscussionMember()"><img src="../images/plus.svg" width="20px" />Leave</button>
+                                            <button class="btn btn-sm bg-white mr-8" onclick="goToCreatePost()"><img src="../images/plus.svg" width="20px" />Post</button>
+                                        </div>
+                                    </div>`;
+    } else {
+        discussionPosts.innerHTML = `<div class="flex justify-between w-full h-fit mt-4">
+                                        <div>
+                                            <button class="btn btn-sm bg-white ml-8 max-[820px]:hidden" onclick="getPostsByDiscussionOrderByLikes()"><img src="../images/fire.svg" width="20px" />Hot</button>
+                                            <button class="btn btn-sm bg-white ml-4"><img src="../images/finance.svg" width="20px" />Trending</button>
+                                        </div>
+                                        <div>
+                                            <button id="joinButton" class="btn btn-sm bg-white mr-4 max-[820px]:mr-2" onclick="createDiscussionMember()"><img src="../images/plus.svg" width="20px" />Join</button>
+                                            <button class="btn btn-sm bg-white mr-8" onclick="goToCreatePost()"><img src="../images/plus.svg" width="20px" />Post</button>
+                                        </div>
+                                    </div>`;
+    }
+
+    for (let i = 0; i < posts.length; i++) {
+        if (posts[i].isEvent == "True") {
+            if (posts[i].accName == "AppleTan") {
+                const postHTML = `<div class="card w-full h-fit bg-white" onclick="goToPost(` + posts[i].postId + `)">
+                                    <div class="card-body">
+                                        <div class="card-title flex justify-between items-center">
+                                            <div class="flex flex-col justify-between w-full gap-2">
+                                                <div class="flex justify-between">
+                                                    <div class="flex items-center gap-2">
+                                                        <img src="../images/account-circle-outline.svg" width="30px" />
+                                                        <h2 class="text-sm">` + posts[i].accName + `</h2>
+                                                        <h2 class="text-sm">` + posts[i].postDate + `</h2>
+                                                    </div>
+                                                    <!-- options dropdown -->
+                                                    <div class="dropdown dropdown-end">
+                                                        <div tabindex="0" role="button" class="btn btn-sm bg-white border-0 shadow-none"><img src="../images/dots-horizontal.svg" width="20px" /></div>
+                                                        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                                                            <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="report_post_modal` + i + `.showModal()"><span class="w-full">Report</span></button></li>
+                                                            <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="delete_modal` + i + `.showModal()"><span class="w-full">Delete</span></button></li>
+                                                            <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="goToEditPost(` + posts[i].postId + `)"><span class="w-full">Edit</span></button></li>
+                                                        </ul>
+                                                        <!-- report post popup -->
+                                                        <dialog id="report_post_modal` + i + `" class="modal">
+                                                            <div class="modal-box flex flex-col h-2/3 rounded-3xl gap-2">
+                                                                <h2 class="font-bold text-2xl">Submit a report</h2>
+                                                                <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                                                <select id="postReportCat` + posts[i].postId + `" class="select select-bordered w-full mt-4">
+                                                                    <option>Hate speech</option>
+                                                                    <option>Minor abuse or sexualisation</option>
+                                                                    <option>Self-harm or suicide</option>
+                                                                </select>
+                                                                <textarea id="postReportDesc` + posts[i].postId + `" class="textarea textarea-bordered h-2/3 resize-none mt-4" placeholder="Description"></textarea>
+                                                                <div class="modal-action">
+                                                                    <form class="flex gap-4" method="dialog">
+                                                                        <button class="btn btn-sm">Cancel</button>
+                                                                        <button class="btn btn-sm bg-red-500 text-white" onclick="createPostReport(` + posts[i].postId + `)">Submit</button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </dialog>
+                                                        <!-- delete popup -->
+                                                        <dialog id="delete_modal` + i + `" class="modal">
+                                                            <div class="modal-box flex flex-col rounded-3xl gap-2">
+                                                                <h2 class="font-bold text-2xl">Delete this post</h2>
+                                                                <p class="text-sm">Are you sure you want to delete this post? Once deleted this post will be gone forever.</p>
+                                                                <div class="modal-action">
+                                                                    <form class="flex gap-4" method="dialog">
+                                                                        <button class="btn btn-sm">Cancel</button>
+                                                                        <button class="btn btn-sm bg-red-500 text-white" onclick="deletePost(` + posts[i].postId + `)">Delete</button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </dialog>
+                                                    </div>
+                                                </div>
+                                                <h2>` + posts[i].postName + `</h2>
+                                            </div>
+                                        </div>
+                                        <p>` + posts[i].postDesc + `</p>
+                                        <div class="flex justify-between">
+                                            <div id="likeCount` + posts[i].postId + `" class="flex items-center gap-4">
+                                                <button id="likeButton` + posts[i].postId + `" class="btn btn-sm" onclick="createPostLike(` + posts[i].postId + `)"><img src="../images/thumb-up-outline.svg" width="20px"></button>
+                                            </div>
+                                            <button id=` + posts[i].postId + ` class="btn btn-sm" onclick="createVolunteer(` + posts[i].postId + `)">Join</button>
+                                        </div>
+                                    </div>
+                                </div>`;
+                discussionPosts.insertAdjacentHTML("beforeend", postHTML);
+            } else {
+                const postHTML = `<div class="card w-full h-fit bg-white" onclick="goToPost(` + posts[i].postId + `)">
+                                    <div class="card-body">
+                                        <div class="card-title flex justify-between items-center">
+                                            <div class="flex flex-col justify-between w-full gap-2">
+                                                <div class="flex justify-between">
+                                                    <div class="flex items-center gap-2">
+                                                        <img src="../images/account-circle-outline.svg" width="30px" />
+                                                        <h2 class="text-sm">` + posts[i].accName + `</h2>
+                                                        <h2 class="text-sm">` + posts[i].postDate + `</h2>
+                                                    </div>
+                                                    <!-- options dropdown -->
+                                                    <div class="dropdown dropdown-end">
+                                                        <div tabindex="0" role="button" class="btn btn-sm bg-white border-0 shadow-none"><img src="../images/dots-horizontal.svg" width="20px" /></div>
+                                                        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                                                            <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="report_post_modal` + i + `.showModal()"><span class="w-full">Report</span></button></li>
+                                                        </ul>
+                                                        <!-- report post popup -->
+                                                        <dialog id="report_post_modal` + i + `" class="modal">
+                                                            <div class="modal-box flex flex-col h-2/3 rounded-3xl gap-2">
+                                                                <h2 class="font-bold text-2xl">Submit a report</h2>
+                                                                <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                                                <select id="postReportCat` + posts[i].postId + `" class="select select-bordered w-full mt-4">
+                                                                    <option>Hate speech</option>
+                                                                    <option>Minor abuse or sexualisation</option>
+                                                                    <option>Self-harm or suicide</option>
+                                                                </select>
+                                                                <textarea id="postReportDesc` + posts[i].postId + `" class="textarea textarea-bordered h-2/3 resize-none mt-4" placeholder="Description"></textarea>
+                                                                <div class="modal-action">
+                                                                    <form class="flex gap-4" method="dialog">
+                                                                        <button class="btn btn-sm">Cancel</button>
+                                                                        <button class="btn btn-sm bg-red-500 text-white" onclick="createPostReport(` + posts[i].postId + `)">Submit</button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </dialog>
+                                                    </div>
+                                                </div>
+                                                <h2>` + posts[i].postName + `</h2>
+                                            </div>
+                                        </div>
+                                        <p>` + posts[i].postDesc + `</p>
+                                        <div class="flex justify-between">
+                                            <div id="likeCount` + posts[i].postId + `" class="flex items-center gap-4">
+                                                <button id="likeButton` + posts[i].postId + `" class="btn btn-sm" onclick="createPostLike(` + posts[i].postId + `)"><img src="../images/thumb-up-outline.svg" width="20px"></button>
+                                            </div>
+                                            <button id=` + posts[i].postId + ` class="btn btn-sm" onclick="createVolunteer(` + posts[i].postId + `)">Join</button>
+                                        </div>
+                                    </div>
+                                </div>`;
+                discussionPosts.insertAdjacentHTML("beforeend", postHTML);
+            }
+        } else {
+            if (posts[i].accName == "AppleTan") {
+                const postHTML = `<div class="card w-full h-fit bg-white" onclick="goToPost(` + posts[i].postId + `)">
+                                    <div class="card-body">
+                                        <div class="card-title flex justify-between items-center">
+                                            <div class="flex flex-col justify-between w-full gap-2">
+                                                <div class="flex justify-between">
+                                                    <div class="flex items-center gap-2">
+                                                        <img src="../images/account-circle-outline.svg" width="30px" />
+                                                        <h2 class="text-sm">` + posts[i].accName + `</h2>
+                                                        <h2 class="text-sm">` + posts[i].postDate + `</h2>
+                                                    </div>
+                                                    <!-- options dropdown -->
+                                                    <div class="dropdown dropdown-end">
+                                                        <div tabindex="0" role="button" class="btn btn-sm bg-white border-0 shadow-none"><img src="../images/dots-horizontal.svg" width="20px" /></div>
+                                                        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                                                            <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="report_post_modal` + i + `.showModal()"><span class="w-full">Report</span></button></li>
+                                                            <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="delete_modal` + i + `.showModal()"><span class="w-full">Delete</span></button></li>
+                                                            <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="goToEditPost(` + posts[i].postId + `)"><span class="w-full">Edit</span></button></li>
+                                                        </ul>
+                                                        <!-- report post popup -->
+                                                        <dialog id="report_post_modal` + i + `" class="modal">
+                                                            <div class="modal-box flex flex-col h-2/3 rounded-3xl gap-2">
+                                                                <h2 class="font-bold text-2xl">Submit a report</h2>
+                                                                <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                                                <select id="postReportCat` + posts[i].postId + `" class="select select-bordered w-full mt-4">
+                                                                    <option>Hate speech</option>
+                                                                    <option>Minor abuse or sexualisation</option>
+                                                                    <option>Self-harm or suicide</option>
+                                                                </select>
+                                                                <textarea id="postReportDesc` + posts[i].postId + `" class="textarea textarea-bordered h-2/3 resize-none mt-4" placeholder="Description"></textarea>
+                                                                <div class="modal-action">
+                                                                    <form class="flex gap-4" method="dialog">
+                                                                        <button class="btn btn-sm">Cancel</button>
+                                                                        <button class="btn btn-sm bg-red-500 text-white" onclick="createPostReport(` + posts[i].postId + `)">Submit</button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </dialog>
+                                                        <!-- delete popup -->
+                                                        <dialog id="delete_modal` + i + `" class="modal">
+                                                            <div class="modal-box flex flex-col rounded-3xl gap-2">
+                                                                <h2 class="font-bold text-2xl">Delete this post</h2>
+                                                                <p class="text-sm">Are you sure you want to delete this post? Once deleted this post will be gone forever.</p>
+                                                                <div class="modal-action">
+                                                                    <form class="flex gap-4" method="dialog">
+                                                                        <button class="btn btn-sm">Cancel</button>
+                                                                        <button class="btn btn-sm bg-red-500 text-white" onclick="deletePost(` + posts[i].postId + `)">Delete</button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </dialog>
+                                                    </div>
+                                                </div>
+                                                <h2>` + posts[i].postName + `</h2>
+                                            </div>
+                                        </div>
+                                        <p>` + posts[i].postDesc + `</p>
+                                        <div id="likeCount` + posts[i].postId + `" class="flex items-center gap-4">
+                                            <button id="likeButton` + posts[i].postId + `" class="btn btn-sm" onclick="createPostLike(` + posts[i].postId + `)"><img src="../images/thumb-up-outline.svg" width="20px"></button>
+                                        </div>
+                                    </div>
+                                </div>`;
+                discussionPosts.insertAdjacentHTML("beforeend", postHTML);
+            } else {
+                const postHTML = `<div class="card w-full h-fit bg-white" onclick="goToPost(` + posts[i].postId + `)">
+                                    <div class="card-body">
+                                        <div class="card-title flex justify-between items-center">
+                                            <div class="flex flex-col justify-between w-full gap-2">
+                                                <div class="flex justify-between">
+                                                    <div class="flex items-center gap-2">
+                                                        <img src="../images/account-circle-outline.svg" width="30px" />
+                                                        <h2 class="text-sm">` + posts[i].accName + `</h2>
+                                                        <h2 class="text-sm">` + posts[i].postDate + `</h2>
+                                                    </div>
+                                                    <!-- options dropdown -->
+                                                    <div class="dropdown dropdown-end">
+                                                        <div tabindex="0" role="button" class="btn btn-sm bg-white border-0 shadow-none"><img src="../images/dots-horizontal.svg" width="20px" /></div>
+                                                        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                                                            <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="report_post_modal` + i + `.showModal()"><span class="w-full">Report</span></button></li>
+                                                        </ul>
+                                                        <!-- report post popup -->
+                                                        <dialog id="report_post_modal` + i + `" class="modal">
+                                                            <div class="modal-box flex flex-col h-2/3 rounded-3xl gap-2">
+                                                                <h2 class="font-bold text-2xl">Submit a report</h2>
+                                                                <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                                                <select id="postReportCat` + posts[i].postId + `" class="select select-bordered w-full mt-4">
+                                                                    <option>Hate speech</option>
+                                                                    <option>Minor abuse or sexualisation</option>
+                                                                    <option>Self-harm or suicide</option>
+                                                                </select>
+                                                                <textarea id="postReportDesc` + posts[i].postId + `" class="textarea textarea-bordered h-2/3 resize-none mt-4" placeholder="Description"></textarea>
+                                                                <div class="modal-action">
+                                                                    <form class="flex gap-4" method="dialog">
+                                                                        <button class="btn btn-sm">Cancel</button>
+                                                                        <button class="btn btn-sm bg-red-500 text-white" onclick="createPostReport(` + posts[i].postId + `)">Submit</button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </dialog>
+                                                    </div>
+                                                </div>
+                                                <h2>` + posts[i].postName + `</h2>
+                                            </div>
+                                        </div>
+                                        <p>` + posts[i].postDesc + `</p>
+                                        <div id="likeCount` + posts[i].postId + `" class="flex items-center gap-4">
+                                            <button id="likeButton` + posts[i].postId + `" class="btn btn-sm" onclick="createPostLike(` + posts[i].postId + `)"><img src="../images/thumb-up-outline.svg" width="20px"></button>
+                                        </div>
+                                    </div>
+                                </div>`;
+                discussionPosts.insertAdjacentHTML("beforeend", postHTML);
+            }
+        }
+        getPostLikesByPost(posts[i].postId);
+    }
+}
+
+async function sidebar() {
+    const res = await fetch("http://localhost:3000/discussionMemberTop3Discussions/" + "AppleTan");
+    const discussionMembers = await res.json();
+
+    const joinedDiscussions = document.getElementById("joinedDiscussions");
+    
+    for (let i = 0; i < discussionMembers.length; i++) {
+        const discussionButtonHTML = `<li><a><span class="flex items-center w-full gap-2"><img src="../images/account-circle-outline.svg" width="30px" />` + discussionMembers[i].dscName + `</span></a></li>`;
+        joinedDiscussions.insertAdjacentHTML("beforeend", discussionButtonHTML);
+    }
+}
+
+async function createInvite() {
+    await fetch("http://localhost:3000/invite", {
         method: "POST",
         body: JSON.stringify({
-            accName: "AppleTan"
+            accName: "AppleTan",
+            dscName: discussionName
         }),
         headers: {
             "Content-type": "application/json; charset=UTF-8"
         }
-    })
+    });
 }
 
 function goToCreatePost() {
@@ -283,6 +847,20 @@ function goToPost(postId) {
     // window.location.href = url;
 }
 
+function goToEditPost(postId) {
+    var script = document.getElementsByTagName("script");
+    var url = script[script.length-1].src;
+    for (let i = 0; i < url.length; i++) {
+        if (url.slice(-1) != "/") {
+            url = url.substring(0, url.length - 1);
+        } else {
+            break;
+        }
+    }
+    url = url.substring(0, url.length - 3);
+    url = url.concat("edit-post.html?discussionName=" + discussionName + "&postId=" + postId);
+    window.location.href = url;
+}
+
 Discussion();
-Posts();
-DiscussionMembers();
+sidebar();
