@@ -24,6 +24,11 @@ const postLikesController = require("./mvc/controllers/postLikesController");
 const invitesController = require("./mvc/controllers/invitesController");
 const siteadminPostReportController = require("./mvc/controllers/siteadminPostReportController");
 
+// import middlewares
+const verifyDiscussionOwner = require("./mvc/middlewares/verifyDiscussionOwner");
+const verifyPostOwner = require("./mvc/middlewares/verifyPostOwner");
+const verifyDiscussionMember = require("./mvc/middlewares/verifyDiscussionMember");
+
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -54,8 +59,8 @@ app.use(cors({
     credentials: true,
     origin: true
 }));
-app.use(helmet());
-app.use(morgan('combined')); // HTTP request logger
+// app.use(helmet());
+// app.use(morgan('combined')); // HTTP request logger
 
 // Route definitions
 app.delete('/deleteAccount', accountsController.deleteAccount);
@@ -75,14 +80,15 @@ app.get("/accounts/:accName", accountsController.getAccountByName);
 app.get("/bannedaccounts", accountsController.getAccountIsBanned);
 app.get("/mutedaccounts", accountsController.getAccountsIsMuted);
 app.get("/posts", postsController.getAllPosts);
-app.get("/posts/:dscName", postsController.getPostsByDiscussion);
+app.get("/posts/:dscName", verifyDiscussionMember, postsController.getPostsByDiscussion);
 app.get("/postsOrderByLikes/:dscName", postsController.getPostsByDiscussionOrderByLikes);
 app.get("/post/:postId", postsController.getPostById);
+app.get("/postOwner/:postId", postsController.getPostOwnerByPostId);
 app.get("/discussions", discussionController.getAllDiscussions);
 app.get("/discussions/search", discussionController.searchDiscussions);
 app.get("/discussions/:dscName", discussionController.getDiscussionByName);
 app.get("/comments", commentsController.getAllComments);
-app.get("/comments/:postId", commentsController.getCommentsByPost);
+app.get("/comments/:dscName/:postId", verifyDiscussionMember, commentsController.getCommentsByPost);
 app.get("/postReports", postReportsController.getAllPostReports);
 app.get("/postReports/:postRptId", postReportsController.getPostReportById);
 app.get("/discussionReports", discussionReportsController.getAllDiscussionReports);
@@ -100,9 +106,9 @@ app.post("/baninfo", baninfoController.addBanInfo);
 app.post("/postReport", postReportsController.createPostReport);
 app.post("/discussionReport", discussionReportsController.createDiscussionReport);
 app.post("/discussion", discussionController.createDiscussion);
-app.post("/comment", commentsController.createComment);
+app.post("/comment/:dscName", verifyDiscussionMember, commentsController.createComment);
 app.post("/post", postsController.createPost);
-app.post("/volunteer", volunteersController.createVolunteer);
+app.post("/volunteer/:dscName", verifyDiscussionMember, volunteersController.createVolunteer);
 app.post('/signup', accountsController.signup);
 app.post('/login', accountsController.login);
 app.post("/news", newsController.createNews);
@@ -112,8 +118,8 @@ app.put("/accounts/mute/:accName", accountsController.muteUser);
 app.put('/accounts/ban/:accName', accountsController.banUser);
 app.put('/post/approve/:postId', postsController.approvePost);
 app.put('/discussions/:dscName', discussionController.updateDiscussion);
-app.put("/post/:postId", postsController.updatePost);
-app.put("/discussion/:dscName", discussionController.updateDiscussionDescription);
+app.put("/post/:postId", verifyPostOwner, postsController.updatePost);
+app.put("/discussion/:dscName", verifyDiscussionOwner, discussionController.updateDiscussionDescription);
 app.put("/comment/:cmtId", commentsController.updateComment);
 app.put("/volunteer/:volId", volunteersController.approveVolunteer);
 app.put("/accounts/unban/:accName", accountsController.unbanAccount);
@@ -122,19 +128,19 @@ app.put('/updateProfile', accountsController.updateProfile);
 app.put("/news/:newsId", newsController.updateNews);
 app.delete("/news/:newsId", newsController.deleteNews);
 app.delete("/comment/:cmtId", commentsController.deleteComment);
-app.delete("/posts/:postId", postsController.deletePost);
-app.delete("/volunteer/:volId", volunteersController.deleteVolunteer);
+app.delete("/posts/:postId", verifyPostOwner, postsController.deletePost);
+app.delete("/volunteer/:postId/:volId", verifyPostOwner, volunteersController.deleteVolunteer);
 app.delete("/baninfo/:accName", baninfoController.removeBanInfo);
 app.delete("/muteinfo/:accName", muteinfoController.removeMuteInfo);
 app.delete("/siteadminApprove/:reportId", siteadminPostReportController.deletePostReport);
 app.delete("/siteadminDeny/:postId", siteadminPostReportController.deletePostReport);
 app.delete("/siteadminPost/:postId", siteadminPostReportController.deletePost);
 app.delete('/deleteAccount', accountsController.deleteAccount);
+
 app.get("/discussionMembers", discussionMembersController.getAllDiscussionMembers);
 app.get("/discussionMembers/:dscName", discussionMembersController.getDiscussionMembersByDiscussion);
 app.get("/discussionMemberTop3Discussions/:accName", discussionMembersController.getDiscussionMemberTop3Discussions);
 app.post("/discussionMember/:dscName", discussionMembersController.createDiscussionMember);
-
 app.delete("/discussionMember/:accName/:dscName", discussionMembersController.deleteDiscussionMember);
 
 app.get("/postLikes", postLikesController.getAllPostLikes);

@@ -64,7 +64,7 @@ async function createPost() {
             postDesc: createPostDesc.value,
             isEvent: isEvent,
             postDate: date,
-            accName: "AppleTan",
+            accName: "box",
             dscName: discussionName
         }),
         headers: {

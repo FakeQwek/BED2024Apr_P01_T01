@@ -94,9 +94,11 @@ function approveVolunteer(volId) {
 
 
 async function deleteVolunteerAsync(volId) {
-    console.log("sdfdsf");
-    await fetch("http://localhost:3000/volunteer/" + volId, {
-        method: "DELETE"
+    await fetch("http://localhost:3000/volunteer/" + postId + "/" + volId, {
+        method: "DELETE",
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("token")
+        }
     });
 };
 

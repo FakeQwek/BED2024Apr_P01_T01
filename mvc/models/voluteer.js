@@ -82,6 +82,8 @@ class Volunteer {
         const result = await request.query(sqlQuery);
 
         connection.close();
+
+        return result;
     }
 
     static async approveVolunteer(volId) {

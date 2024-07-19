@@ -44,14 +44,19 @@ async function Discussion() {
 };
 
 async function Posts() {
-    const res = await fetch("http://localhost:3000/posts/" + discussionName);
+    const res = await fetch("http://localhost:3000/posts/" + discussionName, {
+        method: "GET",
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("token")
+        }
+    });
     const posts = await res.json();
 
     const discussionPosts = document.getElementById("discussionPosts");
 
     for (let i = 0; i < posts.length; i++) {
         if (posts[i].isEvent == "True") {
-            if (posts[i].accName == "AppleTan") {
+            if (posts[i].accName == "box") {
                 const postHTML = `<div class="card w-full h-fit bg-white" onclick="goToPost(` + posts[i].postId + `)">
                                     <div class="card-body">
                                         <div class="card-title flex justify-between items-center">
@@ -170,7 +175,7 @@ async function Posts() {
                 discussionPosts.insertAdjacentHTML("beforeend", postHTML);
             }
         } else {
-            if (posts[i].accName == "AppleTan") {
+            if (posts[i].accName == "box") {
                 const postHTML = `<div class="card w-full h-fit bg-white" onclick="goToPost(` + posts[i].postId + `)">
                                     <div class="card-body">
                                         <div class="card-title flex justify-between items-center">
@@ -300,7 +305,7 @@ async function DiscussionMembers() {
     const joinButton = document.getElementById("joinButton");
 
     for (let i = 0; i < discussionMembers.length; i++) {
-        if (discussionMembers[i].accName == "AppleTan" && discussionMembers[i].dscName == discussionName) {
+        if (discussionMembers[i].accName == "box" && discussionMembers[i].dscName == discussionName) {
             isMember = true;
             
             if (discussionMembers[i].isMuted == "True") {
@@ -316,7 +321,7 @@ async function DiscussionMembers() {
     if (!isBanned) {
         if (!isPublic) {
             for (let i = 0; i < discussionMembers.length; i++) {
-                if (discussionMembers[i].accName == "AppleTan" && discussionMembers[i].dscName == discussionName) {
+                if (discussionMembers[i].accName == "box" && discussionMembers[i].dscName == discussionName) {
                     Posts();
                     isMember = true;
                 }
@@ -355,7 +360,7 @@ async function DiscussionMembers() {
                                         </div>`;
         }
 
-        if (discussionMembers[i].dscMemRole == "Owner" && discussionMembers[i].accName == "AppleTan") {
+        if (discussionMembers[i].dscMemRole == "Owner" && discussionMembers[i].accName == "box") {
             let bannerOptionsHTML;
 
             if (discussionType == "Restricted") {
@@ -383,21 +388,25 @@ async function DiscussionMembers() {
 
 async function deletePost(postId) {
     await fetch("http://localhost:3000/posts/" + postId, {
-        method: "DELETE"
+        method: "DELETE",
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("token")
+        }
     });
     location.reload();
 }
 
 async function createVolunteer(postId) {
-    await fetch("http://localhost:3000/volunteer", {
+    await fetch("http://localhost:3000/volunteer/" + discussionName, {
         method: "POST",
         body: JSON.stringify({
-            accName: "AppleTan",
+            accName: "box",
             isApproved: "False",
             postId: postId
         }),
         headers: {
-            "Content-type": "application/json; charset=UTF-8"
+            "Content-type": "application/json; charset=UTF-8",
+            "Authorization": "Bearer " + localStorage.getItem("token")
         }
     });
 }
@@ -411,7 +420,8 @@ async function editDiscussionDescription() {
             "dscDesc": editDesc.value,
         }),
         headers: {
-            "Content-type": "application/json; charset=UTF-8"
+            "Content-type": "application/json; charset=UTF-8",
+            "Authorization": "Bearer " + localStorage.getItem("token")
         }
     })
     location.reload();
@@ -426,7 +436,7 @@ async function createPostReport(postId) {
         body: JSON.stringify({
             postRptCat: postReportCat.value,
             postRptDesc: postReportDesc.value,
-            accName: "AppleTan",
+            accName: "box",
             postId: postId
         }),
         headers: {
@@ -444,7 +454,7 @@ async function createDiscussionReport() {
         body: JSON.stringify({
             dscRptCat: dscReportCat.value,
             dscRptDesc: dscReportDesc.value,
-            accName: "AppleTan",
+            accName: "box",
             dscName: discussionName
         }),
         headers: {
@@ -459,7 +469,7 @@ async function createDiscussionMember() {
         await fetch("http://localhost:3000/discussionMember/" + discussionName, {
             method: "POST",
             body: JSON.stringify({
-                accName: "AppleTan",
+                accName: "box",
                 dscMemRole: "Member"
             }),
             headers: {
@@ -469,7 +479,7 @@ async function createDiscussionMember() {
         isMember = true;
         joinButton.innerHTML = `<img src="../images/plus.svg" width="20px" />Leave`;
     } else {
-        await fetch("http://localhost:3000/discussionMember/" + "AppleTan" + "/" + discussionName , {
+        await fetch("http://localhost:3000/discussionMember/" + "box" + "/" + discussionName , {
             method: "DELETE"
         });
         isMember = false;
@@ -483,7 +493,7 @@ async function createPostLike(postId) {
         await fetch("http://localhost:3000/postLike/", {
             method: "POST",
             body: JSON.stringify({
-                accName: "AppleTan",
+                accName: "box",
                 postId: postId
             }),
             headers: {
@@ -495,7 +505,7 @@ async function createPostLike(postId) {
         let likeCount =  parseInt(postLikeCount.innerHTML) + 1;
         postLikeCount.innerHTML = likeCount;
     } else {
-        await fetch("http://localhost:3000/postLike/" + "AppleTan" + "/" + postId , {
+        await fetch("http://localhost:3000/postLike/" + "box" + "/" + postId , {
             method: "DELETE"
         });
         likeButton.innerHTML = `<img src="../images/thumb-up-outline.svg" width="20px">`;
@@ -517,7 +527,7 @@ async function getPostLikesByPost(postId) {
     likeCount.insertAdjacentHTML("beforeend", likeCountHTML);
 
     for (let i = 0; i < postLikes.length; i++) {
-        if (postLikes[i].accName == "AppleTan") {
+        if (postLikes[i].accName == "box") {
             const likeButton = document.getElementById("likeButton" + postId);
             likeButton.innerHTML = `<img src="../images/thumb-up.svg" width="20px" />`;
         }
@@ -556,7 +566,7 @@ async function getPostsByDiscussionOrderByLikes() {
 
     for (let i = 0; i < posts.length; i++) {
         if (posts[i].isEvent == "True") {
-            if (posts[i].accName == "AppleTan") {
+            if (posts[i].accName == "box") {
                 const postHTML = `<div class="card w-full h-fit bg-white" onclick="goToPost(` + posts[i].postId + `)">
                                     <div class="card-body">
                                         <div class="card-title flex justify-between items-center">
@@ -675,7 +685,7 @@ async function getPostsByDiscussionOrderByLikes() {
                 discussionPosts.insertAdjacentHTML("beforeend", postHTML);
             }
         } else {
-            if (posts[i].accName == "AppleTan") {
+            if (posts[i].accName == "box") {
                 const postHTML = `<div class="card w-full h-fit bg-white" onclick="goToPost(` + posts[i].postId + `)">
                                     <div class="card-body">
                                         <div class="card-title flex justify-between items-center">
@@ -793,7 +803,7 @@ async function getPostsByDiscussionOrderByLikes() {
 }
 
 async function sidebar() {
-    const res = await fetch("http://localhost:3000/discussionMemberTop3Discussions/" + "AppleTan");
+    const res = await fetch("http://localhost:3000/discussionMemberTop3Discussions/" + "box");
     const discussionMembers = await res.json();
 
     const joinedDiscussions = document.getElementById("joinedDiscussions");
@@ -808,7 +818,7 @@ async function createInvite() {
     await fetch("http://localhost:3000/invite", {
         method: "POST",
         body: JSON.stringify({
-            accName: "AppleTan",
+            accName: "box",
             dscName: discussionName
         }),
         headers: {

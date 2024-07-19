@@ -46,6 +46,17 @@ class Post {
             : null;
     }
 
+    static async getPostOwnerByPostId(postId) {
+        const connection = await sql.connect(dbConfig);
+        const sqlQuery = `SELECT OwnerID FROM Post WHERE PostID = @postId`;
+        const request = connection.request();
+        request.input("postId", postId);
+        const result = await request.query(sqlQuery);
+        connection.close();
+
+        return result.recordset[0].OwnerID;
+    }
+
     static async getPostsByDiscussion(dscName) {
         const connection = await sql.connect(dbConfig);
         const sqlQuery = `SELECT * FROM Post WHERE DscName = @dscName`;

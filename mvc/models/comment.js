@@ -2,10 +2,10 @@ const sql = require("mssql");
 const dbConfig = require("../../dbConfig");
 
 class Comment {
-    constructor(cmtId, cmtDesc, ownerId, postId) {
+    constructor(cmtId, cmtDesc, accName, postId) {
         this.cmtId = cmtId;
         this.cmtDesc = cmtDesc;
-        this.ownerId = ownerId;
+        this.accName = accName;
         this.postId = postId;
     }
 
@@ -33,11 +33,11 @@ class Comment {
         const connection = await sql.connect(dbConfig);
 
         const sqlQuery = `INSERT INTO Comment (CmtID, CmtDesc, OwnerID, PostID) 
-                          SELECT CASE WHEN COUNT(*) = 0 THEN 1 ELSE MAX(CmtID) + 1 END, @cmtDesc, @ownerId, @postId FROM Comment;`;
+                          SELECT CASE WHEN COUNT(*) = 0 THEN 1 ELSE MAX(CmtID) + 1 END, @cmtDesc, @accName, @postId FROM Comment;`;
 
         const request = connection.request();
         request.input("cmtDesc", newCommentData.cmtDesc);
-        request.input("ownerId", newCommentData.ownerId);
+        request.input("accName", newCommentData.accName);
         request.input("postId", newCommentData.postId);
         await request.query(sqlQuery);
         connection.close();

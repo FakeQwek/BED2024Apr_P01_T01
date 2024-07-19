@@ -20,7 +20,7 @@ async function createDiscussion() {
             dscName: discussionName.value,
             dscDesc: "",
             dscType: type,
-            accName: "AppleTan"
+            accName: "box"
         }),
         headers: {
             "Content-type": "application/json; charset=UTF-8"

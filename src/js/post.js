@@ -1,7 +1,6 @@
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const postId = urlParams.get("postId");
-console.log(postId);
 
 const postName = document.getElementById("postName");
 const postDesc = document.getElementById("postDesc");
@@ -34,6 +33,7 @@ async function Discussion(dscName) {
     discussionOwners.insertAdjacentHTML("beforeend", discussionOwnersHTML);
 
     DiscussionMembers();
+    Comments();
 };
 
 async function Post() {
@@ -62,7 +62,12 @@ async function Post() {
 };
 
 async function Comments() {
-    const res = await fetch("http://localhost:3000/comments/" + postId);
+    const res = await fetch("http://localhost:3000/comments/" + discussionName + "/" + postId, {
+        method: "GET",
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("token")
+        }
+    });
     const comments = await res.json();
 
     for (let i = 0; i < comments.length; i++) {
@@ -128,15 +133,16 @@ async function Comments() {
 const commentDesc = document.getElementById("commentDesc");
 
 async function createComment() {
-    await fetch("http://localhost:3000/comment", {
+    await fetch("http://localhost:3000/comment/" + discussionName, {
         method: "POST",
         body: JSON.stringify({
             cmtDesc: commentDesc.value,
-            accName: "AppleTan",
+            accName: "box",
             postId: postId
         }),
         headers: {
-            "Content-type": "application/json; charset=UTF-8"
+            "Content-type": "application/json; charset=UTF-8",
+            "Authorization": "Bearer " + localStorage.getItem("token")
         }
     });
     location.reload();
@@ -183,7 +189,6 @@ async function editCommentAsync(cmtId, editDesc) {
 }
 
 commentDesc.addEventListener("keyup", ({key}) => {
-    console.log("pressed");
     if (key == "Enter") {
         createComment();
     }
@@ -276,5 +281,4 @@ function goToEditPost(postId) {
 }
 
 Post();
-Comments();
 sidebar();

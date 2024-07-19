@@ -94,9 +94,38 @@ const login = async (req, res) => {
         const user = result.recordset[0];
         const passwordMatch = await bcrypt.compare(password, user.Password);
 
+        const response = await fetch("http://localhost:3000/discussions");
+        const allDiscussions = await response.json();
+
+        let userDiscussions = [];
+
+        for (let i = 0; i < allDiscussions.length; i++) {
+            if (allDiscussions[i].accName == "box") {
+                userDiscussions.push(allDiscussions[i].dscName);
+            }
+        }
+
+        const response2 = await fetch("http://localhost:3000/posts");
+        const allPosts = await response2.json();
+
+        let userPosts = [];
+
+        for (let i = 0; i < allPosts.length; i++) {
+            if (allPosts[i].accName == "box") {
+                userPosts.push(allPosts[i].postId);
+            }
+        }
+
+        const payload = {
+            username: user.AccName,
+            email: user.AccEmail,
+            discussionOwner: userDiscussions,
+            postOwner: userPosts
+        }
+
         if (passwordMatch) {
-            const token = jwt.sign({ username: user.AccName, email: user.AccEmail }, JWT_SECRET, { expiresIn: '1h' });
-            res.status(200).json({ token, username: user.AccName, email: user.AccEmail });
+            const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
+            res.status(200).json({ token, payload });
         } else {
             return res.status(401).send('Invalid credentials');
         }
