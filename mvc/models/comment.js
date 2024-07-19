@@ -29,6 +29,17 @@ class Comment {
         return result.recordset.map(row => new Comment(row.CmtID, row.CmtDesc, row.OwnerID, row.PostID));
     }
 
+    static async getCommentOwnerByCommentId(cmtId) {
+        const connection = await sql.connect(dbConfig);
+        const sqlQuery = `SELECT OwnerID FROM Comment WHERE CmtID = @cmtId`;
+        const request = connection.request();
+        request.input("cmtId", cmtId);
+        const result = await request.query(sqlQuery);
+        connection.close();
+
+        return result.recordset[0].OwnerID; 
+    }
+
     static async createComment(newCommentData) {
         const connection = await sql.connect(dbConfig);
 
@@ -52,8 +63,11 @@ class Comment {
         request.input("cmtId", cmtId);
         request.input("cmtDesc", newCommentData.cmtDesc || null);
 
-        await request.query(sqlQuery);
+        const result = await request.query(sqlQuery);
+        
         connection.close();
+
+        return result;
     }
 
     static async deleteComment(cmtId) {

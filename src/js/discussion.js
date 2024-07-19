@@ -431,7 +431,7 @@ async function createPostReport(postId) {
     const postReportCat = document.getElementById("postReportCat" + postId);
     const postReportDesc = document.getElementById("postReportDesc" + postId);
 
-    await fetch("http://localhost:3000/postReport", {
+    await fetch("http://localhost:3000/postReport/" + discussionName, {
         method: "POST",
         body: JSON.stringify({
             postRptCat: postReportCat.value,
@@ -440,7 +440,8 @@ async function createPostReport(postId) {
             postId: postId
         }),
         headers: {
-            "Content-type": "application/json; charset=UTF-8"
+            "Content-type": "application/json; charset=UTF-8",
+            "Authorization": "Bearer " + localStorage.getItem("token")
         }
     })
 }
@@ -449,7 +450,7 @@ async function createDiscussionReport() {
     const dscReportCat = document.getElementById("dscReportCat");
     const dscReportDesc = document.getElementById("dscReportDesc");
 
-    await fetch("http://localhost:3000/discussionReport", {
+    await fetch("http://localhost:3000/discussionReport/" + discussionName, {
         method: "POST",
         body: JSON.stringify({
             dscRptCat: dscReportCat.value,
@@ -458,7 +459,8 @@ async function createDiscussionReport() {
             dscName: discussionName
         }),
         headers: {
-            "Content-type": "application/json; charset=UTF-8"
+            "Content-type": "application/json; charset=UTF-8",
+            "Authorization": "Bearer " + localStorage.getItem("token")
         }
     })
 }
@@ -490,14 +492,15 @@ async function createDiscussionMember() {
 async function createPostLike(postId) {
     const likeButton = document.getElementById("likeButton" + postId);
     if (likeButton.innerHTML == `<img src="../images/thumb-up-outline.svg" width="20px">`) {
-        await fetch("http://localhost:3000/postLike/", {
+        await fetch("http://localhost:3000/postLike/" + discussionName, {
             method: "POST",
             body: JSON.stringify({
                 accName: "box",
                 postId: postId
             }),
             headers: {
-                "Content-type": "application/json; charset=UTF-8"
+                "Content-type": "application/json; charset=UTF-8",
+                "Authorization": "Bearer " + localStorage.getItem("token")
             }
         })
         likeButton.innerHTML = `<img src="../images/thumb-up.svg" width="20px">`;
@@ -505,8 +508,11 @@ async function createPostLike(postId) {
         let likeCount =  parseInt(postLikeCount.innerHTML) + 1;
         postLikeCount.innerHTML = likeCount;
     } else {
-        await fetch("http://localhost:3000/postLike/" + "box" + "/" + postId , {
-            method: "DELETE"
+        await fetch("http://localhost:3000/postLike/" + "box" + "/" + postId + "/" + discussionName, {
+            method: "DELETE",
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("token")
+            }
         });
         likeButton.innerHTML = `<img src="../images/thumb-up-outline.svg" width="20px">`;
         const postLikeCount = document.getElementById("postLikeCount" + postId);
@@ -517,7 +523,12 @@ async function createPostLike(postId) {
 }
 
 async function getPostLikesByPost(postId) {
-    const res = await fetch("http://localhost:3000/postLikes/" + postId);
+    const res = await fetch("http://localhost:3000/postLikes/" + discussionName + "/" + postId, {
+        method: "GET",
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("token")
+        }
+    });
     const postLikes = await res.json();
 
     const likeCount = document.getElementById("likeCount" + postId);
@@ -535,7 +546,12 @@ async function getPostLikesByPost(postId) {
 }
 
 async function getPostsByDiscussionOrderByLikes() {
-    const res = await fetch("http://localhost:3000/postsOrderByLikes/" + discussionName);
+    const res = await fetch("http://localhost:3000/postsOrderByLikes/" + discussionName, {
+        method: "GET",
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("token")
+        }
+    });
     const posts = await res.json();
 
     const discussionPosts = document.getElementById("discussionPosts");

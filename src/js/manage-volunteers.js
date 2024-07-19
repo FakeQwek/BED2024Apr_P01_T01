@@ -22,9 +22,13 @@ async function Post() {
 };
 
 async function Volunteers() {
-    const res = await fetch("http://localhost:3000/volunteers/" + postId);
+    const res = await fetch("http://localhost:3000/volunteers/" + postId, {
+        method: "GET",
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("token")
+        }
+    });
     const volunteers = await res.json();
-    console.log(volunteers);
 
     const postVolunteers = document.getElementById("postVolunteers");
 
@@ -69,8 +73,11 @@ async function Volunteers() {
 };
 
 async function approveVolunteerAsync(volId) {
-    await fetch("http://localhost:3000/volunteer/" + volId, {
-        method: "PUT"
+    await fetch("http://localhost:3000/volunteer/" + postId + "/" + volId, {
+        method: "PUT",
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("token")
+        }
     });
 };
 
@@ -87,7 +94,7 @@ async function sidebar() {
 }
 
 function approveVolunteer(volId) {
-    location.reload();
+    // location.reload();
 
     approveVolunteerAsync(volId);
 }

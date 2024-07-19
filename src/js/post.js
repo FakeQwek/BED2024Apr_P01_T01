@@ -150,7 +150,10 @@ async function createComment() {
 
 async function deleteComment(cmtId) {
     await fetch("http://localhost:3000/comment/" + cmtId, {
-        method: "DELETE"
+        method: "DELETE",
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("token")
+        }
     });
     location.reload();
 }
@@ -182,7 +185,8 @@ async function editCommentAsync(cmtId, editDesc) {
             "cmtDesc": editDesc,
         }),
         headers: {
-            "Content-type": "application/json; charset=UTF-8"
+            "Content-type": "application/json; charset=UTF-8",
+            "Authorization": "Bearer " + localStorage.getItem("token")
         }
     });
     location.reload();
@@ -198,16 +202,17 @@ async function createPostReport() {
     const postReportCat = document.getElementById("postReportCat");
     const postReportDesc = document.getElementById("postReportDesc");
 
-    await fetch("http://localhost:3000/postReport", {
+    await fetch("http://localhost:3000/postReport/" + discussionName, {
         method: "POST",
         body: JSON.stringify({
             postRptCat: postReportCat.value,
             postRptDesc: postReportDesc.value,
-            accName: "AppleTan",
+            accName: "box",
             postId: postId
         }),
         headers: {
-            "Content-type": "application/json; charset=UTF-8"
+            "Content-type": "application/json; charset=UTF-8",
+            "Authorization": "Bearer " + localStorage.getItem("token")
         }
     })
 }
@@ -216,16 +221,17 @@ async function createDiscussionReport() {
     const dscReportCat = document.getElementById("dscReportCat");
     const dscReportDesc = document.getElementById("dscReportDesc");
 
-    await fetch("http://localhost:3000/discussionReport", {
+    await fetch("http://localhost:3000/discussionReport/" + discussionName, {
         method: "POST",
         body: JSON.stringify({
             dscRptCat: dscReportCat.value,
             dscRptDesc: dscReportDesc.value,
-            accName: "AppleTan",
+            accName: "box",
             dscName: discussionName
         }),
         headers: {
-            "Content-type": "application/json; charset=UTF-8"
+            "Content-type": "application/json; charset=UTF-8",
+            "Authorization": "Bearer " + localStorage.getItem("token")
         }
     })
 }
