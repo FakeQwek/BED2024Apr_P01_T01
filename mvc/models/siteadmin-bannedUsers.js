@@ -15,7 +15,7 @@
          
          const connection = await sql.connect(dbConfig);
          const query = 
-         `SELECT AccID, AccName FROM Account WHERE isBanned = 'true'`;
+         `SELECT AccID, AccName FROM Account WHERE isBanned = 'True'`;
       
          const request = connection.request();
          const result = await request.query(query);
@@ -27,7 +27,7 @@
         
         const connection = await sql.connect(dbConfig);
         const query = 
-        `SELECT AccID, AccName FROM Account WHERE AccName LIKE '%${accName}%' AND isBanned ='true'`;
+        `SELECT AccID, AccName FROM Account WHERE AccName LIKE '%${accName}%' AND isBanned ='True'`;
     
         const request = connection.request();
         request.input("accName", accName);
@@ -39,7 +39,7 @@
      static async unbanUser(accId) {
         const connection = await sql.connect(dbConfig);
         const query = 
-        `UPDATE Account SET isBanned = 'false' WHERE AccId = @accId`;
+        `UPDATE Account SET isBanned = 'False' WHERE AccId = @accId`;
     
         const request = connection.request();
         request.input("accId", accId);

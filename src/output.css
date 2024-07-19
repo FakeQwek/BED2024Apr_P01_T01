@@ -3020,6 +3020,10 @@ html:has(.drawer-toggle:checked) {
   margin-bottom: 2rem;
 }
 
+.mb-16 {
+  margin-bottom: 4rem;
+}
+
 .ml-12 {
   margin-left: 3rem;
 }

@@ -25,6 +25,7 @@ const invitesController = require("./mvc/controllers/invitesController");
 const siteadminPostReportController = require("./mvc/controllers/siteadminPostReportController");
 const siteadminMutedUserController = require("./mvc/controllers/siteadminMutedUserController");
 const siteadminBannedUserController = require("./mvc/controllers/siteadminBannedUserController.js");
+const statisticsController = require("./mvc/controllers/userStatisticsController.js");
 
 
 const app = express();
@@ -65,6 +66,20 @@ app.use(morgan('combined')); // HTTP request logger
 
 //Route Definitions
 app.get('/ping', (req, res) => res.send('Server is running')); // Simple ping endpoint
+//Statistic routes
+app.get('/statistics/bancount', statisticsController.getCountOfUsersBanned);
+app.get('/statistics/usercount', statisticsController.getCountOfUsers);
+app.get('/statistics/mutedcount', statisticsController.getCountOfUsersMuted);
+app.get('/statistics/admincount', statisticsController.getCountOfAdminUsers);
+app.get('/statistics/commentcount', statisticsController.getCountOfComments);
+app.get('/statistics/discussioncount', statisticsController.getCountOfDiscussions);
+app.get('/statistics/postcount', statisticsController.getCountOfPosts);
+app.get('/statistics/reportcount', statisticsController.getCountOfPostReports);
+app.get('/statistics/postcount', statisticsController.getCountOfPosts);
+app.get('/statistics/discussionreportcount', statisticsController.getCountOfPosts);
+app.get('/statistics/discussionadmincount', statisticsController.getCountOfDiscussionAdmins);
+app.get('/statistics/discussiontypes', statisticsController.getTypeOfDiscussions);
+
 app.get('/siteadmin/postreport', siteadminPostReportController.getAllPostReports);
 app.get("/siteadmin/reportcount", siteadminPostReportController.getAllCountOfPostReports);
 app.get('/siteadmin/newestpostreport', siteadminPostReportController.getAllPostReportsByNewest);
