@@ -80,7 +80,7 @@
       
        
         const allQuery = 
-        `SELECT COUNT(*) AS 'Count' From Comments`;
+        `SELECT COUNT(*) AS 'Count' From Comment`;
     
         
         const request = connection.request();
@@ -183,4 +183,4 @@
 
     }
  
- module.exports = UserStatistics;
+ module.exports = Statistic;

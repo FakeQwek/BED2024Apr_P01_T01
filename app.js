@@ -75,8 +75,7 @@ app.get('/statistics/commentcount', statisticsController.getCountOfComments);
 app.get('/statistics/discussioncount', statisticsController.getCountOfDiscussions);
 app.get('/statistics/postcount', statisticsController.getCountOfPosts);
 app.get('/statistics/reportcount', statisticsController.getCountOfPostReports);
-app.get('/statistics/postcount', statisticsController.getCountOfPosts);
-app.get('/statistics/discussionreportcount', statisticsController.getCountOfPosts);
+app.get('/statistics/discussionreportcount', statisticsController.getCountOfDiscussionReports);
 app.get('/statistics/discussionadmincount', statisticsController.getCountOfDiscussionAdmins);
 app.get('/statistics/discussiontypes', statisticsController.getTypeOfDiscussions);
 

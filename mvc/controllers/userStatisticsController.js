@@ -1,4 +1,4 @@
-const Statistics = require("../models/user-statistic");
+const Statistics = require("../models/user-statistics");
 
 const getCountOfUsersBanned = async (req, res) => {
     try {
