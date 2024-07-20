@@ -138,7 +138,7 @@ app.get('/protected', authenticateJWT, (req, res) => {
 
 // Start the server
 app.listen(port, async () => {
-    console.log(`Server listening on port ${port}`);
+    console.log('Server listening on port ${port}');
     try {
         await sql.connect(dbConfig);
         console.log("Database connection established successfully");
@@ -147,8 +147,10 @@ app.listen(port, async () => {
     }
 });
 
+
 process.on("SIGINT", async () => {
     console.log("Server is gracefully shutting down");
+    await resetProfileSettings();
     await sql.close();
     console.log("Database connection closed");
     process.exit(0);
