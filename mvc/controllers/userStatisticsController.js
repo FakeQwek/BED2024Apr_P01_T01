@@ -102,7 +102,7 @@ const getCountOfDiscussionAdmins= async (req, res) => {
 
 const getTypeOfDiscussions = async (req, res) => {
     try {
-        const statistics = await Statistics.getCountOfDiscussions();
+        const statistics = await Statistics.getTypeOfDiscussions();
         res.json(statistics);
     } catch (error) {
         console.log(error);

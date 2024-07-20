@@ -14,10 +14,13 @@ getCountOfComments();
 
 //Triggers all the count functions to retreive and populate the discussion chart
 getCountOfPosts();
-getCountOfPostReports();
-getCountOfDiscussionAdmins();
 getCountOfDiscussion();
-getCountOfDiscussionReports();
+getDiscussionAdminCount();
+getCountOfPostReports();
+getDiscussionReportCount();
+
+//Triggers the type function to retrieve and populate the discussion type chart
+getTypeOfDiscussions();
 
 
 async function getCountOfUsers() {
@@ -217,8 +220,31 @@ async function getDiscussionAdminCount() {
     });  
 }
 
+async function getCountOfPostReports() {
+    response = await fetch("http://localhost:3000/statistics/reportcount")
+    .then(response => {
+        if(!response.ok){
+            throw new Error('Response invalid!');
+        }
+        return response.json();
+    })
+    .then(countData => {
+        
+        
+        console.log(countData); 
+        discussionStats.push(["postreportcount", countData[0]["count"]]);
+        if (discussionStats.length > 4) {
+            populateDiscussionChart(discussionStats);
+        }
+
+    })
+    .catch(error => {
+        console.error("Error:", error);
+    });  
+}
+
 async function getTypeOfDiscussions() {
-    response = await fetch("http://localhost:3000/statistics/discussionadmincount")
+    response = await fetch("http://localhost:3000/statistics/discussiontypes")
     .then(response => {
         if(!response.ok){
             throw new Error('Response invalid!');
@@ -229,8 +255,8 @@ async function getTypeOfDiscussions() {
         
         
         console.log(typeData); 
-        discussionType.push(["discussionType", countData[0]]);
-
+        
+        populateDiscussionTypeChart(typeData);
 
     })
     .catch(error => {
@@ -339,12 +365,48 @@ function populateDiscussionChart(discussionStats) {
 
 
 
-function populateDiscTypeChart() {
 
-}
 
-function populateUserTypeChart() {
+function populateDiscussionTypeChart(discussionType) {
+    labels = [];
+    counts = [];
+    console.log(discussionType);
+    for (i=0; i < discussionType.length; i++) {
+       
+        var discussionname = discussionType[i]["dscname"];
+        console.log(discussionname);
+        var discussioncount = discussionType[i]["count"];
+        labels.push(discussionname);
+        counts.push(discussioncount);
+    }
+  
+   
+    console.log("should be populating chart" , discussionType);
+    const discussionChart = document.getElementById('discussionType');
+    
+    
+   
+    
+    new Chart(discussionChart, {
+    type: 'pie',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'Posts',
+            data: counts,
+            
 
+     }]
+    },
+    options: {
+     scales: {
+            y: {
+                beginAtZero: true
+            }
+         }
+        }
+
+    });
 }
 
 
