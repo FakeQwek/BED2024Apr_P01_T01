@@ -6,6 +6,23 @@ const postId = urlParams.get("postId");
 const editPostName = document.getElementById("editPostName");
 const editPostDesc = document.getElementById("editPostDesc");
 
+let accountName;
+
+async function checkAccountName() {
+    const res = await fetch("http://localhost:3000/accounts/" + localStorage.getItem("username"), {
+        method: "GET",
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("token")
+        }
+    });
+    const account = await res.json();
+    accountName = account.accName;
+
+    Post();
+}
+
+checkAccountName();
+
 async function Discussion(dscName) { 
     const res = await fetch("http://localhost:3000/discussions/" + dscName);
     const discussion = await res.json();
@@ -38,6 +55,14 @@ async function Post() {
 
     editPostName.value = post.postName;
     editPostDesc.value = post.postDesc;
+
+    if (post.accName != accountName) {
+        const postCard = document.getElementById("postCard");
+        postCard.innerHTML = `<div class="flex flex-col justify-center items-center h-full">
+                                <img src="../images/lock-outline.svg" width="100px" />
+                                <h2 class="text-2xl font-bold">You are not the owner of this post</h2>
+                            </div>`;
+    }
     
     Discussion(post.dscName);
 };
@@ -133,6 +158,5 @@ async function sidebar() {
     }
 }
 
-Post();
 DiscussionMembers();
 sidebar();

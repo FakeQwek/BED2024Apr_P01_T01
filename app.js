@@ -29,6 +29,7 @@ const verifyDiscussionOwner = require("./mvc/middlewares/verifyDiscussionOwner")
 const verifyPostOwner = require("./mvc/middlewares/verifyPostOwner");
 const verifyDiscussionMember = require("./mvc/middlewares/verifyDiscussionMember");
 const verifyCommentOwner = require("./mvc/middlewares/verifyCommentOwner");
+const verifyAccount = require("./mvc/middlewares/verifyAccount");
 
 
 const app = express();
@@ -77,7 +78,7 @@ app.get('/question/:questionId', questionController.getQuestionById);
 app.get("/news", newsController.getAllNews);
 app.get("/news/:newsId", newsController.getNewsById);
 app.get("/accounts", accountsController.getAllAccounts);
-app.get("/accounts/:accName", accountsController.getAccountByName);
+app.get("/accounts/:accName", verifyAccount, accountsController.getAccountByName);
 app.get("/bannedaccounts", accountsController.getAccountIsBanned);
 app.get("/mutedaccounts", accountsController.getAccountsIsMuted);
 
@@ -87,7 +88,7 @@ app.get("/posts/:dscName", verifyDiscussionMember, postsController.getPostsByDis
 app.get("/postsOrderByLikes/:dscName", verifyDiscussionMember, postsController.getPostsByDiscussionOrderByLikes); // member
 app.get("/post/:postId", postsController.getPostById); // public
 app.get("/postOwner/:postId", postsController.getPostOwnerByPostId); // public
-app.post("/post", verifyDiscussionMember, postsController.createPost); // member
+app.post("/post/:dscName", verifyDiscussionMember, postsController.createPost); // member
 app.put('/post/approve/:postId', postsController.approvePost);
 app.put("/post/:postId", verifyPostOwner, postsController.updatePost); // post owner
 

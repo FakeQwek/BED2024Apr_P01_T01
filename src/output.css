@@ -3060,6 +3060,10 @@ html:has(.drawer-toggle:checked) {
   margin-right: auto;
 }
 
+.ms-4 {
+  margin-inline-start: 1rem;
+}
+
 .mt-12 {
   margin-top: 3rem;
 }
@@ -3082,6 +3086,10 @@ html:has(.drawer-toggle:checked) {
 
 .mt-8 {
   margin-top: 2rem;
+}
+
+.ms-2 {
+  margin-inline-start: 0.5rem;
 }
 
 .block {

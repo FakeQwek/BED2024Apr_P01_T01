@@ -1,5 +1,20 @@
 const discussionName = document.getElementById("discussionName");
 
+let accountName;
+
+async function checkAccountName() {
+    const res = await fetch("http://localhost:3000/accounts/" + localStorage.getItem("username"), {
+        method: "GET",
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("token")
+        }
+    });
+    const account = await res.json();
+    accountName = account.accName;
+}
+
+checkAccountName();
+
 async function createDiscussion() {
     const public = document.getElementById("public");
     const restricted = document.getElementById("restricted");
@@ -20,7 +35,7 @@ async function createDiscussion() {
             dscName: discussionName.value,
             dscDesc: "",
             dscType: type,
-            accName: "box"
+            accName: accountName
         }),
         headers: {
             "Content-type": "application/json; charset=UTF-8"
@@ -30,7 +45,7 @@ async function createDiscussion() {
     await fetch("http://localhost:3000/discussionMember/" + discussionName.value, {
         method: "POST",
         body: JSON.stringify({
-            accName: "AppleTan",
+            accName: accountName,
             dscMemRole: "Owner"
         }),
         headers: {
@@ -145,7 +160,7 @@ async function createPostReport(postId) {
         body: JSON.stringify({
             postRptCat: postReportCat.value,
             postRptDesc: postReportDesc.value,
-            accName: "AppleTan",
+            accName: accountName,
             postId: postId
         }),
         headers: {
@@ -155,7 +170,7 @@ async function createPostReport(postId) {
 }
 
 async function sidebar() {
-    const res = await fetch("http://localhost:3000/discussionMemberTop3Discussions/" + "AppleTan");
+    const res = await fetch("http://localhost:3000/discussionMemberTop3Discussions/" + accountName);
     const discussionMembers = await res.json();
 
     const joinedDiscussions = document.getElementById("joinedDiscussions");

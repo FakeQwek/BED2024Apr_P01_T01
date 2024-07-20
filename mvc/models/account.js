@@ -167,6 +167,10 @@ class Account {
             : null;
     }
 
+    static async getAccountName(accName) {
+        
+    }
+
     static async getAccountsIsBanned() {
         const connection = await sql.connect(dbConfig);
         const sqlQuery = `SELECT * FROM Account WHERE isBanned = 'True'`;

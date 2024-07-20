@@ -2,14 +2,26 @@ const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const discussionName = urlParams.get("discussionName");
 
-let owners = [];
+let accountName;
 let isMember = false;
 let isMuted = false;
 let isBanned = false;
-
 let isPublic = false;
 
 let discussionType;
+
+async function checkAccountName() {
+    const res = await fetch("http://localhost:3000/accounts/" + localStorage.getItem("username"), {
+        method: "GET",
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("token")
+        }
+    });
+    const account = await res.json();
+    accountName = account.accName;
+}
+
+checkAccountName();
 
 async function Discussion() { 
     const res = await fetch("http://localhost:3000/discussions/" + discussionName);
@@ -56,7 +68,7 @@ async function Posts() {
 
     for (let i = 0; i < posts.length; i++) {
         if (posts[i].isEvent == "True") {
-            if (posts[i].accName == "box") {
+            if (posts[i].accName == accountName) {
                 const postHTML = `<div class="card w-full h-fit bg-white" onclick="goToPost(` + posts[i].postId + `)">
                                     <div class="card-body">
                                         <div class="card-title flex justify-between items-center">
@@ -175,7 +187,7 @@ async function Posts() {
                 discussionPosts.insertAdjacentHTML("beforeend", postHTML);
             }
         } else {
-            if (posts[i].accName == "box") {
+            if (posts[i].accName == accountName) {
                 const postHTML = `<div class="card w-full h-fit bg-white" onclick="goToPost(` + posts[i].postId + `)">
                                     <div class="card-body">
                                         <div class="card-title flex justify-between items-center">
@@ -305,7 +317,7 @@ async function DiscussionMembers() {
     const joinButton = document.getElementById("joinButton");
 
     for (let i = 0; i < discussionMembers.length; i++) {
-        if (discussionMembers[i].accName == "box" && discussionMembers[i].dscName == discussionName) {
+        if (discussionMembers[i].accName == accountName && discussionMembers[i].dscName == discussionName) {
             isMember = true;
             
             if (discussionMembers[i].isMuted == "True") {
@@ -321,7 +333,7 @@ async function DiscussionMembers() {
     if (!isBanned) {
         if (!isPublic) {
             for (let i = 0; i < discussionMembers.length; i++) {
-                if (discussionMembers[i].accName == "box" && discussionMembers[i].dscName == discussionName) {
+                if (discussionMembers[i].accName == accountName && discussionMembers[i].dscName == discussionName) {
                     Posts();
                     isMember = true;
                 }
@@ -360,7 +372,7 @@ async function DiscussionMembers() {
                                         </div>`;
         }
 
-        if (discussionMembers[i].dscMemRole == "Owner" && discussionMembers[i].accName == "box") {
+        if (discussionMembers[i].dscMemRole == "Owner" && discussionMembers[i].accName == accountName) {
             let bannerOptionsHTML;
 
             if (discussionType == "Restricted") {
@@ -400,7 +412,7 @@ async function createVolunteer(postId) {
     await fetch("http://localhost:3000/volunteer/" + discussionName, {
         method: "POST",
         body: JSON.stringify({
-            accName: "box",
+            accName: accountName,
             isApproved: "False",
             postId: postId
         }),
@@ -436,7 +448,7 @@ async function createPostReport(postId) {
         body: JSON.stringify({
             postRptCat: postReportCat.value,
             postRptDesc: postReportDesc.value,
-            accName: "box",
+            accName: accountName,
             postId: postId
         }),
         headers: {
@@ -455,7 +467,7 @@ async function createDiscussionReport() {
         body: JSON.stringify({
             dscRptCat: dscReportCat.value,
             dscRptDesc: dscReportDesc.value,
-            accName: "box",
+            accName: accountName,
             dscName: discussionName
         }),
         headers: {
@@ -471,7 +483,7 @@ async function createDiscussionMember() {
         await fetch("http://localhost:3000/discussionMember/" + discussionName, {
             method: "POST",
             body: JSON.stringify({
-                accName: "box",
+                accName: accountName,
                 dscMemRole: "Member"
             }),
             headers: {
@@ -481,7 +493,7 @@ async function createDiscussionMember() {
         isMember = true;
         joinButton.innerHTML = `<img src="../images/plus.svg" width="20px" />Leave`;
     } else {
-        await fetch("http://localhost:3000/discussionMember/" + "box" + "/" + discussionName , {
+        await fetch("http://localhost:3000/discussionMember/" + accountName + "/" + discussionName , {
             method: "DELETE"
         });
         isMember = false;
@@ -495,7 +507,7 @@ async function createPostLike(postId) {
         await fetch("http://localhost:3000/postLike/" + discussionName, {
             method: "POST",
             body: JSON.stringify({
-                accName: "box",
+                accName: accountName,
                 postId: postId
             }),
             headers: {
@@ -508,7 +520,7 @@ async function createPostLike(postId) {
         let likeCount =  parseInt(postLikeCount.innerHTML) + 1;
         postLikeCount.innerHTML = likeCount;
     } else {
-        await fetch("http://localhost:3000/postLike/" + "box" + "/" + postId + "/" + discussionName, {
+        await fetch("http://localhost:3000/postLike/" + accountName + "/" + postId + "/" + discussionName, {
             method: "DELETE",
             headers: {
                 "Authorization": "Bearer " + localStorage.getItem("token")
@@ -538,7 +550,7 @@ async function getPostLikesByPost(postId) {
     likeCount.insertAdjacentHTML("beforeend", likeCountHTML);
 
     for (let i = 0; i < postLikes.length; i++) {
-        if (postLikes[i].accName == "box") {
+        if (postLikes[i].accName == accountName) {
             const likeButton = document.getElementById("likeButton" + postId);
             likeButton.innerHTML = `<img src="../images/thumb-up.svg" width="20px" />`;
         }
@@ -582,7 +594,7 @@ async function getPostsByDiscussionOrderByLikes() {
 
     for (let i = 0; i < posts.length; i++) {
         if (posts[i].isEvent == "True") {
-            if (posts[i].accName == "box") {
+            if (posts[i].accName == accountName) {
                 const postHTML = `<div class="card w-full h-fit bg-white" onclick="goToPost(` + posts[i].postId + `)">
                                     <div class="card-body">
                                         <div class="card-title flex justify-between items-center">
@@ -701,7 +713,7 @@ async function getPostsByDiscussionOrderByLikes() {
                 discussionPosts.insertAdjacentHTML("beforeend", postHTML);
             }
         } else {
-            if (posts[i].accName == "box") {
+            if (posts[i].accName == accountName) {
                 const postHTML = `<div class="card w-full h-fit bg-white" onclick="goToPost(` + posts[i].postId + `)">
                                     <div class="card-body">
                                         <div class="card-title flex justify-between items-center">
@@ -819,7 +831,7 @@ async function getPostsByDiscussionOrderByLikes() {
 }
 
 async function sidebar() {
-    const res = await fetch("http://localhost:3000/discussionMemberTop3Discussions/" + "box");
+    const res = await fetch("http://localhost:3000/discussionMemberTop3Discussions/" + accountName);
     const discussionMembers = await res.json();
 
     const joinedDiscussions = document.getElementById("joinedDiscussions");
@@ -834,7 +846,7 @@ async function createInvite() {
     await fetch("http://localhost:3000/invite", {
         method: "POST",
         body: JSON.stringify({
-            accName: "box",
+            accName: accountName,
             dscName: discussionName
         }),
         headers: {

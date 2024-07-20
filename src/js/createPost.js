@@ -1,16 +1,31 @@
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const discussionName = urlParams.get("discussionName");
-console.log(discussionName);
 
 const createPostName = document.getElementById("createPostName");
 const createPostDesc = document.getElementById("createPostDesc");
 const isEventRadio = document.getElementById("isEvent");
 
+let isMember = false;
+let isPublic = false;
+let accountName;
+
+async function checkAccountName() {
+    const res = await fetch("http://localhost:3000/accounts/" + localStorage.getItem("username"), {
+        method: "GET",
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("token")
+        }
+    });
+    const account = await res.json();
+    accountName = account.accName;
+}
+
+checkAccountName();
+
 async function Discussion() { 
     const res = await fetch("http://localhost:3000/discussions/" + discussionName);
     const discussion = await res.json();
-    console.log(discussion);
 
     const discussionName2 = document.getElementById("discussionName");
     const discussionName2HTML = `<h2>d:` + discussion.dscName + `</h2>`;
@@ -30,6 +45,12 @@ async function Discussion() {
                                     <h2>` + discussion.accName + `</h2>
                                 </div>`;
     discussionOwners.insertAdjacentHTML("beforeend", discussionOwnersHTML);
+
+    if (discussion.dscType == "Public") {
+        isPublic = true;
+    }
+
+    DiscussionMembers();
 };
 
 async function createPost() {
@@ -57,18 +78,19 @@ async function createPost() {
     }
     date = dd + '/' + mm + '/' + yyyy;
         
-    await fetch("http://localhost:3000/post", {
+    await fetch("http://localhost:3000/post/" + discussionName, {
         method: "POST",
         body: JSON.stringify({
             postName: createPostName.value,
             postDesc: createPostDesc.value,
             isEvent: isEvent,
             postDate: date,
-            accName: "box",
+            accName: accountName,
             dscName: discussionName
         }),
         headers: {
-            "Content-type": "application/json; charset=UTF-8"
+            "Content-type": "application/json; charset=UTF-8",
+            "Authorization": "Bearer " + localStorage.getItem("token")
         }
     });
     
@@ -76,7 +98,7 @@ async function createPost() {
     var url = script[script.length-1].src;
     for (let i = 0; i < url.length; i++) {
         if (url.slice(-1) != "/") {
-            url = url.substring(0, url.length - 1);
+            url = url.substring(0, url.length - 1); 
         } else {
             break;
         }
@@ -96,16 +118,32 @@ async function DiscussionMembers() {
     
     memberCount.innerHTML = `<h2 class="font-bold">` + discussionMembers.length + `</h2>`;
 
+    const postCard = document.getElementById("postCard");
+
+    if (!isPublic) {
+        for (let i = 0; i < discussionMembers.length; i++) {
+            if (discussionMembers[i].accName == accountName) {
+                isMember = true;
+            }
+        }
+    
+        if (!isMember) {
+            postCard.innerHTML = `<div class="flex flex-col justify-center items-center h-full">
+                                    <img src="../images/lock-outline.svg" width="100px" />
+                                    <h2 class="text-2xl font-bold">You are not a member of this disucssion</h2>
+                                </div>`;
+        }
+    }
+
     for (let i = 0; i < discussionMembers.length; i++) {
-        if (discussionMembers[i].accName == "AppleTan" && discussionMembers[i].isMuted == "True") {
-            const postCard = document.getElementById("postCard");
+        if (discussionMembers[i].accName == accountName && discussionMembers[i].isMuted == "True") {
             postCard.innerHTML = `<div class="flex flex-col justify-center items-center h-full">
                                     <img src="../images/microphone-off.svg" width="100px" />
                                     <h2 class="text-2xl font-bold">You are muted and are no longer allowed to make posts</h2>
                                 </div>`;
         }
 
-        if (discussionMembers[i].dscMemRole == "Owner" && discussionMembers[i].accName == "AppleTan") {
+        if (discussionMembers[i].dscMemRole == "Owner" && discussionMembers[i].accName == accountName) {
             const bannerOptionsHTML = `<li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="edit_discussion_modal.showModal()"><span class="w-full">Edit</span></button></li>`;
             bannerOptions.insertAdjacentHTML("beforeend", bannerOptionsHTML);
         } else if (discussionMembers[i].dscMemRole == "Admin") {
@@ -120,7 +158,7 @@ async function DiscussionMembers() {
 }
 
 async function sidebar() {
-    const res = await fetch("http://localhost:3000/discussionMemberTop3Discussions/" + "AppleTan");
+    const res = await fetch("http://localhost:3000/discussionMemberTop3Discussions/" + accountName);
     const discussionMembers = await res.json();
 
     const joinedDiscussions = document.getElementById("joinedDiscussions");
@@ -139,5 +177,4 @@ isEventRadio.addEventListener("change", () => {
 })
 
 Discussion();
-DiscussionMembers();
 sidebar();

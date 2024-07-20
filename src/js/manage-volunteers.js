@@ -3,10 +3,26 @@ const urlParams = new URLSearchParams(queryString);
 const postId = urlParams.get("postId");
 let approvedVolunteerCount = 0;
 
+let accountName;
+
+async function checkAccountName() {
+    const res = await fetch("http://localhost:3000/accounts/" + localStorage.getItem("username"), {
+        method: "GET",
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("token")
+        }
+    });
+    const account = await res.json();
+    accountName = account.accName;
+
+    Post();
+}
+
+checkAccountName();
+
 async function Post() {
     const res = await fetch("http://localhost:3000/post/" + postId);
     const post = await res.json();
-    console.log(post);
 
     const postDiscussionName = document.getElementById("postDiscussionName");
 
@@ -19,6 +35,14 @@ async function Post() {
     postNameHTML = `<h2 class="text-2xl font-bold m-8">` + post.postName + `</h2>`;
 
     postName.insertAdjacentHTML("afterbegin", postNameHTML);
+
+    if (post.accName != accountName) {
+        const postCard = document.getElementById("postCard");
+        postCard.innerHTML = `<div class="flex flex-col justify-center items-center h-full">
+                                <img src="../images/lock-outline.svg" width="100px" />
+                                <h2 class="text-2xl font-bold">You are not the owner of this post</h2>
+                            </div>`;
+    }
 };
 
 async function Volunteers() {
@@ -116,6 +140,5 @@ function deleteVolunteer(volId) {
     deleteVolunteerAsync(volId);
 };
 
-Post();
 Volunteers();
 sidebar();

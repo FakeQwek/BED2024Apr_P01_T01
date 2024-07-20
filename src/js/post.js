@@ -11,6 +11,28 @@ const postOptions = document.getElementById("postOptions");
 
 var discussionName;
 
+let isPublic = false;
+let isMember = false;
+let isMuted = false;
+let isBanned = false;
+let accountName;
+
+async function checkAccountName() {
+    const res = await fetch("http://localhost:3000/accounts/" + localStorage.getItem("username"), {
+        method: "GET",
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("token")
+        }
+    });
+    const account = await res.json();
+    accountName = account.accName;
+
+    Post();
+    sidebar();
+}
+
+checkAccountName();
+
 async function Discussion(dscName) { 
     const res = await fetch("http://localhost:3000/discussions/" + dscName);
     const discussion = await res.json();
@@ -32,27 +54,31 @@ async function Discussion(dscName) {
                                 </div>`;
     discussionOwners.insertAdjacentHTML("beforeend", discussionOwnersHTML);
 
+    if (discussion.dscType == "Public") {
+        isPublic = true;
+    }
+
     DiscussionMembers();
-    Comments();
 };
+
+let postNameHTML;
+let postDescHTML;
+let postAccountHTML;
+let postDateHTML;
 
 async function Post() {
     const res = await fetch("http://localhost:3000/post/" + postId);
     const post = await res.json();
 
-    const postNameHTML = `<h2>` + post.postName + '</h2>';
-    postName.insertAdjacentHTML("afterbegin", postNameHTML);
+    postNameHTML = `<h2>` + post.postName + '</h2>';
 
-    const postDescHTML = '<p>' + post.postDesc + '<p>';
-    postDesc.insertAdjacentHTML("beforeend", postDescHTML);
+    postDescHTML = '<p>' + post.postDesc + '<p>';
 
-    const postAccountHTML = '<p>' + post.accName + '<p>';
-    postAccount.insertAdjacentHTML("beforeend", postAccountHTML);
+    postAccountHTML = '<p>' + post.accName + '<p>';
 
-    const postDateHTML = '<p>' + post.postDate + '<p>';
-    postDate.insertAdjacentHTML("beforeend", postDateHTML);
+    postDateHTML = '<p>' + post.postDate + '<p>';
 
-    if (post.accName == "AppleTan") {
+    if (post.accName == accountName) {
         const postOptionsHTML = `<li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="delete_modal.showModal()"><span class="w-full">Delete</span></button></li>
                                 <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="goToEditPost(` + postId + `)"><span class="w-full">Edit</span></button></li>`;
         postOptions.insertAdjacentHTML("beforeend", postOptionsHTML);
@@ -245,7 +271,19 @@ async function DiscussionMembers() {
     memberCount.innerHTML = `<h2 class="font-bold">` + discussionMembers.length + `</h2>`;
 
     for (let i = 0; i < discussionMembers.length; i++) {
-        if (discussionMembers[i].dscMemRole == "Owner" && discussionMembers[i].accName == "AppleTan") {
+        if (discussionMembers[i].accName == accountName) {
+            isMember = true;
+            
+            if (discussionMembers[i].isMuted == "True") {
+                isMuted = "True";
+            }
+
+            if (discussionMembers[i].isBanned == "True") {
+                isBanned = "True";
+            }
+        }
+
+        if (discussionMembers[i].dscMemRole == "Owner" && discussionMembers[i].accName == accountName) {
             const bannerOptionsHTML = `<li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="edit_discussion_modal.showModal()"><span class="w-full">Edit</span></button></li>`;
             bannerOptions.insertAdjacentHTML("beforeend", bannerOptionsHTML);
         } else if (discussionMembers[i].dscMemRole == "Admin") {
@@ -257,10 +295,54 @@ async function DiscussionMembers() {
             discussionAdmins.insertAdjacentHTML("beforeend", discussionAdminsHTML);
         }
     }
+
+    if (!isBanned) {
+        if (!isPublic) {
+            if (!isMember) {
+                const postCard = document.getElementById("postCard");
+                postCard.innerHTML = `<div class="flex flex-col justify-center items-center h-full">
+                                        <img src="../images/lock-outline.svg" width="100px" />
+                                        <h2 class="text-2xl font-bold">You do not have access to this discussion</h2>
+                                    </div>`;
+            } else {
+                postName.insertAdjacentHTML("beforeend", postNameHTML);
+                postDesc.insertAdjacentHTML("beforeend", postDescHTML);
+                postAccount.insertAdjacentHTML("beforeend", postAccountHTML);
+                postDate.insertAdjacentHTML("beforeend", postDateHTML);
+                if (isMuted) {
+                    const commentInput = document.getElementById("commentInput");
+                    commentInput.innerHTML = `<div class="flex items-center">
+                                                <img src="../images/lock-outline.svg" width="30" />
+                                                <h2 class="text-md font-bold ms-2">You are muted in this discussion</h2>
+                                            </div>`;
+                }
+                Comments();
+            }
+        } else {
+            postName.insertAdjacentHTML("beforeend", postNameHTML);
+            postDesc.insertAdjacentHTML("beforeend", postDescHTML);
+            postAccount.insertAdjacentHTML("beforeend", postAccountHTML);
+            postDate.insertAdjacentHTML("beforeend", postDateHTML);
+            if (isMuted) {
+                const commentInput = document.getElementById("commentInput");
+                commentInput.innerHTML = `<div class="flex items-center">
+                                            <img src="../images/lock-outline.svg" width="30" />
+                                            <h2 class="text-md font-bold ms-2">You are muted in this discussion</h2>
+                                        </div>`;
+            }
+            Comments(); 
+        }
+    } else {
+        const postCard = document.getElementById("postCard");
+        postCard.innerHTML = `<div class="flex flex-col justify-center items-center h-full">
+                                <img src="../images/lock-outline.svg" width="100px" />
+                                <h2 class="text-2xl font-bold">You are banned from this discussion</h2>
+                            </div>`;
+    }
 }
 
 async function sidebar() {
-    const res = await fetch("http://localhost:3000/discussionMemberTop3Discussions/" + "AppleTan");
+    const res = await fetch("http://localhost:3000/discussionMemberTop3Discussions/" + accountName);
     const discussionMembers = await res.json();
 
     const joinedDiscussions = document.getElementById("joinedDiscussions");
@@ -285,6 +367,3 @@ function goToEditPost(postId) {
     url = url.concat("edit-post.html?discussionName=" + discussionName + "&postId=" + postId);
     window.location.href = url;
 }
-
-Post();
-sidebar();
