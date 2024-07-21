@@ -23,9 +23,9 @@ const questionController = require("./mvc/controllers/questionController");
 const postLikesController = require("./mvc/controllers/postLikesController");
 const invitesController = require("./mvc/controllers/invitesController");
 const siteadminPostReportController = require("./mvc/controllers/siteadminPostReportController");
+const feedbackController = require("./mvc/controllers/feedbackController");
 const siteadminMutedUserController = require("./mvc/controllers/siteadminMutedUserController");
-const siteadminBannedUserController = require("./mvc/controllers/siteadminBannedUserController.js");
-
+const siteadminBannedUserController = require("./mvc/controllers/siteadminBannedUserController");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -59,20 +59,14 @@ app.use(cors({
 app.use(helmet());
 app.use(morgan('combined')); // HTTP request logger
 
-
-
-
-
-//Route Definitions
+// Route definitions
+app.delete('/deleteAccount', accountsController.deleteAccount);
+app.put('/updateProfile', accountsController.updateProfile);
+app.post('/signup', accountsController.signup);
+app.post('/login', accountsController.login);
 app.get('/ping', (req, res) => res.send('Server is running')); // Simple ping endpoint
-app.get('/siteadmin/postreport', siteadminPostReportController.getAllPostReports);
-app.get("/siteadmin/reportcount", siteadminPostReportController.getAllCountOfPostReports);
-app.get('/siteadmin/newestpostreport', siteadminPostReportController.getAllPostReportsByNewest);
-app.get('/siteadmin/postreport/:postId', siteadminPostReportController.getPostReportById);
-app.get("/siteadmin/mutedusers", siteadminMutedUserController.getAllMutedUsers);
-app.get("/siteadmin/mutedusers/:name", siteadminMutedUserController.getMutedUsersByName);
-app.get("/siteadmin/bannedusers", siteadminBannedUserController.getAllBannedUsers);
-app.get("/siteadmin/bannedusers/:name", siteadminBannedUserController.getBannedUsersByName);
+
+app.get('/siteadminPostReport', siteadminPostReportController.getAllPostReports);
 app.get('/login', accountsController.login);
 app.get('/question', questionController.getAllQuestions);
 app.get('/question/:questionId', questionController.getQuestionById);
@@ -84,7 +78,6 @@ app.get("/bannedaccounts", accountsController.getAccountIsBanned);
 app.get("/mutedaccounts", accountsController.getAccountsIsMuted);
 app.get("/posts", postsController.getAllPosts);
 app.get("/posts/:dscName", postsController.getPostsByDiscussion);
-app.get("/postsOrderByLikes/:dscName", postsController.getPostsByDiscussionOrderByLikes);
 app.get("/post/:postId", postsController.getPostById);
 app.get("/discussions", discussionController.getAllDiscussions);
 app.get("/discussions/search", discussionController.searchDiscussions);
@@ -128,46 +121,36 @@ app.put("/accounts/unban/:accName", accountsController.unbanAccount);
 app.put("/accounts/unmute/:accName", accountsController.unmuteUser);
 app.put('/updateProfile', accountsController.updateProfile);
 app.put("/news/:newsId", newsController.updateNews);
-app.put("/siteadmin/unmute/:accId", siteadminMutedUserController.unmuteUser);
-app.put("/siteadmin/unban/:accId", siteadminBannedUserController.unbanUser);
 app.delete("/news/:newsId", newsController.deleteNews);
 app.delete("/comment/:cmtId", commentsController.deleteComment);
 app.delete("/posts/:postId", postsController.deletePost);
 app.delete("/volunteer/:volId", volunteersController.deleteVolunteer);
 app.delete("/baninfo/:accName", baninfoController.removeBanInfo);
 app.delete("/muteinfo/:accName", muteinfoController.removeMuteInfo);
-app.delete("/siteadmin/approve/:reportId", siteadminPostReportController.deletePostReport);
-app.delete("/siteadmin/deny/:postId", siteadminPostReportController.deletePostReport);
-app.delete("/siteadmin/post/:postId", siteadminPostReportController.deletePost);
+app.delete("/siteadminApprove/:reportId", siteadminPostReportController.deletePostReport);
+app.delete("/siteadminDeny/:postId", siteadminPostReportController.deletePostReport);
+app.delete("/siteadminPost/:postId", siteadminPostReportController.deletePost);
 app.delete('/deleteAccount', accountsController.deleteAccount);
+app.put('/discussionReports/warn/:dscRptId', discussionReportsController.warnDiscussionReport);
 app.get("/discussionMembers", discussionMembersController.getAllDiscussionMembers);
 app.get("/discussionMembers/:dscName", discussionMembersController.getDiscussionMembersByDiscussion);
-app.get("/discussionMemberTop3Discussions/:accName", discussionMembersController.getDiscussionMemberTop3Discussions);
 app.post("/discussionMember/:dscName", discussionMembersController.createDiscussionMember);
-
-app.delete("/discussionMember/:accName/:dscName", discussionMembersController.deleteDiscussionMember);
-
-app.get("/postLikes", postLikesController.getAllPostLikes);
-app.get("/postLikes/:postId", postLikesController.getPostLikesByPost);
-app.post("/postLike", postLikesController.createPostLike);
-app.delete("/postLike/:accName/:dscName", postLikesController.deletePostLike);
-
-app.get("/invites", invitesController.getAllInvites);
-app.get("/invites/:dscName", invitesController.getInvitesByDiscussion);
-app.post("/invite", invitesController.createInvite);
-app.delete("/invite/:invId", invitesController.deleteInvite);
-
 app.delete("/discussionReports/:dscRptId", discussionReportsController.deleteDiscussionReport);
+
+// Feedback routes
+app.post('/feedback', feedbackController.createFeedback);
+app.get('/feedback', feedbackController.getFeedback);
+app.put('/feedback/:feedbackID', feedbackController.updateFeedback);
+app.delete('/feedback/:feedbackID', feedbackController.deleteFeedback);
 
 // Example protected route
 app.get('/protected', authenticateJWT, (req, res) => {
     res.send('This is a protected route');
 });
 
-
 // Start the server
 app.listen(port, async () => {
-    console.log('Server listening on port ${port}');
+    console.log(`Server listening on port ${port}`);
     try {
         await sql.connect(dbConfig);
         console.log("Database connection established successfully");
@@ -176,10 +159,8 @@ app.listen(port, async () => {
     }
 });
 
-
 process.on("SIGINT", async () => {
     console.log("Server is gracefully shutting down");
-    await resetProfileSettings();
     await sql.close();
     console.log("Database connection closed");
     process.exit(0);

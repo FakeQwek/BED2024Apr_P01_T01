@@ -209,8 +209,27 @@
                         alert('Delete failed: An error occurred');
                         console.error('Error deleting discussion report:', error);
                     }
+                } else if (selectedPunishment === 'warn') {
+                    try {
+                        const response = await fetch(`http://localhost:3000/discussionReports/warn/${discussionId}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        });
+
+                        if (response.ok) {
+                            alert('Discussion warned successfully');
+                            window.opener.location.reload();  // Refresh the parent page
+                            window.close();  // Close the modal
+                        } else {
+                            alert('Warn failed: Discussion report not found');
+                        }
+                    } catch (error) {
+                        alert('Warn failed: An error occurred');
+                        console.error('Error warning discussion report:', error);
+                    }
                 } else {
-                    // Handle the warn case here
                     window.history.back();
                 }
             });
