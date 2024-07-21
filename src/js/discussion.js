@@ -20,6 +20,14 @@ async function checkAccountName() {
         }
     });
     const account = await res.json();
+
+    // set html for account if the user is logged in
+    if (account.accName != null) {
+        const loginSignUp = document.getElementById("loginSignUp");
+        loginSignUp.innerHTML = `<h2 class="mr-4 max-[820px]:hidden">Hello: ` + account.accName + `</h2>
+                                <button class="btn btn-sm mr-4 max-[820px]:hidden" onclick="goToProfile("` + account.accName +`")">View Profile</button>`;
+    }
+
     accountName = account.accName;
 }
 
@@ -76,14 +84,14 @@ async function Posts() {
     for (let i = 0; i < posts.length; i++) {
         if (posts[i].isEvent == "True") {
             if (posts[i].accName == accountName) {
-                const postHTML = `<div class="card w-full h-fit bg-white" onclick="goToPost(` + posts[i].postId + `)">
+                const postHTML = `<div class="card w-full h-fit bg-white">
                                     <div class="card-body">
                                         <div class="card-title flex justify-between items-center">
                                             <div class="flex flex-col justify-between w-full gap-2">
                                                 <div class="flex justify-between">
                                                     <div class="flex items-center gap-2">
                                                         <img src="../images/account-circle-outline.svg" width="30px" />
-                                                        <h2 class="text-sm">` + posts[i].accName + `</h2>
+                                                        <h2 class="text-sm" onclick="goToProfile('` + posts[i].accName + `')">` + posts[i].accName + `</h2>
                                                         <h2 class="text-sm">` + posts[i].postDate + `</h2>
                                                     </div>
                                                     <!-- options dropdown -->
@@ -93,6 +101,7 @@ async function Posts() {
                                                             <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="report_post_modal` + i + `.showModal()"><span class="w-full">Report</span></button></li>
                                                             <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="delete_modal` + i + `.showModal()"><span class="w-full">Delete</span></button></li>
                                                             <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="goToEditPost(` + posts[i].postId + `)"><span class="w-full">Edit</span></button></li>
+                                                            <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="goToManageVolunteers(` + posts[i].postId + `)"><span class="w-full">Manage Volunteers</span></button></li>
                                                         </ul>
                                                         <!-- report post popup -->
                                                         <dialog id="report_post_modal` + i + `" class="modal">
@@ -136,20 +145,23 @@ async function Posts() {
                                             <div id="likeCount` + posts[i].postId + `" class="flex items-center gap-4">
                                                 <button id="likeButton` + posts[i].postId + `" class="btn btn-sm" onclick="createPostLike(` + posts[i].postId + `)"><img src="../images/thumb-up-outline.svg" width="20px"></button>
                                             </div>
-                                            <button id=` + posts[i].postId + ` class="btn btn-sm" onclick="createVolunteer(` + posts[i].postId + `)">Join</button>
+                                            <div>
+                                                <button id=` + posts[i].postId + ` class="btn btn-sm" onclick="createVolunteer(` + posts[i].postId + `)">Join</button>
+                                                <button id=` + posts[i].postId + ` class="btn btn-sm" onclick="goToPost(` + posts[i].postId + `)">View</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>`;
                 discussionPosts.insertAdjacentHTML("beforeend", postHTML);
             } else {
-                const postHTML = `<div class="card w-full h-fit bg-white" onclick="goToPost(` + posts[i].postId + `)">
+                const postHTML = `<div class="card w-full h-fit bg-white">
                                     <div class="card-body">
                                         <div class="card-title flex justify-between items-center">
                                             <div class="flex flex-col justify-between w-full gap-2">
                                                 <div class="flex justify-between">
                                                     <div class="flex items-center gap-2">
                                                         <img src="../images/account-circle-outline.svg" width="30px" />
-                                                        <h2 class="text-sm">` + posts[i].accName + `</h2>
+                                                        <h2 class="text-sm" onclick="goToProfile('` + posts[i].accName + `')">` + posts[i].accName + `</h2>
                                                         <h2 class="text-sm">` + posts[i].postDate + `</h2>
                                                     </div>
                                                     <!-- options dropdown -->
@@ -187,7 +199,10 @@ async function Posts() {
                                             <div id="likeCount` + posts[i].postId + `" class="flex items-center gap-4">
                                                 <button id="likeButton` + posts[i].postId + `" class="btn btn-sm" onclick="createPostLike(` + posts[i].postId + `)"><img src="../images/thumb-up-outline.svg" width="20px"></button>
                                             </div>
-                                            <button id=` + posts[i].postId + ` class="btn btn-sm" onclick="createVolunteer(` + posts[i].postId + `)">Join</button>
+                                            <div>
+                                                <button id=` + posts[i].postId + ` class="btn btn-sm" onclick="createVolunteer(` + posts[i].postId + `)">Join</button>
+                                                <button id=` + posts[i].postId + ` class="btn btn-sm" onclick="goToPost(` + posts[i].postId + `)">View</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>`;
@@ -195,14 +210,14 @@ async function Posts() {
             }
         } else {
             if (posts[i].accName == accountName) {
-                const postHTML = `<div class="card w-full h-fit bg-white" onclick="goToPost(` + posts[i].postId + `)">
+                const postHTML = `<div class="card w-full h-fit bg-white">
                                     <div class="card-body">
                                         <div class="card-title flex justify-between items-center">
                                             <div class="flex flex-col justify-between w-full gap-2">
                                                 <div class="flex justify-between">
                                                     <div class="flex items-center gap-2">
                                                         <img src="../images/account-circle-outline.svg" width="30px" />
-                                                        <h2 class="text-sm">` + posts[i].accName + `</h2>
+                                                        <h2 class="text-sm" onclick="goToProfile('` + posts[i].accName + `')">` + posts[i].accName + `</h2>
                                                         <h2 class="text-sm">` + posts[i].postDate + `</h2>
                                                     </div>
                                                     <!-- options dropdown -->
@@ -251,21 +266,24 @@ async function Posts() {
                                             </div>
                                         </div>
                                         <p>` + posts[i].postDesc + `</p>
-                                        <div id="likeCount` + posts[i].postId + `" class="flex items-center gap-4">
-                                            <button id="likeButton` + posts[i].postId + `" class="btn btn-sm" onclick="createPostLike(` + posts[i].postId + `)"><img src="../images/thumb-up-outline.svg" width="20px"></button>
+                                        <div class="flex justify-between">
+                                            <div id="likeCount` + posts[i].postId + `" class="flex items-center gap-4">
+                                                <button id="likeButton` + posts[i].postId + `" class="btn btn-sm" onclick="createPostLike(` + posts[i].postId + `)"><img src="../images/thumb-up-outline.svg" width="20px"></button>
+                                            </div>
+                                            <button id=` + posts[i].postId + ` class="btn btn-sm" onclick="goToPost(` + posts[i].postId + `)">View</button>
                                         </div>
                                     </div>
                                 </div>`;
                 discussionPosts.insertAdjacentHTML("beforeend", postHTML);
             } else {
-                const postHTML = `<div class="card w-full h-fit bg-white" onclick="goToPost(` + posts[i].postId + `)">
+                const postHTML = `<div class="card w-full h-fit bg-white">
                                     <div class="card-body">
                                         <div class="card-title flex justify-between items-center">
                                             <div class="flex flex-col justify-between w-full gap-2">
                                                 <div class="flex justify-between">
                                                     <div class="flex items-center gap-2">
                                                         <img src="../images/account-circle-outline.svg" width="30px" />
-                                                        <h2 class="text-sm">` + posts[i].accName + `</h2>
+                                                        <h2 class="text-sm" onclick="goToProfile('` + posts[i].accName + `')">` + posts[i].accName + `</h2>
                                                         <h2 class="text-sm">` + posts[i].postDate + `</h2>
                                                     </div>
                                                     <!-- options dropdown -->
@@ -299,8 +317,11 @@ async function Posts() {
                                             </div>
                                         </div>
                                         <p>` + posts[i].postDesc + `</p>
-                                        <div id="likeCount` + posts[i].postId + `" class="flex items-center gap-4">
-                                            <button id="likeButton` + posts[i].postId + `" class="btn btn-sm" onclick="createPostLike(` + posts[i].postId + `)"><img src="../images/thumb-up-outline.svg" width="20px"></button>
+                                        <div class="flex justify-between">
+                                            <div id="likeCount` + posts[i].postId + `" class="flex items-center gap-4">
+                                                <button id="likeButton` + posts[i].postId + `" class="btn btn-sm" onclick="createPostLike(` + posts[i].postId + `)"><img src="../images/thumb-up-outline.svg" width="20px"></button>
+                                            </div>
+                                            <button id=` + posts[i].postId + ` class="btn btn-sm" onclick="goToPost(` + posts[i].postId + `)">View</button>
                                         </div>
                                     </div>
                                 </div>`;
@@ -630,14 +651,14 @@ async function getPostsByDiscussionOrderByLikes() {
     for (let i = 0; i < posts.length; i++) {
         if (posts[i].isEvent == "True") {
             if (posts[i].accName == accountName) {
-                const postHTML = `<div class="card w-full h-fit bg-white" onclick="goToPost(` + posts[i].postId + `)">
+                const postHTML = `<div class="card w-full h-fit bg-white">
                                     <div class="card-body">
                                         <div class="card-title flex justify-between items-center">
                                             <div class="flex flex-col justify-between w-full gap-2">
                                                 <div class="flex justify-between">
                                                     <div class="flex items-center gap-2">
                                                         <img src="../images/account-circle-outline.svg" width="30px" />
-                                                        <h2 class="text-sm">` + posts[i].accName + `</h2>
+                                                        <h2 class="text-sm" onclick="goToProfile('` + posts[i].accName + `')">` + posts[i].accName + `</h2>
                                                         <h2 class="text-sm">` + posts[i].postDate + `</h2>
                                                     </div>
                                                     <!-- options dropdown -->
@@ -647,6 +668,7 @@ async function getPostsByDiscussionOrderByLikes() {
                                                             <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="report_post_modal` + i + `.showModal()"><span class="w-full">Report</span></button></li>
                                                             <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="delete_modal` + i + `.showModal()"><span class="w-full">Delete</span></button></li>
                                                             <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="goToEditPost(` + posts[i].postId + `)"><span class="w-full">Edit</span></button></li>
+                                                            <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="goToManageVolunteers(` + posts[i].postId + `)"><span class="w-full">Manage Volunteers</span></button></li>
                                                         </ul>
                                                         <!-- report post popup -->
                                                         <dialog id="report_post_modal` + i + `" class="modal">
@@ -690,20 +712,23 @@ async function getPostsByDiscussionOrderByLikes() {
                                             <div id="likeCount` + posts[i].postId + `" class="flex items-center gap-4">
                                                 <button id="likeButton` + posts[i].postId + `" class="btn btn-sm" onclick="createPostLike(` + posts[i].postId + `)"><img src="../images/thumb-up-outline.svg" width="20px"></button>
                                             </div>
-                                            <button id=` + posts[i].postId + ` class="btn btn-sm" onclick="createVolunteer(` + posts[i].postId + `)">Join</button>
+                                            <div>
+                                                <button id=` + posts[i].postId + ` class="btn btn-sm" onclick="createVolunteer(` + posts[i].postId + `)">Join</button>
+                                                <button id=` + posts[i].postId + ` class="btn btn-sm" onclick="goToPost(` + posts[i].postId + `)">View</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>`;
                 discussionPosts.insertAdjacentHTML("beforeend", postHTML);
             } else {
-                const postHTML = `<div class="card w-full h-fit bg-white" onclick="goToPost(` + posts[i].postId + `)">
+                const postHTML = `<div class="card w-full h-fit bg-white">
                                     <div class="card-body">
                                         <div class="card-title flex justify-between items-center">
                                             <div class="flex flex-col justify-between w-full gap-2">
                                                 <div class="flex justify-between">
                                                     <div class="flex items-center gap-2">
                                                         <img src="../images/account-circle-outline.svg" width="30px" />
-                                                        <h2 class="text-sm">` + posts[i].accName + `</h2>
+                                                        <h2 class="text-sm" onclick="goToProfile('` + posts[i].accName + `')">` + posts[i].accName + `</h2>
                                                         <h2 class="text-sm">` + posts[i].postDate + `</h2>
                                                     </div>
                                                     <!-- options dropdown -->
@@ -741,7 +766,10 @@ async function getPostsByDiscussionOrderByLikes() {
                                             <div id="likeCount` + posts[i].postId + `" class="flex items-center gap-4">
                                                 <button id="likeButton` + posts[i].postId + `" class="btn btn-sm" onclick="createPostLike(` + posts[i].postId + `)"><img src="../images/thumb-up-outline.svg" width="20px"></button>
                                             </div>
-                                            <button id=` + posts[i].postId + ` class="btn btn-sm" onclick="createVolunteer(` + posts[i].postId + `)">Join</button>
+                                            <div>
+                                                <button id=` + posts[i].postId + ` class="btn btn-sm" onclick="createVolunteer(` + posts[i].postId + `)">Join</button>
+                                                <button id=` + posts[i].postId + ` class="btn btn-sm" onclick="goToPost(` + posts[i].postId + `)">View</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>`;
@@ -749,14 +777,14 @@ async function getPostsByDiscussionOrderByLikes() {
             }
         } else {
             if (posts[i].accName == accountName) {
-                const postHTML = `<div class="card w-full h-fit bg-white" onclick="goToPost(` + posts[i].postId + `)">
+                const postHTML = `<div class="card w-full h-fit bg-white">
                                     <div class="card-body">
                                         <div class="card-title flex justify-between items-center">
                                             <div class="flex flex-col justify-between w-full gap-2">
                                                 <div class="flex justify-between">
                                                     <div class="flex items-center gap-2">
                                                         <img src="../images/account-circle-outline.svg" width="30px" />
-                                                        <h2 class="text-sm">` + posts[i].accName + `</h2>
+                                                        <h2 class="text-sm" onclick="goToProfile('` + posts[i].accName + `')">` + posts[i].accName + `</h2>
                                                         <h2 class="text-sm">` + posts[i].postDate + `</h2>
                                                     </div>
                                                     <!-- options dropdown -->
@@ -805,21 +833,24 @@ async function getPostsByDiscussionOrderByLikes() {
                                             </div>
                                         </div>
                                         <p>` + posts[i].postDesc + `</p>
-                                        <div id="likeCount` + posts[i].postId + `" class="flex items-center gap-4">
-                                            <button id="likeButton` + posts[i].postId + `" class="btn btn-sm" onclick="createPostLike(` + posts[i].postId + `)"><img src="../images/thumb-up-outline.svg" width="20px"></button>
+                                        <div class="flex justify-between">
+                                            <div id="likeCount` + posts[i].postId + `" class="flex items-center gap-4">
+                                                <button id="likeButton` + posts[i].postId + `" class="btn btn-sm" onclick="createPostLike(` + posts[i].postId + `)"><img src="../images/thumb-up-outline.svg" width="20px"></button>
+                                            </div>
+                                            <button id=` + posts[i].postId + ` class="btn btn-sm" onclick="goToPost(` + posts[i].postId + `)">View</button>
                                         </div>
                                     </div>
                                 </div>`;
                 discussionPosts.insertAdjacentHTML("beforeend", postHTML);
             } else {
-                const postHTML = `<div class="card w-full h-fit bg-white" onclick="goToPost(` + posts[i].postId + `)">
+                const postHTML = `<div class="card w-full h-fit bg-white">
                                     <div class="card-body">
                                         <div class="card-title flex justify-between items-center">
                                             <div class="flex flex-col justify-between w-full gap-2">
                                                 <div class="flex justify-between">
                                                     <div class="flex items-center gap-2">
                                                         <img src="../images/account-circle-outline.svg" width="30px" />
-                                                        <h2 class="text-sm">` + posts[i].accName + `</h2>
+                                                        <h2 class="text-sm" onclick="goToProfile('` + posts[i].accName + `')">` + posts[i].accName + `</h2>
                                                         <h2 class="text-sm">` + posts[i].postDate + `</h2>
                                                     </div>
                                                     <!-- options dropdown -->
@@ -853,8 +884,11 @@ async function getPostsByDiscussionOrderByLikes() {
                                             </div>
                                         </div>
                                         <p>` + posts[i].postDesc + `</p>
-                                        <div id="likeCount` + posts[i].postId + `" class="flex items-center gap-4">
-                                            <button id="likeButton` + posts[i].postId + `" class="btn btn-sm" onclick="createPostLike(` + posts[i].postId + `)"><img src="../images/thumb-up-outline.svg" width="20px"></button>
+                                        <div class="flex justify-between">
+                                            <div id="likeCount` + posts[i].postId + `" class="flex items-center gap-4">
+                                                <button id="likeButton` + posts[i].postId + `" class="btn btn-sm" onclick="createPostLike(` + posts[i].postId + `)"><img src="../images/thumb-up-outline.svg" width="20px"></button>
+                                            </div>
+                                            <button id=` + posts[i].postId + ` class="btn btn-sm" onclick="goToPost(` + posts[i].postId + `)">View</button>
                                         </div>
                                     </div>
                                 </div>`;
@@ -910,18 +944,18 @@ function goToCreatePost() {
 
 // direct page to the post page with the post id of the selected post
 function goToPost(postId) {
-    // var script = document.getElementsByTagName("script");
-    // var url = script[script.length-1].src;
-    // for (let i = 0; i < url.length; i++) {
-    //     if (url.slice(-1) != "/") {
-    //         url = url.substring(0, url.length - 1);
-    //     } else {
-    //         break;
-    //     }
-    // }
-    // url = url.substring(0, url.length - 3);
-    // url = url.concat("post.html?postId=" + postId);
-    // window.location.href = url;
+    var script = document.getElementsByTagName("script");
+    var url = script[script.length-1].src;
+    for (let i = 0; i < url.length; i++) {
+        if (url.slice(-1) != "/") {
+            url = url.substring(0, url.length - 1);
+        } else {
+            break;
+        }
+    }
+    url = url.substring(0, url.length - 3);
+    url = url.concat("post.html?postId=" + postId);
+    window.location.href = url;
 }
 
 // direct page to the edit post page
@@ -937,6 +971,38 @@ function goToEditPost(postId) {
     }
     url = url.substring(0, url.length - 3);
     url = url.concat("edit-post.html?discussionName=" + discussionName + "&postId=" + postId);
+    window.location.href = url;
+}
+
+// direct page to profile page
+function goToProfile(accName) {
+    var script = document.getElementsByTagName("script");
+    var url = script[script.length-1].src;
+    for (let i = 0; i < url.length; i++) {
+        if (url.slice(-1) != "/") {
+            url = url.substring(0, url.length - 1);
+        } else {
+            break;
+        }
+    }
+    url = url.substring(0, url.length - 3);
+    url = url.concat("profile.html");
+    window.location.href = url;
+}
+
+// direct page to manage volunteers page
+function goToManageVolunteers(postId) {
+    var script = document.getElementsByTagName("script");
+    var url = script[script.length-1].src;
+    for (let i = 0; i < url.length; i++) {
+        if (url.slice(-1) != "/") {
+            url = url.substring(0, url.length - 1);
+        } else {
+            break;
+        }
+    }
+    url = url.substring(0, url.length - 3);
+    url = url.concat("manage-volunteers.html?postId=" + postId);
     window.location.href = url;
 }
 

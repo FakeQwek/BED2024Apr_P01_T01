@@ -17,6 +17,14 @@ async function checkAccountName() {
         }
     });
     const account = await res.json();
+
+    // set html for account if the user is logged in
+    if (account.accName != null) {
+        const loginSignUp = document.getElementById("loginSignUp");
+        loginSignUp.innerHTML = `<h2 class="mr-4 max-[820px]:hidden">Hello: ` + account.accName + `</h2>
+                                <button class="btn btn-sm mr-4 max-[820px]:hidden" onclick="goToProfile("` + account.accName +`")">View Profile</button>`;
+    }
+
     accountName = account.accName;
 }
 
@@ -84,12 +92,12 @@ async function Posts() {
 
     for (let i = 0; i < posts.length; i++) {
         const homePostsHTML = `<div class="flex justify-center w-full">
-                                    <div class="card w-5/6 bg-white" onclick="goToPost(` + posts[i].postId + `)">
+                                    <div class="card w-5/6 bg-white">
                                         <div class="card-body">
                                             <div class="flex justify-between">
                                                 <div class="flex items-center gap-2">
                                                     <img src="../images/account-circle-outline.svg" width="30px" />
-                                                    <h2 class="text-md">d:` + posts[i].dscName + `</h2>
+                                                    <h2 class="text-md" onclick="goToDiscussion('` + posts[i].dscName + `')">d:` + posts[i].dscName + `</h2>
                                                     <h2 class="text-sm">` + posts[i].postDate + `</h2>
                                                 </div>
                                                 <!-- options dropdown -->
@@ -121,6 +129,9 @@ async function Posts() {
                                             </div>
                                             <h2 class="card-title">` + posts[i].postName + `</h2>
                                             <p>` + posts[i].postDesc + `</p>
+                                            <div class="flex justify-end">
+                                                <button id=` + posts[i].postId + ` class="btn btn-sm" onclick="goToPost(` + posts[i].postId + `)">View</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>`;
@@ -191,18 +202,18 @@ async function sidebar() {
 
 // direct page to the post page with the post id of the selected post
 function goToPost(postId) {
-    // var script = document.getElementsByTagName("script");
-    // var url = script[script.length-1].src;
-    // for (let i = 0; i < url.length; i++) {
-    //     if (url.slice(-1) != "/") {
-    //         url = url.substring(0, url.length - 1);
-    //     } else {
-    //         break;
-    //     }
-    // }
-    // url = url.substring(0, url.length - 3);
-    // url = url.concat("post.html?postId=" + postId);
-    // window.location.href = url;
+    var script = document.getElementsByTagName("script");
+    var url = script[script.length-1].src;
+    for (let i = 0; i < url.length; i++) {
+        if (url.slice(-1) != "/") {
+            url = url.substring(0, url.length - 1);
+        } else {
+            break;
+        }
+    }
+    url = url.substring(0, url.length - 3);
+    url = url.concat("post.html?postId=" + postId);
+    window.location.href = url;
 }
 
 // direct page to discussion page
@@ -218,6 +229,22 @@ function goToDiscussion(dscName) {
     }
     url = url.substring(0, url.length - 3);
     url = url.concat("discussion.html?discussionName=" + dscName);
+    window.location.href = url;
+}
+
+// direct page to profile page
+function goToProfile(accName) {
+    var script = document.getElementsByTagName("script");
+    var url = script[script.length-1].src;
+    for (let i = 0; i < url.length; i++) {
+        if (url.slice(-1) != "/") {
+            url = url.substring(0, url.length - 1);
+        } else {
+            break;
+        }
+    }
+    url = url.substring(0, url.length - 3);
+    url = url.concat("profile.html");
     window.location.href = url;
 }
 

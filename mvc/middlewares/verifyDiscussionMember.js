@@ -33,7 +33,10 @@ const verifyDiscussionMember = async (req, res, next) => {
                 getDiscussionMember();
             }
         }
-        getDiscussion();
+        
+        if (dscName != null) {
+            getDiscussion();
+        }
     });
 };
 

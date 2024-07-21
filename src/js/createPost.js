@@ -26,6 +26,13 @@ async function checkAccountName() {
     });
     const account = await res.json();
 
+    // set html for account if the user is logged in
+    if (account.accName != null) {
+        const loginSignUp = document.getElementById("loginSignUp");
+        loginSignUp.innerHTML = `<h2 class="mr-4 max-[820px]:hidden">Hello: ` + account.accName + `</h2>
+                                <button class="btn btn-sm mr-4 max-[820px]:hidden" onclick="goToProfile("` + account.accName +`")">View Profile</button>`;
+    }
+
     // stores the account name in the accountName variable if username matches
     accountName = account.accName;
 }
@@ -192,6 +199,22 @@ isEventRadio.addEventListener("change", () => {
     const dateInputHTML = `<input id="dateInput" type="text" placeholder="Date" class="input input-bordered" />`;
     eventContainer.insertAdjacentHTML("afterbegin", dateInputHTML);
 })
+
+// direct page to profile page
+function goToProfile(accName) {
+    var script = document.getElementsByTagName("script");
+    var url = script[script.length-1].src;
+    for (let i = 0; i < url.length; i++) {
+        if (url.slice(-1) != "/") {
+            url = url.substring(0, url.length - 1);
+        } else {
+            break;
+        }
+    }
+    url = url.substring(0, url.length - 3);
+    url = url.concat("profile.html");
+    window.location.href = url;
+}
 
 Discussion();
 sidebar();

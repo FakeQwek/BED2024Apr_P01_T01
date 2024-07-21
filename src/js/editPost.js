@@ -24,6 +24,14 @@ async function checkAccountName() {
         }
     });
     const account = await res.json();
+
+    // set html for account if the user is logged in
+    if (account.accName != null) {
+        const loginSignUp = document.getElementById("loginSignUp");
+        loginSignUp.innerHTML = `<h2 class="mr-4 max-[820px]:hidden">Hello: ` + account.accName + `</h2>
+                                <button class="btn btn-sm mr-4 max-[820px]:hidden" onclick="goToProfile("` + account.accName +`")">View Profile</button>`;
+    }
+
     accountName = account.accName;
 
     Post();
@@ -167,6 +175,22 @@ async function sidebar() {
         const discussionButtonHTML = `<li><a><span class="flex items-center w-full gap-2"><img src="../images/account-circle-outline.svg" width="30px" />` + discussionMembers[i].dscName + `</span></a></li>`;
         joinedDiscussions.insertAdjacentHTML("beforeend", discussionButtonHTML);
     }
+}
+
+// direct page to profile page
+function goToProfile(accName) {
+    var script = document.getElementsByTagName("script");
+    var url = script[script.length-1].src;
+    for (let i = 0; i < url.length; i++) {
+        if (url.slice(-1) != "/") {
+            url = url.substring(0, url.length - 1);
+        } else {
+            break;
+        }
+    }
+    url = url.substring(0, url.length - 3);
+    url = url.concat("profile.html");
+    window.location.href = url;
 }
 
 DiscussionMembers();
