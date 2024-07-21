@@ -21,6 +21,7 @@ const baninfoController = require("./mvc/controllers/baninfoController");
 const muteinfoController = require("./mvc/controllers/muteinfoController");
 const questionController = require("./mvc/controllers/questionController");
 const siteadminPostReportController = require("./mvc/controllers/siteadminPostReportController");
+const feedbackController = require("./mvc/controllers/feedbackController");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -126,10 +127,17 @@ app.delete("/siteadminApprove/:reportId", siteadminPostReportController.deletePo
 app.delete("/siteadminDeny/:postId", siteadminPostReportController.deletePostReport);
 app.delete("/siteadminPost/:postId", siteadminPostReportController.deletePost);
 app.delete('/deleteAccount', accountsController.deleteAccount);
+app.put('/discussionReports/warn/:dscRptId', discussionReportsController.warnDiscussionReport); // Add this line
 app.get("/discussionMembers", discussionMembersController.getAllDiscussionMembers);
 app.get("/discussionMembers/:dscName", discussionMembersController.getDiscussionMembersByDiscussion);
 app.post("/discussionMember/:dscName", discussionMembersController.createDiscussionMember);
 app.delete("/discussionReports/:dscRptId", discussionReportsController.deleteDiscussionReport);
+
+// Feedback routes
+app.post('/feedback', feedbackController.createFeedback);
+app.get('/feedback', feedbackController.getFeedback);
+app.put('/feedback/:feedbackID', feedbackController.updateFeedback);
+app.delete('/feedback/:feedbackID', feedbackController.deleteFeedback); // Add this line
 
 // Example protected route
 app.get('/protected', authenticateJWT, (req, res) => {
@@ -138,7 +146,7 @@ app.get('/protected', authenticateJWT, (req, res) => {
 
 // Start the server
 app.listen(port, async () => {
-    console.log('Server listening on port ${port}');
+    console.log(`Server listening on port ${port}`);
     try {
         await sql.connect(dbConfig);
         console.log("Database connection established successfully");
@@ -147,10 +155,8 @@ app.listen(port, async () => {
     }
 });
 
-
 process.on("SIGINT", async () => {
     console.log("Server is gracefully shutting down");
-    await resetProfileSettings();
     await sql.close();
     console.log("Database connection closed");
     process.exit(0);
