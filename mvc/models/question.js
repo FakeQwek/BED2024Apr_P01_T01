@@ -1,4 +1,4 @@
-//Note id is equivalent to name
+//Question model contains crud operations to manipulate data for questions asked in contact us page
 
 const sql =  require("mssql");
 const dbConfig = require("../../dbConfig");
@@ -13,45 +13,10 @@ class Question {
         
     }
 
-    static async getAllQuestions() {
-        const connection = await sql.connect(dbConfig);
-
-        const sqlQuery = `SELECT * FROM Question`;
-
-        const request = connection.request();
-        const result = await request.query(sqlQuery);
-
-        connection.close();
-
-        return result.recordset.map((row) => new Question(row.QuestionId, row.name, row.email, row.query));
-    }
-
-    static async getQuestionById(questionId) {
-        const connection = await sql.connect(dbConfig);
-
-        const sqlQuery = `SELECT * FROM Question WHERE QuestionID = @questionId`;
-
-        const request = connection.request();
-        request.input("questionId", questionId);
-        const result = await request.query(sqlQuery);
-
-        connection.close();
-
-        return result.recordset[0]
-            ? new Question(
-                result.recordset[0].QuestionID,
-                result.recordset[0].Name,
-                result.recordset[0].Email,
-                result.recordset[0].Query,
-            )
-            : null;
-    }
-
-    
-
+    //Posts question data to the local database
     static async createQuestion(newQuestionData) {
         const connection = await sql.connect(dbConfig);
-        
+        //Question id will always be 1 up from the max question id
         const sqlQuery = `INSERT INTO Question (QuestionID, Name, Email, Query) SELECT MAX(QuestionID) + 1, @name, @email, @query FROM Question;`;
 
         const request = connection.request();

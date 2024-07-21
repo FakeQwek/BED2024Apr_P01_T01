@@ -1,3 +1,4 @@
+//Statistics controller returns statistic json responses and logs internal server error if unsuccessful
 const Statistics = require("../models/user-statistics");
 
 const getCountOfUsersBanned = async (req, res) => {

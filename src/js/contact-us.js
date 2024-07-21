@@ -1,7 +1,7 @@
  
  
  
- 
+ //Function is a post function that creates a question
  async function submitForm() {
     console.log("Triggered");
     username = document.getElementById("name").value;

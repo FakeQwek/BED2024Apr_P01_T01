@@ -1,5 +1,4 @@
-//Note id is equivalent to name
- //Add post dates later
+//User stats model contains crud operations to get counts or data from several tables
  const sql =  require("mssql");
  const dbConfig = require("../../dbConfig");
  const { request } = require("express");
@@ -13,7 +12,7 @@
      }
  
     
- 
+     //Gets count of users banned
      static async getCountOfUsersBanned() {
          
          const connection = await sql.connect(dbConfig);
@@ -29,6 +28,7 @@
          return result.recordset.map((row) => new Statistic(row.Count));
      }
  
+     //Gets count of users
      static async getCountOfUsers() {
          
         const connection = await sql.connect(dbConfig);
@@ -44,6 +44,7 @@
         return result.recordset.map((row) => new Statistic(row.Count));
     }
 
+    //Gets count of users muted
     static async getCountOfUsersMuted() {
          
         const connection = await sql.connect(dbConfig);
@@ -59,6 +60,7 @@
         return result.recordset.map((row) => new Statistic(row.Count));
     }
 
+     //Gets count of admins
     static async getCountOfAdminUsers() {
          
         const connection = await sql.connect(dbConfig);
@@ -74,6 +76,7 @@
         return result.recordset.map((row) => new Statistic(row.Count));
     }
 
+     //Gets count of comments
     static async getCountOfComments() {
          
         const connection = await sql.connect(dbConfig);
@@ -89,6 +92,7 @@
         return result.recordset.map((row) => new Statistic(row.Count));
     }
 
+     //Gets count of discussions
     static async getCountOfDiscussions() {
          
         const connection = await sql.connect(dbConfig);
@@ -104,6 +108,7 @@
         return result.recordset.map((row) => new Statistic(row.Count));
     }
 
+     //Gets count of posts
     static async getCountOfPosts() {
          
         const connection = await sql.connect(dbConfig);
@@ -119,6 +124,7 @@
         return result.recordset.map((row) => new Statistic(row.Count));
     }
 
+     //Gets count of post reports
     static async getCountOfPostReports() {
          
         const connection = await sql.connect(dbConfig);
@@ -134,6 +140,7 @@
         return result.recordset.map((row) => new Statistic(row.Count));
     }
 
+     //Gets count of discussion reports
     static async getCountOfDiscussionReports() {
          
         const connection = await sql.connect(dbConfig);
@@ -150,7 +157,7 @@
     }
 
 
-
+    //Gets count of discussion admins
     static async getCountOfDiscussionAdmins() {
          
         const connection = await sql.connect(dbConfig);
@@ -166,6 +173,7 @@
         return result.recordset.map((row) => new Statistic(row.Count));
     }
 
+     //Gets count of discussions and discussion names
     static async getTypeOfDiscussions(){
         const connection = await sql.connect(dbConfig);
         const allQuery = 

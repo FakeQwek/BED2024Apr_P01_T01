@@ -41,16 +41,3 @@ async function getNewsById(retreivedId){
 
         });
 }
-/*
- console.log(newsData);
-        post = newsData[0];
-        const source = document.querySelector(".news-source");
-        const title = document.querySelector(".card-title");
-        const content = document.querySelector(".news-content");
-        source.innerHTML = "from " + post["newsSource"] + " - published on " + post["newsDate"];
-        title.innerHTML = post["newsId"];
-        content.innerHTML = post["newsContent"] + "<br><br>Read full story at: " + post["newsUrl"];
-        title.insertAdjacentHTML("afterend", 
-             `<img class="news-thumbnail object-scale-down" src="${post["newsImage"]}">` 
-        );
-*/

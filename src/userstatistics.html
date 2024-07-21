@@ -10,7 +10,9 @@
     <!-- navbar -->
     <div class="flex justify-center items-center h-12 bg-white border-b-2">
         <div class="flex w-1/4">
+            <img src="../images/socialise2.png" alt="Socialise Logo" class="h-12 w-auto ml-8">
             <label for="my-drawer-2" class="drawer-button bg-white ml-4 lg:hidden">
+                
                 <img src="../images/menu.svg" width="30px" />
             </label>
         </div>
@@ -56,7 +58,7 @@
                         <h2 class="font-bold mb-2">LEARN MORE</h2>
                         <li><a href="./about.html"><span class="flex items-center w-full gap-2"><img src="../images/information-outline.svg" width="30px" />About Us</span></a></li>
                         <li><a href="./contact-us.html"><span class="flex items-center w-full gap-2"><img src="../images/phone-in-talk.svg" width="30px" />Contact Us</span></a></li>
-                        <li><a><span class="flex items-center w-full gap-2"><img src="../images/finance.svg" width="30px" />User Statistics</span></a></li>
+                        <li><a href="./userstatistics.html"><span class="flex items-center w-full gap-2"><img src="../images/finance.svg" width="30px" />Statistics</span></a></li>
                     </div>
                 </ul>
             </div>
@@ -67,6 +69,7 @@
             <div class="bg-white card h-14 justify-center mb-16" id="title">
                 <h1 class="font-bold text-xl ml-8 flex flex-row items-center">Statistics</h1>
             </div>
+              <!--Displays the bar charts for user and discussion bar charts-->
             <div id="stats-box" class="flex flex-row w-4/6 h-full gap-4 max-[820px]:w-full mr-4">
                 <div class="mr-8 ">
                     <canvas id="userChart" width="300px" height="300px"></canvas>
@@ -78,6 +81,7 @@
             
                 
             </div>
+            <!--Displays the pie chart for discussion type-->
             <div id="stats-box" class="flex flex-row w-4/6 h-full gap-4 max-[820px]:w-full mr-4 mt-2 mb-8">
                 <div>
                     <div class="justify-center ml-12">Discussion Popularity By Post</div>

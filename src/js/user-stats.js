@@ -23,6 +23,7 @@ getDiscussionReportCount();
 getTypeOfDiscussions();
 
 
+//Functions below get counts of various things for user statistics chart
 async function getCountOfUsers() {
     response = await fetch("http://localhost:3000/statistics/usercount")
     .then(response => {
@@ -32,8 +33,9 @@ async function getCountOfUsers() {
         return response.json();
     })
     .then(countData => {
-        
+        //Push respective value into user stats for all functions related to user statistics
         userStats.push(["usercount", countData[0]["count"]]);
+        //Populates the chart in html only when all the get counts have triggered
         if (userStats.length > 4) {
             populateUserChart(userStats);
         }
@@ -131,6 +133,7 @@ async function getCountOfComments() {
     });  
 }
 
+//Functions below get counts of various things for discussion statistics chart
 async function getCountOfDiscussion() {
     response = await fetch("http://localhost:3000/statistics/discussioncount")
     .then(response => {
@@ -143,7 +146,9 @@ async function getCountOfDiscussion() {
         
         
         console.log(countData); 
+        //Pushes discussion data into discussion stats array
         discussionStats.push(["discussioncount", countData[0]["count"]]);
+        //Populates chart only after all the discussion data is retrieved
         if (discussionStats.length > 4) {
             populateDiscussionChart(discussionStats);
         }
@@ -243,6 +248,7 @@ async function getCountOfPostReports() {
     });  
 }
 
+//Gets count and name of discussions
 async function getTypeOfDiscussions() {
     response = await fetch("http://localhost:3000/statistics/discussiontypes")
     .then(response => {
@@ -255,7 +261,7 @@ async function getTypeOfDiscussions() {
         
         
         console.log(typeData); 
-        
+        //Populates the discussion type pie chart
         populateDiscussionTypeChart(typeData);
 
     })
@@ -264,7 +270,7 @@ async function getTypeOfDiscussions() {
     });  
 }
 
-
+//Populates user statistics bar chart
 function populateUserChart(userStats) {
     var usercount;
     var mutedcount;
@@ -273,6 +279,7 @@ function populateUserChart(userStats) {
     var commentcount;
     console.log("should be populating chart" , userStats);
     const userChart = document.getElementById('userChart');
+    //Assigns all the variables from users stats array
     for(i = 0; i < userStats.length; i++) {
         if (userStats[i][0] == "usercount") {
             usercount = userStats[i][1];
@@ -293,6 +300,7 @@ function populateUserChart(userStats) {
     
    
     console.log(usercount, bannedcount, mutedcount, admincount, commentcount);
+    //Chart js code generates the chart using the data
     new Chart(userChart, {
     type: 'bar',
     data: {
@@ -314,6 +322,7 @@ function populateUserChart(userStats) {
     });
 }
 
+//Populates discussion statistics bar chart
 function populateDiscussionChart(discussionStats) {
     var discussioncount;
     var discreportcount;
@@ -322,6 +331,7 @@ function populateDiscussionChart(discussionStats) {
     var postreportcount;
     console.log("should be populating chart" , discussionStats);
     const discussionChart = document.getElementById('discussionChart');
+    //Assigns variables from discussionStats 
     for(i = 0; i < discussionStats.length; i++) {
         if (discussionStats[i][0] == "discussioncount") {
             discussioncount = discussionStats[i][1];
@@ -342,6 +352,7 @@ function populateDiscussionChart(discussionStats) {
     
    
     console.log(discussioncount, discreportcount, discadmincount, postcount, postreportcount);
+    //Chart js code to create the bar chart with data
     new Chart(discussionChart, {
     type: 'bar',
     data: {
@@ -366,11 +377,12 @@ function populateDiscussionChart(discussionStats) {
 
 
 
-
+//Creates the discussion type pie chart
 function populateDiscussionTypeChart(discussionType) {
     labels = [];
     counts = [];
     console.log(discussionType);
+    //Assigns variables from discussion type array
     for (i=0; i < discussionType.length; i++) {
        
         var discussionname = discussionType[i]["dscname"];
@@ -386,7 +398,7 @@ function populateDiscussionTypeChart(discussionType) {
     
     
    
-    
+    //Creates pie chart with chart js
     new Chart(discussionChart, {
     type: 'pie',
     data: {

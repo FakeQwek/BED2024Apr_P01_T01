@@ -9,6 +9,7 @@
 <body class="h-max bg-gray-100">
     <!-- navbar -->
     <div class="flex justify-center items-center h-12 bg-white border-b-2">
+        <img src="../images/socialise2.png" alt="Socialise Logo" class="h-12 w-auto ml-8">
         <div class="flex w-1/4">
 
         </div>
@@ -24,32 +25,35 @@
     <!-- main -->
     <div class="flex flex-row">
         <!-- sidebar -->
-        <div class="flex flex-col items-center w-1/6 h-max bg-white border-r-2">
-            <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
-                <div class="flex items-center   ">
-                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/home-variant-outline.svg" width="30px" />Home</span></button>
-                </div>
-                <div class="flex items-center   ">
-                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/account-circle-outline.svg" width="30px" />Profile</span></button>
-                </div>
-                <div class="flex items-center   ">
-                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/newspaper-variant-outline.svg" width="30px" />News</span></button>
-                </div>
+        <div class="drawer lg:drawer-open w-1/6 max-[820px]:w-0 z-20">
+            <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
+            <div class="drawer-content flex flex-col items-center justify-center">
+                <!-- Page content here -->
             </div>
-            <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
-                <h2 class="font-bold mb-2">FOR YOU</h2>
-            </div>
-            <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
-                <h2 class="font-bold mb-2">LEARN MORE</h2>
-                <div class="flex items-center   ">
-                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/information-outline.svg" width="30px" />About Us</span></button>
-                </div>
-                <div class="flex items-center   ">
-                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/phone-in-talk.svg" width="30px" />Contact Us</span></button>
-                </div>
-                <div class="flex items-center   ">
-                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/finance.svg" width="30px" />User Statistics</span></button>
-                </div>
+            <div class="drawer-side w-2/3">
+                <ul class="menu bg-white text-base-content min-h-full w-full items-center border-r-2">
+                    <!-- Sidebar content here -->
+                    <div class="flex w-full m-2 lg:hidden">
+                        <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay">
+                            <img src="../images/chevron-left.svg" width="30px" />
+                        </label>
+                    </div>
+                    <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+                        <li><a href="./index.html"><span class="flex items-center w-full gap-2"><img src="../images/home-variant-outline.svg" width="30px" />Home</span></a></li>
+                        <li><a href="./profile.html"><span class="flex items-center w-full gap-2"><img src="../images/account-circle-outline.svg" width="30px" />Profile</span></a></li>
+                        <li><a href="./news.html"><span class="flex items-center w-full gap-2"><img src="../images/newspaper-variant-outline.svg" width="30px" />News</span></a></li>
+                    </div>
+                    <div id="joinedDiscussions" class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+                        <h2 class="font-bold mb-2">FOR YOU</h2>
+                        
+                    </div>
+                    <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+                        <h2 class="font-bold mb-2">LEARN MORE</h2>
+                        <li><a href="./about.html"><span class="flex items-center w-full gap-2"><img src="../images/information-outline.svg" width="30px" />About Us</span></a></li>
+                        <li><a href="./contact-us.html"><span class="flex items-center w-full gap-2"><img src="../images/phone-in-talk.svg" width="30px" />Contact Us</span></a></li>
+                        <li><a href="./userstatistics.html"><span class="flex items-center w-full gap-2"><img src="../images/finance.svg" width="30px" />Statistics</span></a></li>
+                    </div>
+                </ul>
             </div>
         </div>
 
@@ -74,6 +78,7 @@
                     <img src="../images/search.svg" width="35px" height="35px" class="mt-4" id="search-button">
                     <input type="search" class="bg-gray-100 w-80per rounded-xl ml-4 mt-4 h-8" placeholder="Search User" id="search-box">
                 </div>
+                <!--User box allows for reported posts to be displayed-->
                 <div class="bg-gray-100 card w-90per mt-8 m-auto p-8 flex flex-col justify-center" id="user-box">
                     
                     
@@ -87,6 +92,8 @@
         
         
     </div>
+
+    <!--Muted users popup allows user to unmute users-->
     <div class="siteadmin-popup flex flex-col p-8" id="popup">
         <div class="flex flex-row items-center">
             <img src="../images/account-circle-outline.svg" width="40px" height="40px">
