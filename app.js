@@ -20,8 +20,12 @@ const newsController = require("./mvc/controllers/newsController");
 const baninfoController = require("./mvc/controllers/baninfoController");
 const muteinfoController = require("./mvc/controllers/muteinfoController");
 const questionController = require("./mvc/controllers/questionController");
+const postLikesController = require("./mvc/controllers/postLikesController");
+const invitesController = require("./mvc/controllers/invitesController");
 const siteadminPostReportController = require("./mvc/controllers/siteadminPostReportController");
 const feedbackController = require("./mvc/controllers/feedbackController");
+const siteadminMutedUserController = require("./mvc/controllers/siteadminMutedUserController");
+const siteadminBannedUserController = require("./mvc/controllers/siteadminBannedUserController");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -127,7 +131,7 @@ app.delete("/siteadminApprove/:reportId", siteadminPostReportController.deletePo
 app.delete("/siteadminDeny/:postId", siteadminPostReportController.deletePostReport);
 app.delete("/siteadminPost/:postId", siteadminPostReportController.deletePost);
 app.delete('/deleteAccount', accountsController.deleteAccount);
-app.put('/discussionReports/warn/:dscRptId', discussionReportsController.warnDiscussionReport); // Add this line
+app.put('/discussionReports/warn/:dscRptId', discussionReportsController.warnDiscussionReport);
 app.get("/discussionMembers", discussionMembersController.getAllDiscussionMembers);
 app.get("/discussionMembers/:dscName", discussionMembersController.getDiscussionMembersByDiscussion);
 app.post("/discussionMember/:dscName", discussionMembersController.createDiscussionMember);
@@ -137,7 +141,7 @@ app.delete("/discussionReports/:dscRptId", discussionReportsController.deleteDis
 app.post('/feedback', feedbackController.createFeedback);
 app.get('/feedback', feedbackController.getFeedback);
 app.put('/feedback/:feedbackID', feedbackController.updateFeedback);
-app.delete('/feedback/:feedbackID', feedbackController.deleteFeedback); // Add this line
+app.delete('/feedback/:feedbackID', feedbackController.deleteFeedback);
 
 // Example protected route
 app.get('/protected', authenticateJWT, (req, res) => {

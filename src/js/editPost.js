@@ -9,7 +9,6 @@ const editPostDesc = document.getElementById("editPostDesc");
 async function Discussion(dscName) { 
     const res = await fetch("http://localhost:3000/discussions/" + dscName);
     const discussion = await res.json();
-    console.log(discussion);
 
     const discussionName2 = document.getElementById("discussionName");
     const discussionName2HTML = `<h2>d:` + discussion.dscName + `</h2>`;
@@ -96,14 +95,43 @@ async function createDiscussionReport() {
     })
 }
 
+const bannerOptions = document.getElementById("bannerOptions");
+
 const memberCount = document.getElementById("memberCount");
 
 async function DiscussionMembers() {
     const res = await fetch("http://localhost:3000/discussionMembers/" + discussionName);
     const discussionMembers = await res.json();
     
-    memberCount.innerHTML = `<h2 class="font-bold">` + discussionMembers.length + `</h2>`
+    memberCount.innerHTML = `<h2 class="font-bold">` + discussionMembers.length + `</h2>`;
+
+    for (let i = 0; i < discussionMembers.length; i++) {
+        if (discussionMembers[i].dscMemRole == "Owner" && discussionMembers[i].accName == "AppleTan") {
+            const bannerOptionsHTML = `<li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="edit_discussion_modal.showModal()"><span class="w-full">Edit</span></button></li>`;
+            bannerOptions.insertAdjacentHTML("beforeend", bannerOptionsHTML);
+        } else if (discussionMembers[i].dscMemRole == "Admin") {
+            const discussionAdmins = document.getElementById("discussionAdmins");
+            const discussionAdminsHTML = `<div class="flex items-center gap-2">
+                                            <img src="../images/account-circle-outline.svg" width="30px" />
+                                            <h2>` + discussionMembers[i].accName + `</h2>
+                                        </div>`;
+            discussionAdmins.insertAdjacentHTML("beforeend", discussionAdminsHTML);
+        }
+    }
+}
+
+async function sidebar() {
+    const res = await fetch("http://localhost:3000/discussionMemberTop3Discussions/" + "AppleTan");
+    const discussionMembers = await res.json();
+
+    const joinedDiscussions = document.getElementById("joinedDiscussions");
+    
+    for (let i = 0; i < discussionMembers.length; i++) {
+        const discussionButtonHTML = `<li><a><span class="flex items-center w-full gap-2"><img src="../images/account-circle-outline.svg" width="30px" />` + discussionMembers[i].dscName + `</span></a></li>`;
+        joinedDiscussions.insertAdjacentHTML("beforeend", discussionButtonHTML);
+    }
 }
 
 Post();
 DiscussionMembers();
+sidebar();

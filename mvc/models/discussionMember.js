@@ -2,8 +2,11 @@ const sql = require("mssql");
 const dbConfig = require("../../dbConfig");
 
 class DiscussionMember {
-    constructor(dscMemID, accName, dscName) {
+    constructor(dscMemID, dscMemRole, isMuted, isBanned, accName, dscName) {
         this.dscMemID = dscMemID;
+        this.dscMemRole = dscMemRole;
+        this.isMuted = isMuted,
+        this.isBanned = isBanned,
         this.accName = accName;
         this.dscName = dscName;
     }
@@ -18,7 +21,7 @@ class DiscussionMember {
 
         connection.close();
 
-        return result.recordset.map((row) => new DiscussionMember(row.DscMemID, row.AccName, row.DscName));
+        return result.recordset.map((row) => new DiscussionMember(row.DscMemID, row.DscMemRole, row.isMuted, row.isBanned, row.AccName, row.DscName));
     }
 
     static async getDiscussionMembersByDiscussion(dscName) {
@@ -33,21 +36,53 @@ class DiscussionMember {
 
         connection.close();
 
-        return result.recordset.map((row) => new DiscussionMember(row.DscMemID, row.AccName, row.DscName));
+        return result.recordset.map((row) => new DiscussionMember(row.DscMemID, row.DscMemRole, row.isMuted, row.isBanned, row.AccName, row.DscName));
+    }
+
+    static async getDiscussionMemberTop3Discussions(accName) {
+        const connection = await sql.connect(dbConfig);
+
+        const sqlQuery = `SELECT TOP 3 * FROM DiscussionMember WHERE AccName = @accName`;
+
+        const request = connection.request();
+        request.input("accName", accName);
+
+        const result = await request.query(sqlQuery);
+
+        connection.close();
+
+        return result.recordset.map((row) => new DiscussionMember(row.DscMemID, row.DscMemRole, row.isMuted, row.isBanned, row.AccName, row.DscName));
     }
 
     static async createDiscussionMember(newDiscussionMemberData, dscName) {
         const connection = await sql.connect(dbConfig);
 
-        const sqlQuery = `INSERT INTO DiscussionMember (DscMemID, AccName, DscName) SELECT CASE WHEN COUNT(*) = 0 THEN 1 ELSE MAX(DscMemID) + 1 END, @accName, @dscName FROM DiscussionMember`;
+        const sqlQuery = `INSERT INTO DiscussionMember (DscMemID, DscMemRole, isMuted, isBanned, AccName, DscName) SELECT CASE WHEN COUNT(*) = 0 THEN 1 ELSE MAX(DscMemID) + 1 END, @dscMemRole, 'False', 'False', @accName, @dscName FROM DiscussionMember`;
 
         const request = connection.request();
+        request.input("dscMemRole", newDiscussionMemberData.dscMemRole);
         request.input("accName", newDiscussionMemberData.accName);
         request.input("dscName", dscName);
 
         const result = await request.query(sqlQuery);
 
         connection.close();
+    }
+
+    static async deleteDiscussionMember(accName, dscName) {
+        const connection = await sql.connect(dbConfig);
+
+        const sqlQuery = `DELETE FROM DiscussionMember WHERE DscMemRole = 'Member' AND AccName = @accName AND DscName = @dscName;`;
+
+        const request = connection.request();
+        request.input("accName", accName);
+        request.input("dscName", dscName);
+
+        const result = await request.query(sqlQuery);
+
+        connection.close();
+
+        return result;
     }
 }
 

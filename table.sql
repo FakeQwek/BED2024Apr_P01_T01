@@ -34,7 +34,9 @@ CREATE TABLE Post (
  PostName varchar(100) NOT NULL, 
  PostDesc varchar(1000) NOT NULL, 
  isEvent varchar(5) NOT NULL, 
- isApproved varchar(5) NOT NULL, 
+ isApproved varchar(5) NOT NULL,
+ PostDate varchar(10) NOT NULL,
+ PostEventDate varchar(10) NULL,
  OwnerID varchar(16) NOT NULL, 
  DscName varchar(16) NOT NULL 
  CONSTRAINT PK_Post PRIMARY KEY (PostID), 
@@ -71,7 +73,7 @@ CREATE TABLE DiscussionReport (
 CREATE TABLE PostReport ( 
  PostRptID varchar(10) NOT NULL, 
  PostRptCat varchar(100) NOT NULL, 
- PostRptDesc varchar(100) NOT NULL, 
+ PostRptDesc varchar(100) NOT NULL,
  AccName varchar(16) NOT NULL, 
  PostID varchar(10) NOT NULL 
  CONSTRAINT PK_PostReport PRIMARY KEY (PostRptID), 
@@ -100,7 +102,7 @@ isApproved varchar(5) NOT NULL,
  REFERENCES Account(AccName), 
  CONSTRAINT FK_Volunteer_PostID FOREIGN KEY (PostID) 
  REFERENCES Post(PostID), 
-CONSTRAINT CHK_Volunteer_isApproved CHECK (isApproved IN ('True', 'False')));
+ CONSTRAINT CHK_Volunteer_isApproved CHECK (isApproved IN ('True', 'False')));
 
 CREATE TABLE NewsPost (
  NewsID varchar(100) NOT NULL,
@@ -112,6 +114,9 @@ CREATE TABLE NewsPost (
 
 CREATE TABLE DiscussionMember (
  DscMemID varchar(10) NOT NULL,
+ DscMemRole varchar(6) NOT NULL,
+ isMuted varchar(5) NOT NULL,
+ isBanned varchar(5) NOT NULL,
  AccName varchar(16) NOT NULL,
  DscName varchar(16) NOT NULL
  CONSTRAINT PK_DiscussionMember PRIMARY KEY (DscMemID),
@@ -119,4 +124,28 @@ CREATE TABLE DiscussionMember (
  REFERENCES Account(AccName),
  CONSTRAINT FK_DiscussionMember_DscName FOREIGN KEY (DscName)
  REFERENCES Discussion(DscName),
+ CONSTRAINT CHK_DiscussionMember_isMuted CHECK (isMuted IN ('True', 'False')),
+ CONSTRAINT CHK_DiscussionMember_isBanned CHECK (isBanned IN ('True', 'False')),
  CONSTRAINT AK_AccName_DscName UNIQUE (AccName, DscName));
+
+CREATE TABLE PostLike (
+ PostLikeID varchar(10) NOT NULL,
+ AccName varchar(16) NOT NULL,
+ PostID varchar(10) NOT NULL
+ CONSTRAINT PK_PostLike PRIMARY KEY (PostLikeID),
+ CONSTRAINT FK_PostLike_AccName FOREIGN KEY (AccName)
+ REFERENCES Account(AccName),
+ CONSTRAINT FK_PostLike_PostID FOREIGN KEY (PostID)
+ REFERENCES Post(PostID),
+ CONSTRAINT AK_AccName_PostID UNIQUE (AccName, PostID));
+
+CREATE TABLE Invite (
+ InvID varchar(10) NOT NULL,
+ AccName varchar(16) NOT NULL,
+ DscName varchar(16) NOT NULL,
+ CONSTRAINT PK_Invite PRIMARY KEY (InvID),
+ CONSTRAINT FK_Invite_AccName FOREIGN KEY (AccName)
+ REFERENCES Account(AccName),
+ CONSTRAINT FK_Invite FOREIGN KEY (DscName)
+ REFERENCES Discussion(DscName),
+ CONSTRAINT AK_Invite_AccName_DscName UNIQUE (AccName, DscName));

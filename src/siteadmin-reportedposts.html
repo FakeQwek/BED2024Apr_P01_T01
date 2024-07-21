@@ -22,7 +22,7 @@
     </div>
 
     <!-- main -->
-    <div class="flex flex-row h-full">
+    <div class="flex flex-row">
         <!-- sidebar -->
         <div class="flex flex-col items-center w-1/6 h-full bg-white border-r-2">
             <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
@@ -65,14 +65,14 @@
             </div>
             <div class="bg-white card p-8 mb-8" id="panel">
                 <div id="button-container" class="flex flex-row ml-8 mt-8">
-                    <button class="mr-8"><u>Reported Posts</u></button>
-                    <button class="mr-8">Banned Users</button>
-                    <button class="mr-4">Muted Users</button>
+                    <button class="mr-8" id="reported-button"><u>Reported Posts</u></button>
+                    <button class="mr-8" id="banned-button">Banned Users</button>
+                    <button class="mr-4" id="muted-button">Muted Users</button>
                 </div>
                 <h1 class="font-bold text-xl ml-8 mt-4">Reported Posts</h1>
                 <div id="sort-container" class="flex flex-row ml-12 mt-4">
-                    <button class="mr-4 bg-gray-100 p-2 rounded-lg flex flex-row"><img src="../images/star.svg" width="25px" height="25px">new</button>
-                        <button class="bg-gray-100 p-2 rounded-lg flex flex-row"><img src="../images/flag-reports.svg" width="25px" height="25px" class="mr-1">most reported</button>
+                    <button class="mr-4 bg-gray-100 p-2 rounded-lg flex flex-row" id="new-button"><img src="../images/star.svg" width="25px" height="25px">new</button>
+                    <button class="bg-gray-100 p-2 rounded-lg flex flex-row" id="report-button"><img src="../images/flag-reports.svg" width="25px" height="25px" class="mr-1">most reported</button>
                 </div>
                 <div class="bg-gray-100 card w-90per mt-8 m-auto p-8" id="post-box">
 

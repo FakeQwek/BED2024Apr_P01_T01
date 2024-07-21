@@ -44,18 +44,18 @@
                         </label>
                     </div>
                     <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
-                        <li><a><span class="flex items-center w-full gap-2"><img src="../images/home-variant-outline.svg" width="30px" />Home</span></a></li>
-                        <li><a><span class="flex items-center w-full gap-2"><img src="../images/account-circle-outline.svg" width="30px" />Profile</span></a></li>
-                        <li><a><span class="flex items-center w-full gap-2"><img src="../images/newspaper-variant-outline.svg" width="30px" />News</span></a></li>
+                        <li><a href="./index.html"><span class="flex items-center w-full gap-2"><img src="../images/home-variant-outline.svg" width="30px" />Home</span></a></li>
+                        <li><a href="./profile.html"><span class="flex items-center w-full gap-2"><img src="../images/account-circle-outline.svg" width="30px" />Profile</span></a></li>
+                        <li><a href="./news.html"><span class="flex items-center w-full gap-2"><img src="../images/newspaper-variant-outline.svg" width="30px" />News</span></a></li>
                     </div>
-                    <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+                    <div id="joinedDiscussions" class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
                         <h2 class="font-bold mb-2">FOR YOU</h2>
                         
                     </div>
                     <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
                         <h2 class="font-bold mb-2">LEARN MORE</h2>
-                        <li><a><span class="flex items-center w-full gap-2"><img src="../images/information-outline.svg" width="30px" />About Us</span></a></li>
-                        <li><a><span class="flex items-center w-full gap-2"><img src="../images/phone-in-talk.svg" width="30px" />Contact Us</span></a></li>
+                        <li><a href="./about.html"><span class="flex items-center w-full gap-2"><img src="../images/information-outline.svg" width="30px" />About Us</span></a></li>
+                        <li><a href="./contact-us.html"><span class="flex items-center w-full gap-2"><img src="../images/phone-in-talk.svg" width="30px" />Contact Us</span></a></li>
                         <li><a><span class="flex items-center w-full gap-2"><img src="../images/finance.svg" width="30px" />User Statistics</span></a></li>
                     </div>
                 </ul>
@@ -110,7 +110,7 @@
                                 <div id="discussionBannerName" class="card-title flex justify-between">
                                     <div class="dropdown dropdown-end">
                                         <div tabindex="0" role="button" class="btn btn-sm bg-white border-0 shadow-none"><img src="../images/dots-horizontal.svg" width="20px" /></div>
-                                        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                                        <ul tabindex="0" id="bannerOptions" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
                                             <li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="report_discussion_modal.showModal()"><span class="w-full">Report</span></button></li>
                                         </ul>
                                         <!-- report discussion popup -->
@@ -146,7 +146,7 @@
                                     <div id="discussionOwners" class="flex flex-col border-b-2 pt-4 pb-8 gap-4">
                                         <h2 class="font-bold">Owners</h2>
                                     </div>
-                                    <div class="flex flex-col border-b-2 pt-4 pb-8 gap-4">
+                                    <div id="discussionAdmins" class="flex flex-col border-b-2 pt-4 pb-8 gap-4">
                                         <h2 class="font-bold">Admins</h2>
                                     </div>
                                 </div>
