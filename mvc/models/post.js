@@ -75,15 +75,28 @@ class Post {
         return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.PostDate, row.PostEventDate, row.OwnerID, row.DscName));
     }
 
-    static async getUnapprovedPostsByDiscussion(dscName) {
-        const connection = await sql.connect(dbConfig);
-        const sqlQuery = `SELECT * FROM Post WHERE DscName = @dscName AND isApproved = 'False'`;
-        const request = connection.request();
-        request.input("dscName", dscName);
-        const result = await request.query(sqlQuery);
-        connection.close();
+    static async getApprovedPostsByDiscussion(dscName) {
+        try {
+            await sql.connect(dbConfig);
+            const result = await sql.query`SELECT * FROM Post WHERE DscName = ${dscName} AND isApproved = 'True'`;
+            console.log('Database query result:', result.recordset); // Add this line to log the results
+            return result.recordset;
+        } catch (err) {
+            console.error('Error fetching approved posts:', err);
+            throw new Error('Database query failed');
+        }
+    }
 
-        return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.PostDate, row.PostEventDate, row.OwnerID, row.DscName));
+    static async getUnapprovedPostsByDiscussion(dscName) {
+        try {
+            await sql.connect(dbConfig);
+            const result = await sql.query`SELECT * FROM Post WHERE DscName = ${dscName} AND isApproved = 'False'`;
+            console.log('Database query result:', result.recordset); // Add this line to log the results
+            return result.recordset;
+        } catch (err) {
+            console.error('Error fetching unapproved posts:', err);
+            throw new Error('Database query failed');
+        }
     }
 
     static async createPost(newPostData) {

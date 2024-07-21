@@ -1,54 +1,84 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const reportedPostsContainer = document.getElementById('reportedPostsContainer');
+    const discussionNameElement = document.getElementById('discussionName');
+    const discussionBannerDescElement = document.getElementById('discussionBannerDesc');
+    const adminsListElement = document.getElementById('adminsList');
+    const discussionName = 'TechTalk'; // Replace with the dynamic discussion name as needed
 
     try {
-        const response = await fetch('http://localhost:3000/postReports');
+        const response = await fetch(`http://localhost:3000/discussions/${encodeURIComponent(discussionName)}`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const discussion = await response.json();
+
+        discussionNameElement.innerText = discussion.dscName;
+        discussionBannerDescElement.innerHTML = `<p>${discussion.dscDesc}</p>`;
+        adminsListElement.innerHTML = `
+            <div class="flex items-center">
+                <img src="../images/account-circle-outline.svg" width="30px" />
+                <a href="#" class="ml-2 text-blue-500 hover:underline" onclick="handleUserClick('${discussion.accName}')">u:${discussion.accName}</a>
+            </div>`;
+    } catch (error) {
+        console.error('Error fetching discussion details:', error);
+    }
+
+    try {
+        const response = await fetch(`http://localhost:3000/unapprovedposts/${encodeURIComponent(discussionName)}`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
         const postReports = await response.json();
+        console.log('Fetched unapproved posts:', postReports); // Log for debugging
 
         reportedPostsContainer.innerHTML = '';
-        for (const report of postReports) {
-            const postResponse = await fetch(`http://localhost:3000/post/${report.postId}`);
-            if (!postResponse.ok) {
-                throw new Error('Network response was not ok');
-            }
-            const post = await postResponse.json();
-
-            const reportHTML = `
-                <div class="border p-4 rounded-lg shadow bg-white mb-2" id="post-${report.postId}">
+        postReports.forEach(post => {
+            const postHTML = `
+                <div class="border p-4 rounded-lg shadow bg-white mb-2" id="post-${post.PostID}">
                     <div class="flex justify-between items-center mb-2">
                         <div class="flex items-center gap-2">
                             <img src="../images/account-circle-outline.svg" width="30px" />
-                            <a href="#" class="text-blue-500 hover:underline">u:${report.accName}</a>
-                            <span class="text-gray-500">${report.postRptCat}</span>
+                            <a href="#" class="text-blue-500 hover:underline" onclick="handleUserClick('${post.OwnerID}')">u:${post.OwnerID}</a>
                         </div>
                         <div class="relative">
-                            <button class="btn btn-sm bg-white border-0 shadow-none" onclick="toggleDropdown(${report.postId})"><img src="../images/action.svg" width="20px" /></button>
-                            <div id="dropdown-${report.postId}" class="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg hidden">
-                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100 transition duration-200" onclick="approvePost(${report.postId})">Approve</a>
-                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100 transition duration-200" onclick="muteUser('${report.accName}', '${report.postRptDesc}', 'admin', ${report.postId})">Mute</a>
-                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100 transition duration-200" onclick="banUser('${report.accName}', '${report.postRptDesc}', 'admin', ${report.postId})">Ban</a>
+                            <button class="btn btn-sm bg-white border-0 shadow-none" onclick="toggleDropdown(${post.PostID})"><img src="../images/action.svg" width="20px" /></button>
+                            <div id="dropdown-${post.PostID}" class="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg hidden transition ease-in-out duration-300">
+                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100" onclick="approvePost(${post.PostID})">Approve</a>
+                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100" onclick="muteUser('${post.OwnerID}', '${post.PostDesc}', 'admin', ${post.PostID})">Mute</a>
+                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100" onclick="banUser('${post.OwnerID}', '${post.PostDesc}', 'admin', ${post.PostID})">Ban</a>
                             </div>
                         </div>
                     </div>
-                    <p class="font-bold text-lg mb-2">${post.postName}</p>
-                    <p>${post.postDesc}</p>
-                    <p class="text-gray-500">${report.postRptDesc}</p>
+                    <p class="font-bold text-lg mb-2">${post.PostName}</p>
+                    <p>${post.PostDesc}</p>
                 </div>
             `;
-            reportedPostsContainer.insertAdjacentHTML('beforeend', reportHTML);
-        }
+            reportedPostsContainer.insertAdjacentHTML('beforeend', postHTML);
+        });
+
+        // Add event listener for dropdown buttons
+        document.addEventListener('click', (event) => {
+            const isDropdownButton = event.target.closest('[data-dropdown-button]');
+            if (!isDropdownButton) {
+                document.querySelectorAll('[data-dropdown]').forEach(dropdown => {
+                    dropdown.classList.add('hidden');
+                });
+                return;
+            }
+
+            const currentDropdown = isDropdownButton.nextElementSibling;
+            currentDropdown.classList.toggle('hidden');
+            
+            document.querySelectorAll('[data-dropdown]').forEach(dropdown => {
+                if (dropdown !== currentDropdown) {
+                    dropdown.classList.add('hidden');
+                }
+            });
+        });
     } catch (error) {
-        console.error('Error fetching reported posts:', error);
+        console.error('Error fetching unapproved posts:', error);
     }
 });
-
-function toggleDropdown(postId) {
-    const dropdown = document.getElementById(`dropdown-${postId}`);
-    dropdown.classList.toggle('hidden');
-}
 
 async function approvePost(postId) {
     try {
@@ -112,4 +142,9 @@ async function banUser(accName, banReason, bannedBy, postId) {
     } catch (error) {
         console.error('Error banning user:', error);
     }
+}
+
+function toggleDropdown(postId) {
+    const dropdown = document.getElementById(`dropdown-${postId}`);
+    dropdown.classList.toggle('hidden');
 }

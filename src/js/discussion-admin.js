@@ -9,15 +9,17 @@ const postListElement = document.getElementById('postList');
 const promoteUserDialog = document.getElementById('promoteUserDialog');
 const savePromoteButton = document.getElementById('savePromoteButton');
 const cancelPromoteButton = document.getElementById('cancelPromoteButton');
+const promoteUsername = document.getElementById('promoteUsername');
 
 document.addEventListener('DOMContentLoaded', async () => {
     const discussionNameElement = document.getElementById('discussionName');
     const discussionBannerDescElement = document.getElementById('discussionBannerDesc');
     const ownersListElement = document.getElementById('ownersList');
     const adminsListElement = document.getElementById('adminsList');
+    const discussionName = 'TechTalk'; // Replace with the dynamic discussion name as needed
 
     try {
-        const response = await fetch('http://localhost:3000/discussions/d:Social');
+        const response = await fetch(`http://localhost:3000/discussions/${encodeURIComponent(discussionName)}`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -31,8 +33,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <a href="#" class="ml-2 text-blue-500 hover:underline" onclick="handleUserClick('${discussion.accName}')">u:${discussion.accName}</a>
             </div>`;
         
-        // Fetch unapproved posts
-        const postsResponse = await fetch(`http://localhost:3000/unapprovedposts/${encodeURIComponent(discussion.dscName)}`);
+        // Fetch approved posts
+        const postsResponse = await fetch(`http://localhost:3000/approvedposts/${encodeURIComponent(discussion.dscName)}`);
         if (!postsResponse.ok) {
             throw new Error('Network response was not ok');
         }
@@ -41,23 +43,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         postListElement.innerHTML = '';
         posts.forEach(post => {
             const postHTML = `
-                <div class="border p-4 rounded-lg shadow bg-white mb-2">
+                <div class="border p-4 rounded-lg shadow bg-white mb-2" id="post-${post.PostID}">
                     <div class="flex justify-between items-center mb-2">
                         <div class="flex items-center gap-2">
                             <img src="../images/account-circle-outline.svg" width="30px" />
-                            <a href="#" class="text-blue-500 hover:underline" onclick="handleUserClick('${post.accName}')">u:${post.accName}</a>
+                            <a href="#" class="text-blue-500 hover:underline" onclick="handleUserClick('${post.OwnerID}')">u:${post.OwnerID}</a>
                         </div>
                         <div class="relative">
-                            <button class="btn btn-sm bg-white border-0 shadow-none" onclick="toggleDropdown(${post.postId})"><img src="../images/action.svg" width="20px" /></button>
-                            <div id="dropdown-${post.postId}" class="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg hidden transition ease-in-out duration-300">
-                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100" onclick="approvePost(${post.postId})">Approve</a>
-                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100" onclick="muteUser('${post.accName}', '${post.postDesc}', 'admin', ${post.postId})">Mute</a>
-                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100" onclick="banUser('${post.accName}', '${post.postDesc}', 'admin', ${post.postId})">Ban</a>
+                            <button class="btn btn-sm bg-white border-0 shadow-none" onclick="toggleDropdown(${post.PostID})"><img src="../images/action.svg" width="20px" /></button>
+                            <div id="dropdown-${post.PostID}" class="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg hidden transition ease-in-out duration-300">
+                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100" onclick="approvePost(${post.PostID})">Approve</a>
+                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100" onclick="muteUser('${post.OwnerID}', '${post.PostDesc}', 'admin', ${post.PostID})">Mute</a>
+                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100" onclick="banUser('${post.OwnerID}', '${post.PostDesc}', 'admin', ${post.PostID})">Ban</a>
                             </div>
                         </div>
                     </div>
-                    <p class="font-bold text-lg mb-2">${post.postName}</p>
-                    <p>${post.postDesc}</p>
+                    <p class="font-bold text-lg mb-2">${post.PostName}</p>
+                    <p>${post.PostDesc}</p>
                 </div>
             `;
             postListElement.insertAdjacentHTML('beforeend', postHTML);
@@ -84,7 +86,7 @@ cancelEditButton.addEventListener('click', () => {
 saveEditButton.addEventListener('click', async () => {
     const newDetails = editDiscussionDetailInput.value;
     try {
-        const response = await fetch('http://localhost:3000/discussions/d:Social', {
+        const response = await fetch("http://localhost:3000/discussions/TechTalk", {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -116,8 +118,6 @@ window.addEventListener('click', (event) => {
 });
 
 function handleUserClick(accName) {
-    const promoteUserDialog = document.getElementById('promoteUserDialog');
-    const promoteUsername = document.getElementById('promoteUsername');
     promoteUsername.innerText = `u:${accName}`;
     promoteUserDialog.showModal();
 }
@@ -134,7 +134,7 @@ async function approvePost(postId) {
             throw new Error('Network response was not ok');
         }
         alert('Post approved successfully');
-        location.reload(); // Reload the page to reflect changes
+        document.getElementById(`post-${postId}`).remove(); // Remove the post from the page
     } catch (error) {
         console.error('Error approving post:', error);
     }

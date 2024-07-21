@@ -99,6 +99,7 @@ app.get("/volunteers", volunteersController.getAllVolunteers);
 app.get("/volunteers/:postId", volunteersController.getVolunteersByPost);
 app.get("/baninfo/:accName", baninfoController.getBanInfo);
 app.get("/muteinfo/:accName", muteinfoController.getMuteInfo);
+app.get("/approvedposts/:dscName", postsController.getApprovedPostsByDiscussion); 
 app.get("/unapprovedposts/:dscName", postsController.getUnapprovedPostsByDiscussion);
 app.get("/discussionMembers", discussionMembersController.getAllDiscussionMembers);
 app.get("/discussionMembers/:dscName", discussionMembersController.getDiscussionMembersByDiscussion);

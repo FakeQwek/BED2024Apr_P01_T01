@@ -47,6 +47,17 @@ const getPostsByDiscussionOrderByLikes = async (req, res) => {
 };
 
 
+const getApprovedPostsByDiscussion = async (req, res) => {
+    const dscName = req.params.dscName;
+    try {
+        const posts = await Post.getApprovedPostsByDiscussion(dscName);
+        res.json(posts);
+    } catch (error) {
+        console.error('Error fetching approved posts:', error);
+        res.status(500).send("Error fetching approved posts");
+    }
+};
+
 const getUnapprovedPostsByDiscussion = async (req, res) => {
     const dscName = req.params.dscName;
     try {
@@ -117,6 +128,7 @@ module.exports = {
     createPost,
     deletePost,
     updatePost,
+    getApprovedPostsByDiscussion,
     getUnapprovedPostsByDiscussion,
     approvePost,
 };

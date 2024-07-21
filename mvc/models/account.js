@@ -174,7 +174,6 @@ class Account {
         const result = await request.query(sqlQuery);
         connection.close();
         return result.recordset.map((row) => new Account(
-            row.AccID,
             row.AccName,
             row.AccEmail,
             row.isAdmin,
@@ -209,7 +208,6 @@ class Account {
         const result = await request.query(sqlQuery);
         connection.close();
         return result.recordset.map((row) => new Account(
-            row.AccID,
             row.AccName,
             row.AccEmail,
             row.isAdmin,
