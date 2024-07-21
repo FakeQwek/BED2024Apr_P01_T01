@@ -1,22 +1,31 @@
+// get post id parameter from the url
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const postId = urlParams.get("postId");
 
+// get html elements
 const postName = document.getElementById("postName");
 const postDesc = document.getElementById("postDesc");
 const postComments = document.getElementById("postComments");
 const postAccount = document.getElementById("postAccount");
 const postDate = document.getElementById("postDate");
 const postOptions = document.getElementById("postOptions");
+const commentDesc = document.getElementById("commentDesc");
+const memberCount = document.getElementById("memberCount");
 
+// set variables
 var discussionName;
-
 let isPublic = false;
 let isMember = false;
 let isMuted = false;
 let isBanned = false;
 let accountName;
+let postNameHTML;
+let postDescHTML;
+let postAccountHTML;
+let postDateHTML;
 
+// function that checks if the username in the get request matches with the username in the jwt token
 async function checkAccountName() {
     const res = await fetch("http://localhost:3000/accounts/" + localStorage.getItem("username"), {
         method: "GET",
@@ -33,6 +42,7 @@ async function checkAccountName() {
 
 checkAccountName();
 
+// function to get discussion details
 async function Discussion(dscName) { 
     const res = await fetch("http://localhost:3000/discussions/" + dscName);
     const discussion = await res.json();
@@ -61,23 +71,18 @@ async function Discussion(dscName) {
     DiscussionMembers();
 };
 
-let postNameHTML;
-let postDescHTML;
-let postAccountHTML;
-let postDateHTML;
-
+// function to get post details
 async function Post() {
     const res = await fetch("http://localhost:3000/post/" + postId);
     const post = await res.json();
 
+    // set post details in variables
     postNameHTML = `<h2>` + post.postName + '</h2>';
-
     postDescHTML = '<p>' + post.postDesc + '<p>';
-
     postAccountHTML = '<p>' + post.accName + '<p>';
-
     postDateHTML = '<p>' + post.postDate + '<p>';
 
+    // if user is the post owner show them additional options to delete and edit the post
     if (post.accName == accountName) {
         const postOptionsHTML = `<li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="delete_modal.showModal()"><span class="w-full">Delete</span></button></li>
                                 <li><button class="btn btn-sm bg-white border-0 text-left shadow-none" onclick="goToEditPost(` + postId + `)"><span class="w-full">Edit</span></button></li>`;
@@ -87,6 +92,7 @@ async function Post() {
     Discussion(post.dscName);
 };
 
+// function to get the comment details of the post
 async function Comments() {
     const res = await fetch("http://localhost:3000/comments/" + discussionName + "/" + postId, {
         method: "GET",
@@ -156,8 +162,7 @@ async function Comments() {
     }
 };
 
-const commentDesc = document.getElementById("commentDesc");
-
+// function to create comment
 async function createComment() {
     await fetch("http://localhost:3000/comment/" + discussionName, {
         method: "POST",
@@ -174,6 +179,7 @@ async function createComment() {
     location.reload();
 };
 
+// function to delete comment
 async function deleteComment(cmtId) {
     await fetch("http://localhost:3000/comment/" + cmtId, {
         method: "DELETE",
@@ -204,6 +210,7 @@ function editComment(cmtId, cmtDesc) {
     })
 }
 
+// function to edit comment
 async function editCommentAsync(cmtId, editDesc) {
     await fetch("http://localhost:3000/comment/" + cmtId, {
         method: "PUT",
@@ -218,12 +225,14 @@ async function editCommentAsync(cmtId, editDesc) {
     location.reload();
 }
 
+// event listener to create comment when user hits the enter key
 commentDesc.addEventListener("keyup", ({key}) => {
     if (key == "Enter") {
         createComment();
     }
 })
 
+// function to create post report
 async function createPostReport() {
     const postReportCat = document.getElementById("postReportCat");
     const postReportDesc = document.getElementById("postReportDesc");
@@ -243,6 +252,7 @@ async function createPostReport() {
     })
 }
 
+// function to create discussion report
 async function createDiscussionReport() {
     const dscReportCat = document.getElementById("dscReportCat");
     const dscReportDesc = document.getElementById("dscReportDesc");
@@ -262,14 +272,15 @@ async function createDiscussionReport() {
     })
 }
 
-const memberCount = document.getElementById("memberCount");
-
+// function to get details of the discussion's members
 async function DiscussionMembers() {
     const res = await fetch("http://localhost:3000/discussionMembers/" + discussionName);
     const discussionMembers = await res.json();
 
+    // sets the discussion member count
     memberCount.innerHTML = `<h2 class="font-bold">` + discussionMembers.length + `</h2>`;
 
+    // check if user is a member, muted or banned
     for (let i = 0; i < discussionMembers.length; i++) {
         if (discussionMembers[i].accName == accountName) {
             isMember = true;
@@ -283,6 +294,7 @@ async function DiscussionMembers() {
             }
         }
 
+        // if user is an owner show them additional options to edit discussion details
         if (discussionMembers[i].dscMemRole == "Owner" && discussionMembers[i].accName == accountName) {
             const bannerOptionsHTML = `<li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="edit_discussion_modal.showModal()"><span class="w-full">Edit</span></button></li>`;
             bannerOptions.insertAdjacentHTML("beforeend", bannerOptionsHTML);
@@ -296,20 +308,25 @@ async function DiscussionMembers() {
         }
     }
 
+    // display user is banned message if user is banned
     if (!isBanned) {
+        // if discussion is not public check if user is a member
         if (!isPublic) {
             if (!isMember) {
+                // display user is not a member message
                 const postCard = document.getElementById("postCard");
                 postCard.innerHTML = `<div class="flex flex-col justify-center items-center h-full">
                                         <img src="../images/lock-outline.svg" width="100px" />
                                         <h2 class="text-2xl font-bold">You do not have access to this discussion</h2>
                                     </div>`;
             } else {
+                // set post details
                 postName.insertAdjacentHTML("beforeend", postNameHTML);
                 postDesc.insertAdjacentHTML("beforeend", postDescHTML);
                 postAccount.insertAdjacentHTML("beforeend", postAccountHTML);
                 postDate.insertAdjacentHTML("beforeend", postDateHTML);
                 if (isMuted) {
+                    // display user is muted message
                     const commentInput = document.getElementById("commentInput");
                     commentInput.innerHTML = `<div class="flex items-center">
                                                 <img src="../images/lock-outline.svg" width="30" />
@@ -319,11 +336,13 @@ async function DiscussionMembers() {
                 Comments();
             }
         } else {
+            // set post details
             postName.insertAdjacentHTML("beforeend", postNameHTML);
             postDesc.insertAdjacentHTML("beforeend", postDescHTML);
             postAccount.insertAdjacentHTML("beforeend", postAccountHTML);
             postDate.insertAdjacentHTML("beforeend", postDateHTML);
             if (isMuted) {
+                // display user is muted message
                 const commentInput = document.getElementById("commentInput");
                 commentInput.innerHTML = `<div class="flex items-center">
                                             <img src="../images/lock-outline.svg" width="30" />
@@ -333,6 +352,7 @@ async function DiscussionMembers() {
             Comments(); 
         }
     } else {
+        // display user is banned message
         const postCard = document.getElementById("postCard");
         postCard.innerHTML = `<div class="flex flex-col justify-center items-center h-full">
                                 <img src="../images/lock-outline.svg" width="100px" />
@@ -341,6 +361,7 @@ async function DiscussionMembers() {
     }
 }
 
+// function to get user details to be displayed on the sidebar
 async function sidebar() {
     const res = await fetch("http://localhost:3000/discussionMemberTop3Discussions/" + accountName);
     const discussionMembers = await res.json();
@@ -353,6 +374,7 @@ async function sidebar() {
     }
 }
 
+// direct page to edit post page
 function goToEditPost(postId) {
     var script = document.getElementsByTagName("script");
     var url = script[script.length-1].src;

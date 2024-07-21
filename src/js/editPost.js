@@ -1,13 +1,21 @@
+// get post id parameter from the url
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
-const discussionName = urlParams.get("discussionName");
 const postId = urlParams.get("postId");
 
+// get html elements
 const editPostName = document.getElementById("editPostName");
 const editPostDesc = document.getElementById("editPostDesc");
+const isEventRadio =  document.getElementById("isEvent");
+const bannerOptions = document.getElementById("bannerOptions");
+const memberCount = document.getElementById("memberCount");
 
+// set variables
+let discussionName;
+var checked;
 let accountName;
 
+// function that checks if the username in the get request matches with the username in the jwt token
 async function checkAccountName() {
     const res = await fetch("http://localhost:3000/accounts/" + localStorage.getItem("username"), {
         method: "GET",
@@ -23,6 +31,7 @@ async function checkAccountName() {
 
 checkAccountName();
 
+// function to get discussion details
 async function Discussion(dscName) { 
     const res = await fetch("http://localhost:3000/discussions/" + dscName);
     const discussion = await res.json();
@@ -47,8 +56,7 @@ async function Discussion(dscName) {
     discussionOwners.insertAdjacentHTML("beforeend", discussionOwnersHTML);
 };
 
-const isEventRadio =  document.getElementById("isEvent");
-
+// function to get post details
 async function Post() {
     const res = await fetch("http://localhost:3000/post/" + postId);
     const post = await res.json();
@@ -64,12 +72,13 @@ async function Post() {
                             </div>`;
     }
     
+    discussionName = post.dscName;
     Discussion(post.dscName);
 };
 
-var checked;
-
+// function to update post details
 async function updatePost() {
+    // check whether user checked the event radio button
     if (isEventRadio.checked) {
         checked = "True";
     } else {
@@ -89,6 +98,7 @@ async function updatePost() {
         }
     });
     
+    // direct page back to discussion page
     var script = document.getElementsByTagName("script");
     var url = script[script.length-1].src;
     for (let i = 0; i < url.length; i++) {
@@ -103,6 +113,7 @@ async function updatePost() {
     window.location.href = url;
 }
 
+// function to create discussion report
 async function createDiscussionReport() {
     const dscReportCat = document.getElementById("dscReportCat");
     const dscReportDesc = document.getElementById("dscReportDesc");
@@ -121,16 +132,15 @@ async function createDiscussionReport() {
     })
 }
 
-const bannerOptions = document.getElementById("bannerOptions");
-
-const memberCount = document.getElementById("memberCount");
-
+// function to get details of the discussion's members
 async function DiscussionMembers() {
     const res = await fetch("http://localhost:3000/discussionMembers/" + discussionName);
     const discussionMembers = await res.json();
     
+    // sets the discussion member count
     memberCount.innerHTML = `<h2 class="font-bold">` + discussionMembers.length + `</h2>`;
 
+    // if user is an owner show them additional options to edit discussion details
     for (let i = 0; i < discussionMembers.length; i++) {
         if (discussionMembers[i].dscMemRole == "Owner" && discussionMembers[i].accName == "AppleTan") {
             const bannerOptionsHTML = `<li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="edit_discussion_modal.showModal()"><span class="w-full">Edit</span></button></li>`;
@@ -146,6 +156,7 @@ async function DiscussionMembers() {
     }
 }
 
+// function to get user details to be displayed on the sidebar
 async function sidebar() {
     const res = await fetch("http://localhost:3000/discussionMemberTop3Discussions/" + "AppleTan");
     const discussionMembers = await res.json();

@@ -1,7 +1,10 @@
+// imports
 const sql = require("mssql");
 const dbConfig = require("../../dbConfig");
 
+// comment class
 class Comment {
+    // comment constructor
     constructor(cmtId, cmtDesc, accName, postId) {
         this.cmtId = cmtId;
         this.cmtDesc = cmtDesc;
@@ -9,6 +12,7 @@ class Comment {
         this.postId = postId;
     }
 
+    // get all comments
     static async getAllComments() {
         const connection = await sql.connect(dbConfig);
         const sqlQuery = `SELECT * FROM Comment`;
@@ -18,6 +22,7 @@ class Comment {
         return result.recordset.map(row => new Comment(row.CmtID, row.CmtDesc, row.OwnerID, row.PostID));
     }
 
+    // get comments that belong to post with post id
     static async getCommentsByPost(postId) {
         const connection = await sql.connect(dbConfig);
         const sqlQuery = `SELECT * FROM Comment WHERE PostID = @postId`;
@@ -29,6 +34,7 @@ class Comment {
         return result.recordset.map(row => new Comment(row.CmtID, row.CmtDesc, row.OwnerID, row.PostID));
     }
 
+    // get account name of the owner of comment with comment id
     static async getCommentOwnerByCommentId(cmtId) {
         const connection = await sql.connect(dbConfig);
         const sqlQuery = `SELECT OwnerID FROM Comment WHERE CmtID = @cmtId`;
@@ -40,6 +46,7 @@ class Comment {
         return result.recordset[0].OwnerID; 
     }
 
+    // create comment
     static async createComment(newCommentData) {
         const connection = await sql.connect(dbConfig);
 
@@ -54,6 +61,7 @@ class Comment {
         connection.close();
     }
 
+    // update comment description
     static async updateComment(cmtId, newCommentData) {
         const connection = await sql.connect(dbConfig);
 
@@ -70,6 +78,7 @@ class Comment {
         return result;
     }
 
+    // delete comment
     static async deleteComment(cmtId) {
         const connection = await sql.connect(dbConfig);
 
@@ -83,4 +92,5 @@ class Comment {
     }
 }
 
+// export comment
 module.exports = Comment;

@@ -1,7 +1,10 @@
+// imports
 const sql = require("mssql");
 const dbConfig = require("../../dbConfig");
 
+// discussion report class
 class DiscussionReport {
+    // discussion report constructor
     constructor(dscRptId, dscRptCat, dscRptDesc, accName, dscName) {
         this.dscRptId = dscRptId;
         this.dscRptCat = dscRptCat;
@@ -10,6 +13,7 @@ class DiscussionReport {
         this.dscName = dscName;
     }
 
+    // get all discussion reports
     static async getAllDiscussionReports() {
         const connection = await sql.connect(dbConfig);
         const sqlQuery = `SELECT * FROM DiscussionReport`;
@@ -19,6 +23,7 @@ class DiscussionReport {
         return result.recordset.map((row) => new DiscussionReport(row.DscRptID, row.DscRptCat, row.DscRptDesc, row.AccName, row.DscName));
     }
 
+    // get discussion report by discussion report id
     static async getDiscussionReportById(dscRptId) {
         const connection = await sql.connect(dbConfig);
         const sqlQuery = `SELECT * FROM DiscussionReport WHERE DscRptID = @dscRptId`;
@@ -42,6 +47,7 @@ class DiscussionReport {
             : null;
     }
 
+    // create discussion report
     static async createDiscussionReport(newDiscussionReportData) {
         const connection = await sql.connect(dbConfig);
         const sqlQuery = `INSERT INTO DiscussionReport (DscRptID, DscRptCat, DscRptDesc, AccName, DscName) 
@@ -55,6 +61,7 @@ class DiscussionReport {
         connection.close();
     }
 
+    // delete discussion report
     static async deleteDiscussionReport(dscRptId) {
         const connection = await sql.connect(dbConfig);
     
@@ -113,4 +120,5 @@ class DiscussionReport {
     
 }    
 
+// export discussion report
 module.exports = DiscussionReport;

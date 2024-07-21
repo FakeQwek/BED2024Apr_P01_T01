@@ -1,7 +1,14 @@
+// get html elements
 const discussionName = document.getElementById("discussionName");
+const homePosts = document.getElementById("homePosts");
+const searchBar = document.getElementById("searchBar");
+const searchResults = document.getElementById("searchResults");
+const searchResultsContainer = document.getElementById("searchResultsContainer");
 
+// set variables
 let accountName;
 
+// function that checks if the username in the get request matches with the username in the jwt token
 async function checkAccountName() {
     const res = await fetch("http://localhost:3000/accounts/" + localStorage.getItem("username"), {
         method: "GET",
@@ -15,12 +22,14 @@ async function checkAccountName() {
 
 checkAccountName();
 
+// function to create discussion
 async function createDiscussion() {
     const public = document.getElementById("public");
     const restricted = document.getElementById("restricted");
     const private = document.getElementById("private");
     var type;
 
+    // check which discussion type was selected
     if (public.checked == true) {
         type = "Public";
     } else if (restricted.checked) {
@@ -53,6 +62,7 @@ async function createDiscussion() {
         }
     })
     
+    // direct page to discussion page of newly created discussion
     var script = document.getElementsByTagName("script");
     var url = script[script.length-1].src;
     for (let i = 0; i < url.length; i++) {
@@ -67,8 +77,7 @@ async function createDiscussion() {
     window.location.href = url;
 };
 
-const homePosts = document.getElementById("homePosts");
-
+// function to get random posts from random public discussions
 async function Posts() {
     const res = await fetch("http://localhost:3000/posts");
     const posts = await res.json();
@@ -120,19 +129,14 @@ async function Posts() {
     }
 }
 
-const searchBar = document.getElementById("searchBar");
-const searchResults = document.getElementById("searchResults");
-const searchResultsContainer = document.getElementById("searchResultsContainer");
-
 // searchBar.addEventListener("focusout", () => {
 //     searchResultsContainer.classList.add("invisible");
 // })
 
+// function to search all discussions
 async function searchDiscussions(searchTerm) {
     const res = await fetch("http://localhost:3000/discussions/search?searchTerm=" + searchTerm);
     const discussions = await res.json();
-
-    console.log(discussions);
 
     searchResults.innerHTML = ``;
     
@@ -142,15 +146,18 @@ async function searchDiscussions(searchTerm) {
     }
 }
 
+// event listener for search bar input
 searchBar.addEventListener("input", () => {
     searchResultsContainer.classList.remove("invisible");
     searchDiscussions(searchBar.value);
 })
 
+// event listener for search bar focus
 searchBar.addEventListener("focus", () => {
     searchResultsContainer.classList.remove("invisible");
 })
 
+// function to create post report
 async function createPostReport(postId) {
     const postReportCat = document.getElementById("postReportCat" + postId);
     const postReportDesc = document.getElementById("postReportDesc" + postId);
@@ -169,6 +176,7 @@ async function createPostReport(postId) {
     })
 }
 
+// function to get user details to be displayed on the sidebar
 async function sidebar() {
     const res = await fetch("http://localhost:3000/discussionMemberTop3Discussions/" + accountName);
     const discussionMembers = await res.json();
@@ -181,6 +189,7 @@ async function sidebar() {
     }
 }
 
+// direct page to the post page with the post id of the selected post
 function goToPost(postId) {
     // var script = document.getElementsByTagName("script");
     // var url = script[script.length-1].src;
@@ -196,6 +205,7 @@ function goToPost(postId) {
     // window.location.href = url;
 }
 
+// direct page to discussion page
 function goToDiscussion(dscName) {
     var script = document.getElementsByTagName("script");
     var url = script[script.length-1].src;

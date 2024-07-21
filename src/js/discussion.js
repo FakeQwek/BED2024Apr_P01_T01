@@ -1,15 +1,17 @@
+// get discussion name parameter from the url
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const discussionName = urlParams.get("discussionName");
 
+// set variables
 let accountName;
 let isMember = false;
 let isMuted = false;
 let isBanned = false;
 let isPublic = false;
-
 let discussionType;
 
+// function that checks if the username in the get request matches with the username in the jwt token
 async function checkAccountName() {
     const res = await fetch("http://localhost:3000/accounts/" + localStorage.getItem("username"), {
         method: "GET",
@@ -23,6 +25,7 @@ async function checkAccountName() {
 
 checkAccountName();
 
+// function to get discussion details
 async function Discussion() { 
     const res = await fetch("http://localhost:3000/discussions/" + discussionName);
     const discussion = await res.json();
@@ -48,13 +51,16 @@ async function Discussion() {
 
     DiscussionMembers();
 
+    // set discussion type
     discussionType = discussion.dscType;
 
+    // set isPublic to true if the discussion type is public
     if (discussion.dscType == "Public") {
         isPublic = true;
     }
 };
 
+// function to get posts of the discussion
 async function Posts() {
     const res = await fetch("http://localhost:3000/posts/" + discussionName, {
         method: "GET",
@@ -66,6 +72,7 @@ async function Posts() {
 
     const discussionPosts = document.getElementById("discussionPosts");
 
+    // sets the html of the post depending on if they are an event and whether the user owns them
     for (let i = 0; i < posts.length; i++) {
         if (posts[i].isEvent == "True") {
             if (posts[i].accName == accountName) {
@@ -308,14 +315,17 @@ const memberCount = document.getElementById("memberCount");
 
 const bannerOptions = document.getElementById("bannerOptions");
 
+// function to get details of the discussion's members
 async function DiscussionMembers() {
     const res = await fetch("http://localhost:3000/discussionMembers/" + discussionName);
     const discussionMembers = await res.json();
     
+    // sets the discussion member count
     memberCount.innerHTML = `<h2 class="font-bold">` + discussionMembers.length + `</h2>`;
 
     const joinButton = document.getElementById("joinButton");
 
+    // check if user is a member, muted or banned
     for (let i = 0; i < discussionMembers.length; i++) {
         if (discussionMembers[i].accName == accountName && discussionMembers[i].dscName == discussionName) {
             isMember = true;
@@ -330,7 +340,9 @@ async function DiscussionMembers() {
         }
     }
 
+    // display user is banned message if user is banned
     if (!isBanned) {
+        // if discussion is not public check if user is a member
         if (!isPublic) {
             for (let i = 0; i < discussionMembers.length; i++) {
                 if (discussionMembers[i].accName == accountName && discussionMembers[i].dscName == discussionName) {
@@ -338,25 +350,27 @@ async function DiscussionMembers() {
                     isMember = true;
                 }
             }
-        
+            // display user is not a member message
             if (!isMember) {
                 const discussionPosts = document.getElementById("discussionPosts");
     
                 const postHTML = `<div class="flex flex-col justify-center items-center h-full">
                                     <img src="../images/lock-outline.svg" width="100px" />
-                                    <h2 class="text-2xl font-bold">You do not have access to this discussion</h2>
+                                    <h2 class="text-2xl font-bold">You are not a member of this disucssion</h2>
                                 </div>`;
     
                 discussionPosts.insertAdjacentHTML("beforeend", postHTML);
             } else {
+                // set button text to leave if user is a member
                 joinButton.innerHTML = `<img src="../images/plus.svg" width="20px" />Leave`;
             }
-    
+            // remove the join button if the discussion is not public
             if (joinButton) {
                 joinButton.remove();
             }
         } else {
             if (isMember) {
+                // set button text to leave if user is a member
                 joinButton.innerHTML = `<img src="../images/plus.svg" width="20px" />Leave`;
             }
             Posts();
@@ -364,6 +378,7 @@ async function DiscussionMembers() {
     }
 
     for (let i = 0; i < discussionMembers.length; i++) {
+        // display user is banned message
         if (isBanned) {
             const discussionPosts = document.getElementById("discussionPosts");
             discussionPosts.innerHTML = `<div class="flex flex-col justify-center items-center h-full">
@@ -372,9 +387,11 @@ async function DiscussionMembers() {
                                         </div>`;
         }
 
+        // if user is an owner show them additional options to edit discussion details
         if (discussionMembers[i].dscMemRole == "Owner" && discussionMembers[i].accName == accountName) {
             let bannerOptionsHTML;
 
+            // if discussion is restricted add an extra option for the owner to invite users
             if (discussionType == "Restricted") {
                 bannerOptionsHTML = `<li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="edit_discussion_modal.showModal()"><span class="w-full">Edit</span></button></li>
                                         <li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="invite_modal.showModal()"><span class="w-full">Invite</span></button></li>`;
@@ -384,10 +401,11 @@ async function DiscussionMembers() {
 
             bannerOptions.insertAdjacentHTML("beforeend", bannerOptionsHTML);
             
+            // remove the join button
             if (joinButton) {
                 joinButton.remove();
             }
-        } else if (discussionMembers[i].dscMemRole == "Admin") {
+        } else if (discussionMembers[i].dscMemRole == "Admin") { // if user is an admin add their name to the banner
             const discussionAdmins = document.getElementById("discussionAdmins");
             const discussionAdminsHTML = `<div class="flex items-center gap-2">
                                             <img src="../images/account-circle-outline.svg" width="30px" />
@@ -398,6 +416,7 @@ async function DiscussionMembers() {
     }
 }
 
+// function to delete post
 async function deletePost(postId) {
     await fetch("http://localhost:3000/posts/" + postId, {
         method: "DELETE",
@@ -408,6 +427,7 @@ async function deletePost(postId) {
     location.reload();
 }
 
+// function to create volunteer
 async function createVolunteer(postId) {
     await fetch("http://localhost:3000/volunteer/" + discussionName, {
         method: "POST",
@@ -425,6 +445,7 @@ async function createVolunteer(postId) {
 
 const editDesc = document.getElementById("editDesc");
 
+// function to edit the description of the discussion
 async function editDiscussionDescription() {
     await fetch ("http://localhost:3000/discussion/" + discussionName, {
         method: "PUT",
@@ -439,6 +460,7 @@ async function editDiscussionDescription() {
     location.reload();
 }
 
+// function to create a post report
 async function createPostReport(postId) {
     const postReportCat = document.getElementById("postReportCat" + postId);
     const postReportDesc = document.getElementById("postReportDesc" + postId);
@@ -458,6 +480,7 @@ async function createPostReport(postId) {
     })
 }
 
+// function to create a discussion report
 async function createDiscussionReport() {
     const dscReportCat = document.getElementById("dscReportCat");
     const dscReportDesc = document.getElementById("dscReportDesc");
@@ -477,8 +500,11 @@ async function createDiscussionReport() {
     })
 }
 
+// function to create a discussion member
 async function createDiscussionMember() {
     const joinButton = document.getElementById("joinButton");
+
+    // if user is not a member create a new member record
     if (!isMember) {
         await fetch("http://localhost:3000/discussionMember/" + discussionName, {
             method: "POST",
@@ -492,7 +518,7 @@ async function createDiscussionMember() {
         })
         isMember = true;
         joinButton.innerHTML = `<img src="../images/plus.svg" width="20px" />Leave`;
-    } else {
+    } else { // if user is already a member delete their member record
         await fetch("http://localhost:3000/discussionMember/" + accountName + "/" + discussionName , {
             method: "DELETE"
         });
@@ -501,8 +527,11 @@ async function createDiscussionMember() {
     }
 }
 
+// function to create a post like
 async function createPostLike(postId) {
     const likeButton = document.getElementById("likeButton" + postId);
+
+    // if user has not liked the post create a new post like record
     if (likeButton.innerHTML == `<img src="../images/thumb-up-outline.svg" width="20px">`) {
         await fetch("http://localhost:3000/postLike/" + discussionName, {
             method: "POST",
@@ -515,25 +544,29 @@ async function createPostLike(postId) {
                 "Authorization": "Bearer " + localStorage.getItem("token")
             }
         })
+
+        // change the thumbs up image and update the like count
         likeButton.innerHTML = `<img src="../images/thumb-up.svg" width="20px">`;
         const postLikeCount = document.getElementById("postLikeCount" + postId);
         let likeCount =  parseInt(postLikeCount.innerHTML) + 1;
         postLikeCount.innerHTML = likeCount;
-    } else {
+    } else { // if user has already liked the post delete the post like record
         await fetch("http://localhost:3000/postLike/" + accountName + "/" + postId + "/" + discussionName, {
             method: "DELETE",
             headers: {
                 "Authorization": "Bearer " + localStorage.getItem("token")
             }
         });
+
+        // change the thumbs up image and update the like count
         likeButton.innerHTML = `<img src="../images/thumb-up-outline.svg" width="20px">`;
         const postLikeCount = document.getElementById("postLikeCount" + postId);
         let likeCount =  parseInt(postLikeCount.innerHTML)- 1;
         postLikeCount.innerHTML = likeCount;
-
     }
 }
 
+// function to get the number of likes for each post
 async function getPostLikesByPost(postId) {
     const res = await fetch("http://localhost:3000/postLikes/" + discussionName + "/" + postId, {
         method: "GET",
@@ -543,10 +576,9 @@ async function getPostLikesByPost(postId) {
     });
     const postLikes = await res.json();
 
+    // set the like count of the post
     const likeCount = document.getElementById("likeCount" + postId);
-    
     const likeCountHTML = `<h2 id="postLikeCount` + postId + `">` + postLikes.length + `</h2>`;
-
     likeCount.insertAdjacentHTML("beforeend", likeCountHTML);
 
     for (let i = 0; i < postLikes.length; i++) {
@@ -557,6 +589,7 @@ async function getPostLikesByPost(postId) {
     }
 }
 
+// order the posts by the most likes
 async function getPostsByDiscussionOrderByLikes() {
     const res = await fetch("http://localhost:3000/postsOrderByLikes/" + discussionName, {
         method: "GET",
@@ -568,6 +601,7 @@ async function getPostsByDiscussionOrderByLikes() {
 
     const discussionPosts = document.getElementById("discussionPosts");
 
+    // set the join button text based on whether the user is a member
     if (isMember) {
         discussionPosts.innerHTML = `<div class="flex justify-between w-full h-fit mt-4">
                                         <div>
@@ -592,6 +626,7 @@ async function getPostsByDiscussionOrderByLikes() {
                                     </div>`;
     }
 
+    // sets the html of the post depending on if they are an event and whether the user owns them
     for (let i = 0; i < posts.length; i++) {
         if (posts[i].isEvent == "True") {
             if (posts[i].accName == accountName) {
@@ -830,6 +865,7 @@ async function getPostsByDiscussionOrderByLikes() {
     }
 }
 
+// function to get user details to be displayed on the sidebar
 async function sidebar() {
     const res = await fetch("http://localhost:3000/discussionMemberTop3Discussions/" + accountName);
     const discussionMembers = await res.json();
@@ -842,6 +878,7 @@ async function sidebar() {
     }
 }
 
+// function to create an invite to the discussion
 async function createInvite() {
     await fetch("http://localhost:3000/invite", {
         method: "POST",
@@ -855,6 +892,7 @@ async function createInvite() {
     });
 }
 
+// direct page to the create post page
 function goToCreatePost() {
     var script = document.getElementsByTagName("script");
     var url = script[script.length-1].src;
@@ -870,6 +908,7 @@ function goToCreatePost() {
     window.location.href = url;
 }
 
+// direct page to the post page with the post id of the selected post
 function goToPost(postId) {
     // var script = document.getElementsByTagName("script");
     // var url = script[script.length-1].src;
@@ -885,6 +924,7 @@ function goToPost(postId) {
     // window.location.href = url;
 }
 
+// direct page to the edit post page
 function goToEditPost(postId) {
     var script = document.getElementsByTagName("script");
     var url = script[script.length-1].src;

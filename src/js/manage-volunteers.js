@@ -1,10 +1,13 @@
+// get post id parameter from the url
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const postId = urlParams.get("postId");
-let approvedVolunteerCount = 0;
 
+// set variables
+let approvedVolunteerCount = 0;
 let accountName;
 
+// function that checks if the username in the get request matches with the username in the jwt token
 async function checkAccountName() {
     const res = await fetch("http://localhost:3000/accounts/" + localStorage.getItem("username"), {
         method: "GET",
@@ -20,6 +23,7 @@ async function checkAccountName() {
 
 checkAccountName();
 
+// function to get post details
 async function Post() {
     const res = await fetch("http://localhost:3000/post/" + postId);
     const post = await res.json();
@@ -45,6 +49,7 @@ async function Post() {
     }
 };
 
+// function to get volunteers details of the post
 async function Volunteers() {
     const res = await fetch("http://localhost:3000/volunteers/" + postId, {
         method: "GET",
@@ -56,6 +61,7 @@ async function Volunteers() {
 
     const postVolunteers = document.getElementById("postVolunteers");
 
+    // set the html of the volunteers based on whether they were approved
     for (let i = 0; i < volunteers.length; i++) {
         if (volunteers[i].isApproved == "True") {
             approvedVolunteerCount++;
@@ -96,6 +102,7 @@ async function Volunteers() {
     postName.insertAdjacentHTML("beforeend", approvedVolunteersHTML);
 };
 
+// function to approve volunteers
 async function approveVolunteerAsync(volId) {
     await fetch("http://localhost:3000/volunteer/" + postId + "/" + volId, {
         method: "PUT",
@@ -105,6 +112,7 @@ async function approveVolunteerAsync(volId) {
     });
 };
 
+// function to get user details to be displayed on the sidebar
 async function sidebar() {
     const res = await fetch("http://localhost:3000/discussionMemberTop3Discussions/" + "AppleTan");
     const discussionMembers = await res.json();
@@ -118,12 +126,11 @@ async function sidebar() {
 }
 
 function approveVolunteer(volId) {
-    // location.reload();
-
+    location.reload();
     approveVolunteerAsync(volId);
 }
 
-
+// function to reject/delete volunteers
 async function deleteVolunteerAsync(volId) {
     await fetch("http://localhost:3000/volunteer/" + postId + "/" + volId, {
         method: "DELETE",
@@ -136,7 +143,6 @@ async function deleteVolunteerAsync(volId) {
 
 function deleteVolunteer(volId) {
     location.reload();
-    
     deleteVolunteerAsync(volId);
 };
 
