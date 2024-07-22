@@ -54,6 +54,12 @@ async function Post() {
                                 <img src="../images/lock-outline.svg" width="100px" />
                                 <h2 class="text-2xl font-bold">You are not the owner of this post</h2>
                             </div>`;
+    } else if (post.isEvent == "False") {
+        const postCard = document.getElementById("postCard");
+        postCard.innerHTML = `<div class="flex flex-col justify-center items-center h-full">
+                                <img src="../images/lock-outline.svg" width="100px" />
+                                <h2 class="text-2xl font-bold">This post is not an event</h2>
+                            </div>`;
     }
 };
 
