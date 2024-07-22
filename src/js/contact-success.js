@@ -1,3 +1,4 @@
+//Buttons that link to contact us and home page
 const returnButton = document.getElementById("contact-button");
 const homeButton = document.getElementById("home-button");
 

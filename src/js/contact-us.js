@@ -27,7 +27,7 @@
  
  }
 
- //Checks if all input is acceptable
+ //Checks if all input is acceptable for contact us
  function validateForm() {
     username = document.getElementById("name").value;
     email = document.getElementById("email").value;
@@ -37,19 +37,22 @@
     email1 = /\.com{1}/;
     email2 = /@{1}/;
     query = /[^a-zA-Z0-9\s]/;
-
+    
+    //Checks for spaces, space characters and blank input
     if (space.test(username) || specialchars.test(username) || username == "") {
         
         alert("Username invalid!");
         console.log(space.test(username), specialchars.test(username))
         return;
     }
+    //Checks for .com, @ and blank input
     else if (!email1.test(email) || !email2.test(email) || space.test(email)) {
         alert("Email invalid");
         console.log('email invalid');
         return;
     }
-    else if (query.test(question)) {
+    //Checks for blank input or special characters
+    else if (query.test(question) || question == "") {
         alert("Question invalid");
         return;
     }
