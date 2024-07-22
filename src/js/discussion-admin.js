@@ -27,12 +27,29 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         discussionNameElement.innerText = discussion.dscName;
         discussionBannerDescElement.innerHTML = `<p>${discussion.dscDesc}</p>`;
-        adminsListElement.innerHTML = `
+        ownersListElement.innerHTML = `
             <div class="flex items-center">
                 <img src="../images/account-circle-outline.svg" width="30px" />
                 <a href="#" class="ml-2 text-blue-500 hover:underline" onclick="handleUserClick('${discussion.accName}')">u:${discussion.accName}</a>
             </div>`;
         
+        // Fetch and display admins
+        try {
+            const response = await fetch(`http://localhost:3000/admins/${encodeURIComponent(discussionName)}`);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const admins = await response.json();
+            adminsListElement.innerHTML = admins.map(admin => 
+                `<div class="flex items-center">
+                    <img src="../images/account-circle-outline.svg" width="30px" />
+                    <a href="#" class="ml-2 text-blue-500 hover:underline" onclick="handleUserClick('${admin.AccName}')">u:${admin.AccName}</a>
+                </div>`
+            ).join('');
+        } catch (error) {
+            console.error('Error fetching admins:', error);
+        }
+
         // Fetch approved posts
         const postsResponse = await fetch(`http://localhost:3000/approvedposts/${encodeURIComponent(discussion.dscName)}`);
         if (!postsResponse.ok) {
@@ -50,11 +67,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                             <a href="#" class="text-blue-500 hover:underline" onclick="handleUserClick('${post.OwnerID}')">u:${post.OwnerID}</a>
                         </div>
                         <div class="relative">
-                            <button class="btn btn-sm bg-white border-0 shadow-none" onclick="toggleDropdown(${post.PostID})"><img src="../images/action.svg" width="20px" /></button>
-                            <div id="dropdown-${post.PostID}" class="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg hidden transition ease-in-out duration-300">
-                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100" onclick="approvePost(${post.PostID})">Approve</a>
-                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100" onclick="muteUser('${post.OwnerID}', '${post.PostDesc}', 'admin', ${post.PostID})">Mute</a>
-                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100" onclick="banUser('${post.OwnerID}', '${post.PostDesc}', 'admin', ${post.PostID})">Ban</a>
+                            <button class="btn btn-sm bg-white border-0 shadow-none" data-dropdown-button><img src="../images/action.svg" width="20px" /></button>
+                            <div id="dropdown-${post.PostID}" class="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg hidden" data-dropdown>
+                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100" data-mute-user data-acc-name="${post.OwnerID}" data-post-desc="${post.PostDesc}">Mute</a>
+                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100" data-ban-user data-acc-name="${post.OwnerID}" data-post-desc="${post.PostDesc}">Ban</a>
                             </div>
                         </div>
                     </div>
@@ -64,10 +80,74 @@ document.addEventListener('DOMContentLoaded', async () => {
             `;
             postListElement.insertAdjacentHTML('beforeend', postHTML);
         });
+
+        // Add event listener for dropdown buttons
+        document.addEventListener('click', (event) => {
+            const isDropdownButton = event.target.closest('[data-dropdown-button]');
+            if (!isDropdownButton) {
+                document.querySelectorAll('[data-dropdown]').forEach(dropdown => {
+                    dropdown.classList.add('hidden');
+                });
+                return;
+            }
+
+            const currentDropdown = isDropdownButton.nextElementSibling;
+            currentDropdown.classList.toggle('hidden');
+            
+            document.querySelectorAll('[data-dropdown]').forEach(dropdown => {
+                if (dropdown !== currentDropdown) {
+                    dropdown.classList.add('hidden');
+                }
+            });
+        });
+
+        // Add event listeners for approve, mute, and ban actions
+        postListElement.addEventListener('click', async (event) => {
+            const approveButton = event.target.closest('[data-approve-post]');
+            if (approveButton) {
+                const postId = approveButton.getAttribute('data-post-id');
+                await approvePost(postId);
+                return;
+            }
+
+            const muteButton = event.target.closest('[data-mute-user]');
+            if (muteButton) {
+                const accName = muteButton.getAttribute('data-acc-name');
+                const postDesc = muteButton.getAttribute('data-post-desc');
+                await muteUser(accName, postDesc, 'admin', muteButton.dataset.postId);
+                return;
+            }
+
+            const banButton = event.target.closest('[data-ban-user]');
+            if (banButton) {
+                const accName = banButton.getAttribute('data-acc-name');
+                const postDesc = banButton.getAttribute('data-post-desc');
+                await banUser(accName, postDesc, 'admin', banButton.dataset.postId);
+                return;
+            }
+        });
     } catch (error) {
         console.error('Error fetching discussion details or posts:', error);
     }
 });
+
+async function fetchAdmins(dscName) {
+    try {
+        const response = await fetch(`http://localhost:3000/admins/${encodeURIComponent(dscName)}`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const admins = await response.json();
+        adminsListElement.innerHTML = admins.map(admin => `
+            <div class="flex items-center">
+                <img src="../images/account-circle-outline.svg" width="30px" />
+                <a href="#" class="ml-2 text-blue-500 hover:underline" onclick="handleUserClick('${admin.AccName}')">u:${admin.AccName}</a>
+            </div>
+        `).join('');
+    } catch (error) {
+        console.error('Error fetching admins:', error);
+    }
+}
 
 popupButton.addEventListener('click', () => {
     popupDialog.showModal();
@@ -142,16 +222,20 @@ async function approvePost(postId) {
 
 async function muteUser(accName, muteReason, mutedBy, postId) {
     try {
-        const response = await fetch(`http://localhost:3000/accounts/mute/${accName}`, {
-            method: 'PUT',
+        const muteDate = new Date().toISOString();
+        await fetch('http://localhost:3000/muteinfo', {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ muteReason: muteReason, mutedBy: mutedBy })
+            body: JSON.stringify({ accName, muteDate, muteReason, mutedBy })
         });
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
+        await fetch(`http://localhost:3000/accounts/mute/${accName}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
         alert('User muted successfully');
         document.getElementById(`post-${postId}`).remove(); // Remove the post from the page
     } catch (error) {
@@ -161,26 +245,26 @@ async function muteUser(accName, muteReason, mutedBy, postId) {
 
 async function banUser(accName, banReason, bannedBy, postId) {
     try {
-        const response = await fetch(`http://localhost:3000/accounts/ban/${accName}`, {
+        const banDate = new Date().toISOString();
+        await fetch('http://localhost:3000/baninfo', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ accName, banDate, banReason, bannedBy })
+        });
+        await fetch(`http://localhost:3000/accounts/ban/${accName}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ banReason: banReason, bannedBy: bannedBy })
         });
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
         alert('User banned successfully');
         document.getElementById(`post-${postId}`).remove(); // Remove the post from the page
     } catch (error) {
         console.error('Error banning user:', error);
     }
-}
-
-function toggleDropdown(postId) {
-    const dropdown = document.getElementById(`dropdown-${postId}`);
-    dropdown.classList.toggle('hidden');
 }
 
 // Event listeners for the promote user dialog buttons

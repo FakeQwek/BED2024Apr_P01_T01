@@ -88,6 +88,8 @@ class Discussion {
             await connection.close();
         }
     }
+
 }
+
 
 module.exports = Discussion;

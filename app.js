@@ -96,6 +96,7 @@ app.get("/approvedposts/:dscName", postsController.getApprovedPostsByDiscussion)
 app.get("/unapprovedposts/:dscName", postsController.getUnapprovedPostsByDiscussion);
 app.get("/discussionMembers", discussionMembersController.getAllDiscussionMembers);
 app.get("/discussionMembers/:dscName", discussionMembersController.getDiscussionMembersByDiscussion);
+app.get("/admins/:dscName", discussionController.getAdminsByDiscussion);
 app.post("/question", questionController.createQuestion);
 app.post("/muteinfo", muteinfoController.addMuteInfo);
 app.post("/baninfo", baninfoController.addBanInfo);

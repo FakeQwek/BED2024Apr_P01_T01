@@ -78,8 +78,15 @@ class Post {
     static async getApprovedPostsByDiscussion(dscName) {
         try {
             await sql.connect(dbConfig);
-            const result = await sql.query`SELECT * FROM Post WHERE DscName = ${dscName} AND isApproved = 'True'`;
-            console.log('Database query result:', result.recordset); // Add this line to log the results
+            const result = await sql.query`
+                SELECT p. *
+                FROM Post p
+                JOIN Account a ON p.OwnerID = a.accName
+                WHERE p.DscName = ${dscName}
+                  AND p.isApproved = 'True'
+                  AND a.isMuted = 'False'
+                  AND a.isBanned = 'False'
+            `;
             return result.recordset;
         } catch (err) {
             console.error('Error fetching approved posts:', err);

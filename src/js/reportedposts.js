@@ -41,11 +41,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                             <a href="#" class="text-blue-500 hover:underline" onclick="handleUserClick('${post.OwnerID}')">u:${post.OwnerID}</a>
                         </div>
                         <div class="relative">
-                            <button class="btn btn-sm bg-white border-0 shadow-none" onclick="toggleDropdown(${post.PostID})"><img src="../images/action.svg" width="20px" /></button>
-                            <div id="dropdown-${post.PostID}" class="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg hidden transition ease-in-out duration-300">
-                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100" onclick="approvePost(${post.PostID})">Approve</a>
-                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100" onclick="muteUser('${post.OwnerID}', '${post.PostDesc}', 'admin', ${post.PostID})">Mute</a>
-                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100" onclick="banUser('${post.OwnerID}', '${post.PostDesc}', 'admin', ${post.PostID})">Ban</a>
+                            <button class="btn btn-sm bg-white border-0 shadow-none" data-dropdown-button><img src="../images/action.svg" width="20px" /></button>
+                            <div id="dropdown-${post.PostID}" class="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg hidden" data-dropdown>
+                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100" data-approve-post data-post-id="${post.PostID}">Approve</a>
+                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100" data-mute-user data-acc-name="${post.OwnerID}" data-post-desc="${post.PostDesc}">Mute</a>
+                                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100" data-ban-user data-acc-name="${post.OwnerID}" data-post-desc="${post.PostDesc}">Ban</a>
                             </div>
                         </div>
                     </div>
@@ -74,6 +74,32 @@ document.addEventListener('DOMContentLoaded', async () => {
                     dropdown.classList.add('hidden');
                 }
             });
+        });
+
+        // Add event listeners for approve, mute, and ban actions
+        reportedPostsContainer.addEventListener('click', async (event) => {
+            const approveButton = event.target.closest('[data-approve-post]');
+            if (approveButton) {
+                const postId = approveButton.getAttribute('data-post-id');
+                await approvePost(postId);
+                return;
+            }
+
+            const muteButton = event.target.closest('[data-mute-user]');
+            if (muteButton) {
+                const accName = muteButton.getAttribute('data-acc-name');
+                const postDesc = muteButton.getAttribute('data-post-desc');
+                await muteUser(accName, postDesc, 'admin', postDesc);
+                return;
+            }
+
+            const banButton = event.target.closest('[data-ban-user]');
+            if (banButton) {
+                const accName = banButton.getAttribute('data-acc-name');
+                const postDesc = banButton.getAttribute('data-post-desc');
+                await banUser(accName, postDesc, 'admin', postDesc);
+                return;
+            }
         });
     } catch (error) {
         console.error('Error fetching unapproved posts:', error);
