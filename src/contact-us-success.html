@@ -59,23 +59,20 @@
 
         <!-- content -->
         <div class="flex flex-col w-4/6 h-full">
-           <!--form, which allows the users to submit their details and query-->
-            <div class="flex justify-center w-full flex-col">
-              
-                <div class="card w-5/6 bg-white contact-us">
-                    <form action="" class="flex justify-center flex-col contact-form">
-                        <h1 class="text-3xl font-semibold">Contact Us</h1>
-                        <label for="name" class="label">Name</label>
-                        <input type="text" name="name" class="input-box" id="name" required>
-                        <label for="email"  class="label">Email Address</label>
-                        <input type="email" name="name" class="input-box" id="email" required>
-                        <label for="question"  class="label">Question:</label>
-                        <textarea name="question" class="input-box query-box" id="query" required></textarea>
-                        <!--submits form data onclick-->
-                        <button type="button" onClick="validateForm()" class="btn border-0 submit-button">Submit</button>
-                    </form>
-                </div>
+           <!--contact us success page, which allows the users to submit their details and query-->
+           <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;  background-color: #fff; text-align: center; width: 80%; height: 80%; margin-left: auto; margin-right: auto; margin-top: 5%;" class="rounded-2xl p-8">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 24px;">
+              <svg width="96" height="96" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" style="color: #292d32;">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <h1 style="font-size: 2.25rem; font-weight: bold;">Thank you for your submission!</h1>
+              <p style="font-size: 1rem; color: #6c757d;">Your form has been successfully submitted. Our team will review your information and get back to you shortly.</p>
+              <div style="display: flex; gap: 16px;">
+                <button style="background-color: #ffffff; color: #292d32; border: 2px solid #292d32; padding: 12px 32px; border-radius: 8px;" id="contact-button">Return to Contact Us</button>
+                <button style="background-color: #292d32; color: #ffffff; padding: 12px 32px; border-radius: 8px;" id="home-button">Go to Homepage</button>
+              </div>
             </div>
+          </div>
         </div>
 
         <!-- banner -->
@@ -144,5 +141,5 @@
         </div>
     </div>
 </body>
-<script src="./js/contact-us.js"></script>
+<script src="./js/contact-success.js"></script>
 </html>
