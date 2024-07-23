@@ -1,7 +1,10 @@
+// imports
 const sql = require("mssql");
 const dbConfig = require("../../dbConfig");
 
+// discussion member class
 class DiscussionMember {
+    // discussion member constructor
     constructor(dscMemID, dscMemRole, isMuted, isBanned, accName, dscName) {
         this.dscMemID = dscMemID;
         this.dscMemRole = dscMemRole;
@@ -11,6 +14,7 @@ class DiscussionMember {
         this.dscName = dscName;
     }
 
+    // get all discussion members
     static async getAllDiscussionMembers() {
         const connection = await sql.connect(dbConfig);
 
@@ -24,6 +28,7 @@ class DiscussionMember {
         return result.recordset.map((row) => new DiscussionMember(row.DscMemID, row.DscMemRole, row.isMuted, row.isBanned, row.AccName, row.DscName));
     }
 
+    // get discussion members that belong to discussion with discussion name
     static async getDiscussionMembersByDiscussion(dscName) {
         const connection = await sql.connect(dbConfig);
 
@@ -39,6 +44,7 @@ class DiscussionMember {
         return result.recordset.map((row) => new DiscussionMember(row.DscMemID, row.DscMemRole, row.isMuted, row.isBanned, row.AccName, row.DscName));
     }
 
+    // get top 3 discussions that belong to user with account name
     static async getDiscussionMemberTop3Discussions(accName) {
         const connection = await sql.connect(dbConfig);
 
@@ -54,6 +60,7 @@ class DiscussionMember {
         return result.recordset.map((row) => new DiscussionMember(row.DscMemID, row.DscMemRole, row.isMuted, row.isBanned, row.AccName, row.DscName));
     }
 
+    // create discussion member
     static async createDiscussionMember(newDiscussionMemberData, dscName) {
         const connection = await sql.connect(dbConfig);
 
@@ -69,6 +76,7 @@ class DiscussionMember {
         connection.close();
     }
 
+    // delete discussion member
     static async deleteDiscussionMember(accName, dscName) {
         const connection = await sql.connect(dbConfig);
 
@@ -86,4 +94,5 @@ class DiscussionMember {
     }
 }
 
+// export discussion member
 module.exports = DiscussionMember;

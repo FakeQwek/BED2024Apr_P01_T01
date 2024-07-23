@@ -1,12 +1,39 @@
+// get post id parameter from the url
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const postId = urlParams.get("postId");
-let approvedVolunteerCount = 0;
 
+// set variables
+let approvedVolunteerCount = 0;
+let accountName;
+
+// function that checks if the username in the get request matches with the username in the jwt token
+async function checkAccountName() {
+    const res = await fetch("http://localhost:3000/accounts/" + localStorage.getItem("username"), {
+        method: "GET",
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("token")
+        }
+    });
+    const account = await res.json();
+
+    // set html for account if the user is logged in
+    if (account.accName != null) {
+        const loginSignUp = document.getElementById("loginSignUp");
+        loginSignUp.innerHTML = `<button class="btn btn-sm mr-4 max-[820px]:hidden" onclick="goToProfile('` + account.accName +`')"><img src="../images/account-circle-outline.svg" width="20px" />` + account.accName + `</button>`;
+    }
+
+    accountName = account.accName;
+
+    Post();
+}
+
+checkAccountName();
+
+// function to get post details
 async function Post() {
     const res = await fetch("http://localhost:3000/post/" + postId);
     const post = await res.json();
-    console.log(post);
 
     const postDiscussionName = document.getElementById("postDiscussionName");
 
@@ -19,15 +46,35 @@ async function Post() {
     postNameHTML = `<h2 class="text-2xl font-bold m-8">` + post.postName + `</h2>`;
 
     postName.insertAdjacentHTML("afterbegin", postNameHTML);
+
+    if (post.accName != accountName) {
+        const postCard = document.getElementById("postCard");
+        postCard.innerHTML = `<div class="flex flex-col justify-center items-center h-full">
+                                <img src="../images/lock-outline.svg" width="100px" />
+                                <h2 class="text-2xl font-bold">You are not the owner of this post</h2>
+                            </div>`;
+    } else if (post.isEvent == "False") {
+        const postCard = document.getElementById("postCard");
+        postCard.innerHTML = `<div class="flex flex-col justify-center items-center h-full">
+                                <img src="../images/lock-outline.svg" width="100px" />
+                                <h2 class="text-2xl font-bold">This post is not an event</h2>
+                            </div>`;
+    }
 };
 
+// function to get volunteers details of the post
 async function Volunteers() {
-    const res = await fetch("http://localhost:3000/volunteers/" + postId);
+    const res = await fetch("http://localhost:3000/volunteers/" + postId, {
+        method: "GET",
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("token")
+        }
+    });
     const volunteers = await res.json();
-    console.log(volunteers);
 
     const postVolunteers = document.getElementById("postVolunteers");
 
+    // set the html of the volunteers based on whether they were approved
     for (let i = 0; i < volunteers.length; i++) {
         if (volunteers[i].isApproved == "True") {
             approvedVolunteerCount++;
@@ -68,12 +115,17 @@ async function Volunteers() {
     postName.insertAdjacentHTML("beforeend", approvedVolunteersHTML);
 };
 
+// function to approve volunteers
 async function approveVolunteerAsync(volId) {
-    await fetch("http://localhost:3000/volunteer/" + volId, {
-        method: "PUT"
+    await fetch("http://localhost:3000/volunteer/" + postId + "/" + volId, {
+        method: "PUT",
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("token")
+        }
     });
 };
 
+// function to get user details to be displayed on the sidebar
 async function sidebar() {
     const res = await fetch("http://localhost:3000/discussionMemberTop3Discussions/" + "AppleTan");
     const discussionMembers = await res.json();
@@ -88,25 +140,40 @@ async function sidebar() {
 
 function approveVolunteer(volId) {
     location.reload();
-
     approveVolunteerAsync(volId);
 }
 
-
+// function to reject/delete volunteers
 async function deleteVolunteerAsync(volId) {
-    console.log("sdfdsf");
-    await fetch("http://localhost:3000/volunteer/" + volId, {
-        method: "DELETE"
+    await fetch("http://localhost:3000/volunteer/" + postId + "/" + volId, {
+        method: "DELETE",
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("token")
+        }
     });
 };
 
 
 function deleteVolunteer(volId) {
     location.reload();
-    
     deleteVolunteerAsync(volId);
 };
 
-Post();
+// direct page to profile page
+function goToProfile(accName) {
+    var script = document.getElementsByTagName("script");
+    var url = script[script.length-1].src;
+    for (let i = 0; i < url.length; i++) {
+        if (url.slice(-1) != "/") {
+            url = url.substring(0, url.length - 1);
+        } else {
+            break;
+        }
+    }
+    url = url.substring(0, url.length - 3);
+    url = url.concat("profile.html");
+    window.location.href = url;
+}
+
 Volunteers();
 sidebar();
