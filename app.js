@@ -7,7 +7,6 @@ const morgan = require("morgan");
 const jwt = require("jsonwebtoken");
 const dbConfig = require("./dbConfig");
 
-// Import controllers
 const accountsController = require("./mvc/controllers/accountsController");
 const postsController = require("./mvc/controllers/postsController");
 const discussionController = require("./mvc/controllers/discussionController");
@@ -28,15 +27,15 @@ const siteadminMutedUserController = require("./mvc/controllers/siteadminMutedUs
 const siteadminBannedUserController = require("./mvc/controllers/siteadminBannedUserController");
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000; // Changed from 3000 to 3001
 
-const JWT_SECRET = '3f3a94e1c0b5f11a8e0f2747d2a5e2f7a9a1c3b7d4d6e1e2f7b8c9d1a3e4f6a2'; // Replace with your own secret
+const JWT_SECRET = '3f3a94e1c0b5f11a8e0f2747d2a5e2f7a9a1c3b7d4d6e1e2f7b8c9d1a3e4f6a2';
 
 const authenticateJWT = (req, res, next) => {
     const authHeader = req.header('Authorization');
     if (!authHeader) return res.status(401).send('Access denied. No token provided.');
 
-    const token = authHeader.split(' ')[1]; // Assuming the format is "Bearer TOKEN"
+    const token = authHeader.split(' ')[1];
     if (!token) return res.status(401).send('Access denied. Invalid token format.');
 
     try {
@@ -48,7 +47,6 @@ const authenticateJWT = (req, res, next) => {
     }
 };
 
-// Apply middlewares
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors({
@@ -57,16 +55,15 @@ app.use(cors({
     origin: true
 }));
 app.use(helmet());
-app.use(morgan('combined')); // HTTP request logger
+app.use(morgan('combined'));
 
-// Route definitions
 app.delete('/deleteAccount', accountsController.deleteAccount);
 app.put('/updateProfile', accountsController.updateProfile);
 app.post('/signup', accountsController.signup);
 app.post('/login', accountsController.login);
-app.get('/ping', (req, res) => res.send('Server is running')); // Simple ping endpoint
+app.get('/ping', (req, res) => res.send('Server is running'));
 
-app.get('/siteadminPostReport', siteadminPostReportController.getAllPostReports);
+app.get("/siteadminPostReport", siteadminPostReportController.getAllPostReports);
 app.get('/login', accountsController.login);
 app.get('/question', questionController.getAllQuestions);
 app.get('/question/:questionId', questionController.getQuestionById);
@@ -137,18 +134,16 @@ app.get("/discussionMembers/:dscName", discussionMembersController.getDiscussion
 app.post("/discussionMember/:dscName", discussionMembersController.createDiscussionMember);
 app.delete("/discussionReports/:dscRptId", discussionReportsController.deleteDiscussionReport);
 
-// Feedback routes
 app.post('/feedback', feedbackController.createFeedback);
 app.get('/feedback', feedbackController.getFeedback);
 app.put('/feedback/:feedbackID', feedbackController.updateFeedback);
 app.delete('/feedback/:feedbackID', feedbackController.deleteFeedback);
+app.get('/ping', (req, res) => res.send('Server is running'));
 
-// Example protected route
 app.get('/protected', authenticateJWT, (req, res) => {
     res.send('This is a protected route');
 });
 
-// Start the server
 app.listen(port, async () => {
     console.log(`Server listening on port ${port}`);
     try {

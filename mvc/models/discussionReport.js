@@ -112,4 +112,3 @@ class DiscussionReport {
 }
 
 module.exports = DiscussionReport;
-

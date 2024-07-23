@@ -223,12 +223,12 @@
                 <div style="margin-top: 16px;">
                   <div style="margin-bottom: 16px;">
                     <label for="username" style="display: block; margin-bottom: 8px;">Username</label>
-                    <input id="username" placeholder="Enter your name" value="chatgpt" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" readonly />
+                    <input id="username" placeholder="Enter your name" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" />
                   </div>
                   <div style="margin-bottom: 16px;">
                     <label style="display: block; margin-bottom: 8px;">Rating</label>
                     <button onclick="showRating()">Show Rating</button>
-                    <div id="rating-options" class="rating-options">
+                    <div id="rating-options" class="rating-options" style="display:none;">
                         <div style="margin-bottom: 8px;">
                           <input type="radio" id="rating-1" name="rating" value="1" />
                           <label for="rating-1" style="margin-left: 8px;">1 Star</label>
@@ -321,9 +321,9 @@
         }
 
         function cancelFeedback() {
-            document.getElementById('username').value = '';
             document.getElementById('feedback').value = '';
-            document.querySelector('input[name="rating"]:checked').checked = false;
+            const rating = document.querySelector('input[name="rating"]:checked');
+            if (rating) rating.checked = false;
         }
 
         function submitFeedback() {
@@ -346,6 +346,7 @@
             .then(data => {
                 if (data.success) {
                     alert('Feedback submitted successfully');
+                    localStorage.setItem('username', username); // Save the username to local storage
                     cancelFeedback();
                     loadFeedback();
                 } else {
@@ -460,12 +461,23 @@
         }
 
         window.addEventListener('DOMContentLoaded', (event) => {
-            const username = localStorage.getItem('username');
-            if (username) {
-                const usernameInput = document.getElementById('username');
-                usernameInput.value = username;
-                usernameInput.readOnly = true;
-            }
+            const usernameInput = document.getElementById('username');
+
+            fetch('http://localhost:3000/ping')
+                .then(response => {
+                    if (response.ok) {
+                        const username = localStorage.getItem('username');
+                        if (username) {
+                            usernameInput.value = username;
+                            usernameInput.readOnly = true;
+                        }
+                    } else {
+                        usernameInput.value = '';
+                    }
+                })
+                .catch(() => {
+                    usernameInput.value = '';
+                });
 
             loadFeedback();
         });

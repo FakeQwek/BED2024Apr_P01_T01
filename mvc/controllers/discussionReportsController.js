@@ -75,6 +75,6 @@ module.exports = {
     getAllDiscussionReports,
     getDiscussionReportById,
     createDiscussionReport,
-    warnDiscussionReport, // Add this line
+    warnDiscussionReport,
     deleteDiscussionReport,
 };
