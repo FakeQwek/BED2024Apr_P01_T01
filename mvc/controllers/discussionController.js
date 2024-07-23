@@ -1,5 +1,4 @@
 const Discussion = require("../models/discussion");
-const DiscussionAdmin = require("../models/discussionadmin");
 
 const getAllDiscussions = async (req, res) => {
     try {
@@ -74,18 +73,6 @@ const updateDiscussion = async (req, res) => {
     }
 };
 
-const getAdminsByDiscussion = async (req, res) => {
-    const dscName = req.params.dscName;
-    try {
-        const admins = await DiscussionAdmin.getAdminsByDiscussion(dscName);
-        res.json(admins);
-    } catch (err) {
-        console.error('Error fetching admins:', err);
-        res.status(500).send('Error fetching admins');
-    }
-};
-
-
 module.exports = {
     getAllDiscussions,
     getDiscussionByName,
@@ -93,5 +80,4 @@ module.exports = {
     searchDiscussions,
     updateDiscussionDescription,
     updateDiscussion,
-    getAdminsByDiscussion,
 };
