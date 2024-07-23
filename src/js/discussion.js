@@ -4,12 +4,14 @@ const urlParams = new URLSearchParams(queryString);
 const discussionName = urlParams.get("discussionName");
 
 // set variables
-let accountName;
+let accountName = 'zultest';
+let isAdmin = false;
 let isMember = false;
 let isMuted = false;
 let isBanned = false;
 let isPublic = false;
 let discussionType;
+
 
 // function that checks if the username in the get request matches with the username in the jwt token
 async function checkAccountName() {
@@ -24,7 +26,7 @@ async function checkAccountName() {
     // set html for account if the user is logged in
     if (account.accName != null) {
         const loginSignUp = document.getElementById("loginSignUp");
-        loginSignUp.innerHTML = `<button class="btn btn-sm mr-4 max-[820px]:hidden" onclick="goToProfile('` + account.accName +`')"><img src="../images/account-circle-outline.svg" width="20px" />` + account.accName + `</button>`;
+        loginSignUp.innerHTML = `<button class="btn btn-sm mr-4 max-[820px]:hidden" onclick="goToProfile('` + account.accName + `')"><img src="../images/account-circle-outline.svg" width="20px" />` + account.accName + `</button>`;
     }
 
     accountName = account.accName;
@@ -360,6 +362,20 @@ async function DiscussionMembers() {
         }
     }
 
+    for (let i = 0; i < discussionMembers.length; i++) {
+        if (discussionMembers[i].accName == accountName && discussionMembers[i].dscName == discussionName && discussionMembers[i].dscMemRole == 'admin') {
+            isAdmin = true;
+            
+            if (discussionMembers[i].isMuted == "True") {
+                isMuted = "True";
+            }
+
+            if (discussionMembers[i].isBanned == "True") {
+                isBanned = "True";
+            }
+        }
+    }
+
     // display user is banned message if user is banned
     if (!isBanned) {
         // if discussion is not public check if user is a member
@@ -369,6 +385,10 @@ async function DiscussionMembers() {
                     Posts();
                     isMember = true;
                 }
+            }
+            if (isAdmin){
+                window.location.href = `discussion-admin.html?discussionName=${discussionName}`;
+
             }
             // display user is not a member message
             if (!isMember) {
@@ -1004,6 +1024,7 @@ function goToManageVolunteers(postId) {
     url = url.concat("manage-volunteers.html?postId=" + postId);
     window.location.href = url;
 }
+
 
 Discussion();
 sidebar();

@@ -30,7 +30,6 @@ const verifyPostOwner = require("./mvc/middlewares/verifyPostOwner");
 const verifyDiscussionMember = require("./mvc/middlewares/verifyDiscussionMember");
 const verifyCommentOwner = require("./mvc/middlewares/verifyCommentOwner");
 const verifyAccount = require("./mvc/middlewares/verifyAccount");
-const verifyDiscussionAdmin = require('./mvc/middlewares/verifyDiscussionAdmin');
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -98,7 +97,7 @@ app.get("/discussions", discussionController.getAllDiscussions); // admin
 app.get("/discussions/search", discussionController.searchDiscussions); // public
 app.get("/discussions/:dscName", discussionController.getDiscussionByName); // public
 app.post("/discussion", discussionController.createDiscussion); // logged in user
-app.put('/discussions/:dscName', discussionController.updateDiscussion); // discussion owner?
+app.put("/discussions/:dscName", discussionController.updateDiscussion); // discussion owner?
 app.put("/discussion/:dscName", verifyDiscussionOwner, discussionController.updateDiscussionDescription); // discussion owner
 
 // Comment routes

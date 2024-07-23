@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="output.css" rel="stylesheet">
-    <title>- Admin Page</title>
+    <title>Discussion Admin Page</title>
     <style>
         .content-container {
             overflow-y: auto;
@@ -24,13 +24,11 @@
     <div class="flex justify-center w-1/2">
         <input id="searchBar" type="text" placeholder="Search" class="input input-sm input-bordered w-full rounded-full" />
         <div id="searchResultsContainer" class="absolute w-1/2 px-4 invisible z-10">
-            <div id="searchResults" class="flex flex-col bg-white mt-8">
-            </div>
+            <div id="searchResults" class="flex flex-col bg-white mt-8"></div>
         </div>
     </div>
-        <div class="flex justify-end w-1/4">
-            <img src="../images/account-circle-outline.svg" width="30px" />
-        </div>
+    <div class="flex justify-end w-1/4">
+        <div id="loginSignUp"></div>
     </div>
 </div>
 
@@ -97,7 +95,7 @@
                             <button class="btn btn-sm bg-white mr-4" id="popupButton">
                                 <img src="../images/wrench.svg" width="20px" />Mod Tools
                             </button>
-                            <button class="btn btn-sm bg-white mr-8">
+                            <button class="btn btn-sm bg-white mr-8" onclick="goToCreatePost()">
                                 <img src="../images/plus.svg" width="20px" />Post
                             </button>
                         </div>
@@ -147,7 +145,9 @@
                             <div class="flex flex-col">
                                 <div id="discussionBannerDesc" class="flex flex-col border-b-2 pb-8 gap-4">
                                     <div class="flex flex-col">
-                                        <h2 class="font-bold">123K</h2>
+                                        <div id="memberCount" class="text-lg font-bold">
+                                            <!-- member count -->
+                                        </div>
                                         <p>members</p>
                                     </div>
                                 </div>
@@ -228,7 +228,7 @@
                             <img src="../images/user.svg" width="24px" />
                             <div class="flex flex-col text-left">
                                 <span class="font-bold">User</span>
-                                <span class="text-sm text-gray-500">Promote this user to the owner of this discussion</span>
+                                <span class="text-sm text-gray-500">Demote this user to a member of this discussion</span>
                             </div>
                         </label>
                     </div>
