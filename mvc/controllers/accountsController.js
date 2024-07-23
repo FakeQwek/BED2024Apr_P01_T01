@@ -1,4 +1,4 @@
-/*const Account = require("../models/account");
+const Account = require("../models/account");
 
 /*const getAllAccounts = async (req, res) =>  {
     try {
@@ -33,7 +33,6 @@ const sql = require("mssql");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const dbConfig = require("../../dbConfig");
-const Account = require('../models/Account');
 
 const JWT_SECRET = '3f3a94e1c0b5f11a8e0f2747d2a5e2f7a9a1c3b7d4d6e1e2f7b8c9d1a3e4f6a2'; // Replace with your own secret
 
@@ -95,9 +94,38 @@ const login = async (req, res) => {
         const user = result.recordset[0];
         const passwordMatch = await bcrypt.compare(password, user.Password);
 
+        const response = await fetch("http://localhost:3000/discussions");
+        const allDiscussions = await response.json();
+
+        let userDiscussions = [];
+
+        for (let i = 0; i < allDiscussions.length; i++) {
+            if (allDiscussions[i].accName == "box") {
+                userDiscussions.push(allDiscussions[i].dscName);
+            }
+        }
+
+        const response2 = await fetch("http://localhost:3000/posts");
+        const allPosts = await response2.json();
+
+        let userPosts = [];
+
+        for (let i = 0; i < allPosts.length; i++) {
+            if (allPosts[i].accName == "box") {
+                userPosts.push(allPosts[i].postId);
+            }
+        }
+
+        const payload = {
+            username: user.AccName,
+            email: user.AccEmail,
+            discussionOwner: userDiscussions,
+            postOwner: userPosts
+        }
+
         if (passwordMatch) {
-            const token = jwt.sign({ username: user.AccName, email: user.AccEmail }, JWT_SECRET, { expiresIn: '1h' });
-            res.status(200).json({ token, username: user.AccName, email: user.AccEmail });
+            const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
+            res.status(200).json({ token, payload });
         } else {
             return res.status(401).send('Invalid credentials');
         }

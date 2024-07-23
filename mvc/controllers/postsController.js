@@ -24,6 +24,20 @@ const getPostById = async (req, res) => {
     }
 };
 
+const getPostOwnerByPostId = async (req, res) => {
+    const postId = parseInt(req.params.postId);
+    try {
+        const post = await Post.getPostOwnerByPostId(postId);
+        if (!post) {
+            return res.status(404).send("Post not found");
+        }
+        res.json(post);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Error retrieving post");
+    }
+}
+
 const getPostsByDiscussion = async (req, res) => {
     const dscName = req.params.dscName;
     try {
@@ -46,17 +60,6 @@ const getPostsByDiscussionOrderByLikes = async (req, res) => {
     }
 };
 
-
-const getApprovedPostsByDiscussion = async (req, res) => {
-    const dscName = req.params.dscName;
-    try {
-        const posts = await Post.getApprovedPostsByDiscussion(dscName);
-        res.json(posts);
-    } catch (error) {
-        console.error('Error fetching approved posts:', error);
-        res.status(500).send("Error fetching approved posts");
-    }
-};
 
 const getUnapprovedPostsByDiscussion = async (req, res) => {
     const dscName = req.params.dscName;
@@ -123,12 +126,12 @@ const approvePost = async (req, res) => {
 module.exports = {
     getAllPosts,
     getPostById,
+    getPostOwnerByPostId,
     getPostsByDiscussion,
     getPostsByDiscussionOrderByLikes,
     createPost,
     deletePost,
     updatePost,
-    getApprovedPostsByDiscussion,
     getUnapprovedPostsByDiscussion,
     approvePost,
 };
