@@ -29,8 +29,7 @@ async function checkAccountName() {
     // set html for account if the user is logged in
     if (account.accName != null) {
         const loginSignUp = document.getElementById("loginSignUp");
-        loginSignUp.innerHTML = `<h2 class="mr-4 max-[820px]:hidden">Hello: ` + account.accName + `</h2>
-                                <button class="btn btn-sm mr-4 max-[820px]:hidden" onclick="goToProfile("` + account.accName +`")">View Profile</button>`;
+        loginSignUp.innerHTML = `<button class="btn btn-sm mr-4 max-[820px]:hidden" onclick="goToProfile('` + account.accName +`')"><img src="../images/account-circle-outline.svg" width="20px" />` + account.accName + `</button>`;
     }
 
     // stores the account name in the accountName variable if username matches
