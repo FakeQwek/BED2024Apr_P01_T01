@@ -61,8 +61,8 @@ app.use(cors({
     credentials: true,
     origin: true
 }));
-// app.use(helmet());
-// app.use(morgan('combined')); // HTTP request logger
+app.use(helmet());
+app.use(morgan('combined')); // HTTP request logger
 
 // Route definitions
 app.delete('/deleteAccount', accountsController.deleteAccount);
