@@ -1,10 +1,7 @@
-// imports
 const sql = require("mssql");
 const dbConfig = require("../../dbConfig");
 
-// post report class
 class PostReport {
-    // post report constructor
     constructor(postRptId, postRptCat, postRptDesc, accName, postId) {
         this.postRptId = postRptId;
         this.postRptCat = postRptCat;
@@ -13,7 +10,6 @@ class PostReport {
         this.postId = postId;
     }
 
-    // get all post reports
     static async getAllPostReports() {
         const connection = await sql.connect(dbConfig);
 
@@ -27,7 +23,6 @@ class PostReport {
         return result.recordset.map((row) => new PostReport(row.PostRptID, row.PostRptCat, row.PostRptDesc, row.AccName, row.PostID));
     }
 
-    // get post report by post report id
     static async getPostReportById(postRptId) {
         const connection = await sql.connect(dbConfig);
 
@@ -50,7 +45,6 @@ class PostReport {
             : null;
     }
 
-    // create post report
     static async createPostReport(newPostReportData) {
         const connection = await sql.connect(dbConfig);
 
@@ -66,7 +60,8 @@ class PostReport {
 
         connection.close();
     }
+
+   
 }
 
-// export post report
 module.exports = PostReport;

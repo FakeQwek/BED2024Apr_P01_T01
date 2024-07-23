@@ -1,10 +1,7 @@
-// imports
 const sql = require("mssql");
 const dbConfig = require("../../dbConfig");
 
-// post class
 class Post {
-    // post constructor
     constructor(postId, postName, postDesc, isEvent, isApproved, postDate, postEventDate, accName, dscName) {
         this.postId = postId;
         this.postName = postName;
@@ -17,7 +14,6 @@ class Post {
         this.dscName = dscName;
     }
 
-    // get all posts
     static async getAllPosts() {
         const connection = await sql.connect(dbConfig);
         const sqlQuery = `SELECT * FROM Post`;
@@ -27,7 +23,6 @@ class Post {
         return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.PostDate, row.PostEventDate, row.OwnerID, row.DscName));
     }
 
-    // get post by post id
     static async getPostById(postId) {
         const connection = await sql.connect(dbConfig);
         const sqlQuery = `SELECT * FROM Post WHERE PostID = @postId`;
@@ -51,19 +46,6 @@ class Post {
             : null;
     }
 
-    // get owner of post by post id
-    static async getPostOwnerByPostId(postId) {
-        const connection = await sql.connect(dbConfig);
-        const sqlQuery = `SELECT OwnerID FROM Post WHERE PostID = @postId`;
-        const request = connection.request();
-        request.input("postId", postId);
-        const result = await request.query(sqlQuery);
-        connection.close();
-
-        return result.recordset[0].OwnerID;
-    }
-
-    // get posts that belong to discussion with discussion name
     static async getPostsByDiscussion(dscName) {
         const connection = await sql.connect(dbConfig);
         const sqlQuery = `SELECT * FROM Post WHERE DscName = @dscName`;
@@ -75,7 +57,6 @@ class Post {
         return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.PostDate, row.PostEventDate, row.OwnerID, row.DscName));
     }
 
-    // get posts that belong to discussion with discussion name ordered by likes in descending order
     static async getPostsByDiscussionOrderByLikes(dscName) {
         const connection = await sql.connect(dbConfig);
 
@@ -94,18 +75,37 @@ class Post {
         return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.PostDate, row.PostEventDate, row.OwnerID, row.DscName));
     }
 
-    static async getUnapprovedPostsByDiscussion(dscName) {
-        const connection = await sql.connect(dbConfig);
-        const sqlQuery = `SELECT * FROM Post WHERE DscName = @dscName AND isApproved = 'False'`;
-        const request = connection.request();
-        request.input("dscName", dscName);
-        const result = await request.query(sqlQuery);
-        connection.close();
-
-        return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.PostDate, row.PostEventDate, row.OwnerID, row.DscName));
+    static async getApprovedPostsByDiscussion(dscName) {
+        try {
+            await sql.connect(dbConfig);
+            const result = await sql.query`
+                SELECT p. *
+                FROM Post p
+                JOIN Account a ON p.OwnerID = a.accName
+                WHERE p.DscName = ${dscName}
+                  AND p.isApproved = 'True'
+                  AND a.isMuted = 'False'
+                  AND a.isBanned = 'False'
+            `;
+            return result.recordset;
+        } catch (err) {
+            console.error('Error fetching approved posts:', err);
+            throw new Error('Database query failed');
+        }
     }
 
-    // create post
+    static async getUnapprovedPostsByDiscussion(dscName) {
+        try {
+            await sql.connect(dbConfig);
+            const result = await sql.query`SELECT * FROM Post WHERE DscName = ${dscName} AND isApproved = 'False'`;
+            console.log('Database query result:', result.recordset); // Add this line to log the results
+            return result.recordset;
+        } catch (err) {
+            console.error('Error fetching unapproved posts:', err);
+            throw new Error('Database query failed');
+        }
+    }
+
     static async createPost(newPostData) {
         const connection = await sql.connect(dbConfig);
         
@@ -123,7 +123,6 @@ class Post {
         connection.close();
     }
 
-    // update post
     static async updatePost(postId, newPostData) {
         const connection = await sql.connect(dbConfig);
 
@@ -142,7 +141,6 @@ class Post {
         return this.getPostById(postId);
     }
 
-    // delete post
     static async deletePost(postId) {
         const connection = await sql.connect(dbConfig);
         const sqlQuery = `DELETE FROM Post WHERE PostID = @postId`;
@@ -162,5 +160,4 @@ class Post {
     }
 }
 
-// export post
 module.exports = Post;

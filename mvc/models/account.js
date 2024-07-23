@@ -167,10 +167,6 @@ class Account {
             : null;
     }
 
-    static async getAccountName(accName) {
-        
-    }
-
     static async getAccountsIsBanned() {
         const connection = await sql.connect(dbConfig);
         const sqlQuery = `SELECT * FROM Account WHERE isBanned = 'True'`;
@@ -178,7 +174,6 @@ class Account {
         const result = await request.query(sqlQuery);
         connection.close();
         return result.recordset.map((row) => new Account(
-            row.AccID,
             row.AccName,
             row.AccEmail,
             row.isAdmin,
@@ -213,7 +208,6 @@ class Account {
         const result = await request.query(sqlQuery);
         connection.close();
         return result.recordset.map((row) => new Account(
-            row.AccID,
             row.AccName,
             row.AccEmail,
             row.isAdmin,

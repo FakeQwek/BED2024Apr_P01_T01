@@ -1,5 +1,5 @@
 apikey = "ad61a3b55ab20ed21479950c798b39d9";
-url = 'https://gnews.io/api/v4/top-headlines?lang=en&country=sg&max=10&apikey=' + apikey;
+url = 'https://gnews.io/api/v4/top-headlines?category=health&lang=en&country=sg&max=10&apikey=' + apikey;
 const newsContainer = document.getElementById("news-container");
 const loadButton = document.getElementById("load-button");
 const loadContainer = document.getElementById("load-container");
@@ -138,9 +138,9 @@ async function getAllNews() {
         
         for (i = 0; i < newsData.length; i++) {
             storednewsData.push(newsData[i]);
-            console.log(storednewsData);  
+            
         }
-    
+        console.log(storednewsData); 
         populateNews(storednewsData, newsContainer);
 
     })

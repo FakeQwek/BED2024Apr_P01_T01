@@ -39,14 +39,52 @@ const deletePost = async (req, res) => {
         console.log(error);
         res.status(500).send("Error deleting post or post report");
     }
-        
-
-
 };
+
+const getAllPostReportsByNewest = async (req, res) => {
+    try {
+        const postreport = await PostReport.getAllPostReportsByNewest();
+        res.json(postreport);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Error retrieving post reports");
+    }
+};
+
+const getAllCountOfPostReports = async (req, res) => {
+    try {
+        const postreport = await PostReport.getAllCountOfPostReports();
+        res.json(postreport);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Error retrieving post reports");
+    }
+};
+
+const getPostReportById = async (req,res) => {
+    const postId = parseInt(req.params.postId);
+    try {
+        const postreport = await PostReport.getPostReportById(postId);
+        if (!postreport) {
+            return res.status(404).send("Post report not found")
+        }
+      
+        res.json(postreport);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Error retrieving post report");
+    }
+};
+
+
+
 
 
 module.exports = {
     getAllPostReports,
     deletePostReport,
-    deletePost
+    deletePost,
+    getAllPostReportsByNewest,
+    getAllCountOfPostReports,
+    getPostReportById
 };

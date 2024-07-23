@@ -1,10 +1,7 @@
-// imports
 const sql = require("mssql");
 const dbConfig = require("../../dbConfig");
 
-// volunteer class
 class Volunteer {
-    // volunteer constructor
     constructor(volId, accName, isApproved, postId) {
         this.volId = volId;
         this.accName = accName;
@@ -12,7 +9,6 @@ class Volunteer {
         this.postId = postId;
     }
 
-    // get all volunteers
     static async getAllVolunteers() {
         const connection = await sql.connect(dbConfig);
 
@@ -26,7 +22,6 @@ class Volunteer {
         return result.recordset.map((row) => new Volunteer(row.VolID, row.AccName, row.isApproved, row.PostID));
     }
 
-    // get volunteer by volunteer id
     static async getVolunteerById(volId) {
         const connection = await sql.connect(dbConfig);
 
@@ -48,7 +43,6 @@ class Volunteer {
             : null;
     }
 
-    // get volunteers that belong to post with post id
     static async getVolunteersByPost(postId) {
         const connection = await sql.connect(dbConfig);
 
@@ -63,7 +57,6 @@ class Volunteer {
         return result.recordset.map((row) => new Volunteer(row.VolID, row.AccName, row.isApproved, row.PostID));
     }
 
-    // create volunteer
     static async createVolunteer(newVolunteerData) {
         const connection = await sql.connect(dbConfig);
 
@@ -79,7 +72,6 @@ class Volunteer {
         connection.close();
     }
 
-    // delete volunteer
     static async deleteVolunteer(volId) {
         const connection = await sql.connect(dbConfig);
 
@@ -90,11 +82,8 @@ class Volunteer {
         const result = await request.query(sqlQuery);
 
         connection.close();
-
-        return result;
     }
 
-    // set isApproved in volunteer record to true
     static async approveVolunteer(volId) {
         const connection = await sql.connect(dbConfig);
         
@@ -110,5 +99,4 @@ class Volunteer {
     }
 }
 
-// export volunteer
 module.exports = Volunteer;

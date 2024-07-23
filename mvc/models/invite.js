@@ -1,18 +1,14 @@
-// imports
 const sql =  require("mssql");
 const dbConfig = require("../../dbConfig");
 const { request } = require("express");
 
-// invite class
 class Invite {
-    // invite constructor
     constructor(invId, accName, dscName) {
         this.invId = invId;
         this.accName = accName;
         this.dscName = dscName
     }
 
-    // get all invites
     static async getAllInvites() {
         const connection = await sql.connect(dbConfig);
 
@@ -26,7 +22,6 @@ class Invite {
         return result.recordset.map((row) => new Invite(row.InvID, row.AccName, row.DscName));
     }
 
-    // get invites by discussion name
     static async getInvitesByDiscussion(dscName) {
         const connection = await sql.connect(dbConfig);
 
@@ -41,7 +36,6 @@ class Invite {
         return result.recordset.map((row) => new Invite(row.InvID, row.AccName, row.DscName));
     }
 
-    // create invite
     static async createInvite(newInviteData) {
         const connection = await sql.connect(dbConfig);
 
@@ -56,7 +50,6 @@ class Invite {
         connection.close();
     }
 
-    // delete invite
     static async deleteInvite(invId) {
         const connection = await sql.connect(dbConfig);
 
@@ -72,5 +65,4 @@ class Invite {
     }
 }
 
-// export invite
 module.exports = Invite;

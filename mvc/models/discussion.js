@@ -1,10 +1,7 @@
-// imports
 const sql = require("mssql");
 const dbConfig = require("../../dbConfig");
 
-// discussion class
 class Discussion {
-    // discussion constructor
     constructor(dscName, dscDesc, dscType, accName) {
         this.dscName = dscName;
         this.dscDesc = dscDesc;
@@ -12,7 +9,6 @@ class Discussion {
         this.accName = accName;
     }
 
-    // get all discussions
     static async getAllDiscussions() {
         const connection = await sql.connect(dbConfig);
 
@@ -26,7 +22,6 @@ class Discussion {
         return result.recordset.map((row) => new Discussion(row.DscName, row.DscDesc, row.DscType, row.OwnerID));
     }
 
-    // get discussion by name
     static async getDiscussionByName(dscName) {
         const connection = await sql.connect(dbConfig);
 
@@ -48,7 +43,6 @@ class Discussion {
             : null;
     }
 
-    // create discussion
     static async createDiscussion(newDiscussionData) {
         const connection = await sql.connect(dbConfig);
 
@@ -65,7 +59,7 @@ class Discussion {
         connection.close();
     }
 
-    // update discussion description
+
     static async updateDiscussionDescription(dscName, newDiscussionData) {
         const connection = await sql.connect(dbConfig);
 
@@ -80,7 +74,6 @@ class Discussion {
         connection.close();
     }
 
-    // get discussions with name that includes the search term
     static async searchDiscussions(searchTerm) {
         const connection = await sql.connect(dbConfig);
 
@@ -95,7 +88,8 @@ class Discussion {
             await connection.close();
         }
     }
+
 }
 
-// export discussion
+
 module.exports = Discussion;

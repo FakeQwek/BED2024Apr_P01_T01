@@ -21,20 +21,6 @@ const getCommentsByPost = async (req, res) => {
     }
 };
 
-const getCommentOwnerByCommentId = async (req, res) => {
-    const cmtId = parseInt(req.params.cmtId);
-    try {
-        const comment = await Comment.getCommentOwnerByCommentId(cmtId);
-        if (!comment) {
-            return res.status(404).send("Comment not found");
-        }
-        res.json(comment);
-    } catch (error) {
-        console.log(error);
-        res.status(500).send("Error retrieving comment");
-    }
-}
-
 const createComment = async (req, res) => {
     const newComment = req.body;
     try {
@@ -77,7 +63,6 @@ const deleteComment = async (req, res) => {
 module.exports = {
     getAllComments,
     getCommentsByPost,
-    getCommentOwnerByCommentId,
     createComment,
     updateComment,
     deleteComment,
