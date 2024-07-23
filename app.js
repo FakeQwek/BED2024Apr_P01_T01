@@ -31,6 +31,7 @@ const verifyDiscussionMember = require("./mvc/middlewares/verifyDiscussionMember
 const verifyCommentOwner = require("./mvc/middlewares/verifyCommentOwner");
 const verifyAccount = require("./mvc/middlewares/verifyAccount");
 
+const verifyDiscussionAdmin = require('./mvc/middlewares/verifyDiscussionAdmin');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -70,6 +71,10 @@ app.put('/updateProfile', accountsController.updateProfile);
 app.post('/signup', accountsController.signup);
 app.post('/login', accountsController.login);
 app.get('/ping', (req, res) => res.send('Server is running')); // Simple ping endpoint
+
+app.get('/discussions/:dscName/admin', verifyDiscussionAdmin, (req, res) => {
+    res.status(200).json({ message: "Admin access granted" });
+});
 
 app.get('/siteadminPostReport', siteadminPostReportController.getAllPostReports);
 app.get('/login', accountsController.login);

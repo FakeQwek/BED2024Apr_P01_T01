@@ -16,9 +16,39 @@ document.addEventListener('DOMContentLoaded', async () => {
     const discussionBannerDescElement = document.getElementById('discussionBannerDesc');
     const ownersListElement = document.getElementById('ownersList');
     const adminsListElement = document.getElementById('adminsList');
-    const discussionName = 'TechTalk'; // Replace with the dynamic discussion name as needed
+    const discussionName = 'BookClub'; // Replace with the dynamic discussion name as needed
+
+    // Role Verification Logic
+    const token = localStorage.getItem('token'); // Assume token is stored in localStorage
+    let isAdmin = false;
+    let isMember = false;
 
     try {
+        const adminResponse = await fetch(`/api/discussions/${discussionName}/admin`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (adminResponse.ok) {
+            isAdmin = true;
+        } else {
+            const memberResponse = await fetch(`/api/discussions/${discussionName}/member`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (memberResponse.ok) {
+                isMember = true;
+            }
+        }
+
+        if (!isAdmin && !isMember) {
+            throw new Error('Access denied');
+        }
+
+        // Fetch Discussion Details
         const response = await fetch(`http://localhost:3000/discussions/${encodeURIComponent(discussionName)}`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -166,7 +196,7 @@ cancelEditButton.addEventListener('click', () => {
 saveEditButton.addEventListener('click', async () => {
     const newDetails = editDiscussionDetailInput.value;
     try {
-        const response = await fetch("http://localhost:3000/discussions/TechTalk", {
+        const response = await fetch(`http://localhost:3000/discussion/${encodeURIComponent(dscName)}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'

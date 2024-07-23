@@ -65,6 +65,25 @@ class Discussion {
         connection.close();
     }
 
+
+    static async updateDiscussion(dscName, newDiscussionData) {
+        try {
+            const connection = await sql.connect(dbConfig);
+
+            const sqlQuery = `UPDATE Discussion SET DscDesc = @dscDesc WHERE DscName = @dscName`;
+
+            const request = connection.request();
+            request.input("dscDesc", sql.NVarChar, newDiscussionData.dscDesc);
+            request.input("dscName", sql.NVarChar, dscName);
+
+            await request.query(sqlQuery);
+
+            connection.close();
+        } catch (error) {
+            console.error('Error updating discussion description:', error);
+            throw error;
+        }
+    }
     // update discussion description
     static async updateDiscussionDescription(dscName, newDiscussionData) {
         const connection = await sql.connect(dbConfig);
