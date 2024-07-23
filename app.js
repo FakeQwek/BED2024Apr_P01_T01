@@ -26,6 +26,7 @@ const siteadminPostReportController = require("./mvc/controllers/siteadminPostRe
 const feedbackController = require("./mvc/controllers/feedbackController");
 const siteadminMutedUserController = require("./mvc/controllers/siteadminMutedUserController");
 const siteadminBannedUserController = require("./mvc/controllers/siteadminBannedUserController");
+const verifyDiscussionAdmin = require('./mvc/middlewares/verifyDiscussionAdmin');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -65,6 +66,10 @@ app.put('/updateProfile', accountsController.updateProfile);
 app.post('/signup', accountsController.signup);
 app.post('/login', accountsController.login);
 app.get('/ping', (req, res) => res.send('Server is running')); // Simple ping endpoint
+
+app.get('/discussions/:dscName/admin', verifyDiscussionAdmin, (req, res) => {
+    res.status(200).json({ message: "Admin access granted" });
+});
 
 app.get('/siteadminPostReport', siteadminPostReportController.getAllPostReports);
 app.get('/login', accountsController.login);
