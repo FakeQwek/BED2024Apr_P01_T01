@@ -31,8 +31,6 @@ const verifyDiscussionMember = require("./mvc/middlewares/verifyDiscussionMember
 const verifyCommentOwner = require("./mvc/middlewares/verifyCommentOwner");
 const verifyAccount = require("./mvc/middlewares/verifyAccount");
 
-const verifyDiscussionAdmin = require('./mvc/middlewares/verifyDiscussionAdmin');
-
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -72,9 +70,6 @@ app.post('/signup', accountsController.signup);
 app.post('/login', accountsController.login);
 app.get('/ping', (req, res) => res.send('Server is running')); // Simple ping endpoint
 
-app.get('/discussions/:dscName/admin', verifyDiscussionAdmin, (req, res) => {
-    res.status(200).json({ message: "Admin access granted" });
-});
 
 app.get('/siteadminPostReport', siteadminPostReportController.getAllPostReports);
 app.get('/login', accountsController.login);
@@ -102,7 +97,7 @@ app.get("/discussions", discussionController.getAllDiscussions); // admin
 app.get("/discussions/search", discussionController.searchDiscussions); // public
 app.get("/discussions/:dscName", discussionController.getDiscussionByName); // public
 app.post("/discussion", discussionController.createDiscussion); // logged in user
-app.put('/discussions/:dscName', discussionController.updateDiscussion); // discussion owner?
+app.put("/discussions/:dscName", discussionController.updateDiscussion); // discussion owner?
 app.put("/discussion/:dscName", verifyDiscussionOwner, discussionController.updateDiscussionDescription); // discussion owner
 
 // comment
