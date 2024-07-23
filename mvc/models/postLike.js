@@ -1,14 +1,18 @@
+// imports
 const sql =  require("mssql");
 const dbConfig = require("../../dbConfig");
 const { request } = require("express");
 
+// post like class
 class PostLike {
+    // post like constructor
     constructor(postLikeId, accName, postId) {
         this.postLikeId = postLikeId;
         this.accName = accName;
         this.postId = postId;
     }
 
+    // get all post likes
     static async getAllPostLikes() {
         const connection = await sql.connect(dbConfig);
 
@@ -22,6 +26,7 @@ class PostLike {
         return result.recordset.map((row) => new PostLike(row.PostLikeID, row.AccName, row.PostID));
     }
 
+    // get post likes that belong to post with post id
     static async getPostLikesByPost(postId) {
         const connection = await sql.connect(dbConfig);
 
@@ -36,6 +41,7 @@ class PostLike {
         return result.recordset.map((row) => new PostLike(row.PostLikeID, row.AccName, row.PostID));
     }
 
+    // create post like
     static async createPostLike(newPostLikeData) {
         const connection = await sql.connect(dbConfig);
 
@@ -50,6 +56,7 @@ class PostLike {
         connection.close();
     }
 
+    // delete post like
     static async deletePostLike(accName, postId) {
         const connection = await sql.connect(dbConfig);
 
@@ -67,4 +74,5 @@ class PostLike {
     }
 }
 
+// export post like
 module.exports = PostLike;
