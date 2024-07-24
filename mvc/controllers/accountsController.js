@@ -29,6 +29,7 @@ module.exports = {
     getAccountById,
 };*/
 
+
 const sql = require("mssql");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -152,9 +153,36 @@ const updateProfile = async (req, res) => {
         return res.status(400).send('Invalid value for gender. Allowed values are "Male" and "Female".');
     }
 
+    let transaction;
+
     try {
         const pool = await sql.connect(dbConfig);
-        const query = `
+        transaction = new sql.Transaction(pool);
+        await transaction.begin();
+
+        // Create a request for checking username existence
+        const checkUsernameRequest = new sql.Request(transaction);
+        const checkUsernameQuery = `
+            SELECT COUNT(*) as count
+            FROM Account
+            WHERE AccName = @newUsername
+        `;
+        const usernameCheckResult = await checkUsernameRequest
+            .input('newUsername', sql.VarChar, username)
+            .query(checkUsernameQuery);
+
+        if (usernameCheckResult.recordset[0].count > 0) {
+            await transaction.rollback();
+            return res.status(400).send('The new username already exists.');
+        }
+
+        // Disable foreign key constraints
+        const disableFKRequest = new sql.Request(transaction);
+        await disableFKRequest.query('ALTER TABLE Feedback NOCHECK CONSTRAINT ALL');
+
+        // Create a request for updating the account
+        const accountUpdateRequest = new sql.Request(transaction);
+        const queryAccountUpdate = `
             UPDATE Account
             SET 
                 AccName = @newUsername,
@@ -164,26 +192,56 @@ const updateProfile = async (req, res) => {
                 Gender = @newGender
             WHERE AccEmail = @currentEmail
         `;
-
-        const result = await pool.request()
+        await accountUpdateRequest
             .input('newUsername', sql.VarChar, username)
             .input('newEmail', sql.VarChar, email)
             .input('newPhoneNumber', sql.VarChar, phoneNumber || null)
             .input('newEmailNotification', sql.VarChar, emailNotification || 'Not allowed')
             .input('newGender', sql.VarChar, gender || 'NIL')
             .input('currentEmail', sql.VarChar, currentEmail)
-            .query(query);
+            .query(queryAccountUpdate);
 
-        if (result.rowsAffected[0] > 0) {
-            res.json({ message: 'Profile updated successfully' });
-        } else {
-            res.status(404).send('User not found');
-        }
+        // Create a request for updating the feedback
+        const feedbackUpdateRequest = new sql.Request(transaction);
+        const queryFeedbackUpdate = `
+            UPDATE Feedback
+            SET 
+                Username = @newUsername
+            WHERE Username = (
+                SELECT AccName
+                FROM Account
+                WHERE AccEmail = @currentEmail
+            )
+        `;
+        await feedbackUpdateRequest
+            .input('newUsername', sql.VarChar, username)
+            .input('currentEmail', sql.VarChar, currentEmail)
+            .query(queryFeedbackUpdate);
+
+        // Re-enable foreign key constraints
+        const enableFKRequest = new sql.Request(transaction);
+        await enableFKRequest.query('ALTER TABLE Feedback CHECK CONSTRAINT ALL');
+
+        await transaction.commit();
+
+        res.json({ message: 'Profile updated successfully' });
     } catch (err) {
+        if (transaction) await transaction.rollback();
         console.error('Database error:', err);
         res.status(500).send('Failed to update profile');
     }
 };
+
+
+
+
+
+
+
+
+
+
+
 
 const deleteAccount = async (req, res) => {
     const { username, email } = req.body;
@@ -366,6 +424,7 @@ module.exports = {
     promoteUser,
     demoteUser,
 };
+
 
 /*const Account = require("../models/account");
 

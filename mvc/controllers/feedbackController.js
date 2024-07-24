@@ -39,7 +39,7 @@ const updateFeedback = async (req, res) => {
     const { feedbackID } = req.params;
     const { rating, feedback } = req.body;
 
-    if (!rating || !feedback) {
+    if (!feedbackID || !rating || !feedback) {
         return res.status(400).send({ success: false, message: 'All fields are required' });
     }
 
@@ -50,7 +50,7 @@ const updateFeedback = async (req, res) => {
             .input('RatingStar', sql.Int, rating)
             .input('FeedbackDescription', sql.VarChar, feedback)
             .query(`UPDATE Feedback 
-                    SET RatingStar = @RatingStar, FeedbackDescription = @FeedbackDescription 
+                    SET RatingStar = @RatingStar, FeedbackDescription = @FeedbackDescription
                     WHERE FeedbackID = @FeedbackID`);
 
         res.status(200).send({ success: true, message: 'Feedback updated successfully' });
