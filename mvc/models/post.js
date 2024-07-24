@@ -27,6 +27,16 @@ class Post {
         return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.PostDate, row.PostEventDate, row.OwnerID, row.DscName));
     }
 
+    // get all posts from public discussions
+    static async getAllPublicPosts() {
+        const connection = await sql.connect(dbConfig);
+        const sqlQuery = `SELECT p.* FROM Post p JOIN Discussion d ON p.DscName = d.DscName AND d.DscType = 'Public';`;
+        const result = await connection.request().query(sqlQuery);
+        connection.close();
+
+        return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.PostDate, row.PostEventDate, row.OwnerID, row.DscName));
+    }
+
     // get post by post id
     static async getPostById(postId) {
         const connection = await sql.connect(dbConfig);

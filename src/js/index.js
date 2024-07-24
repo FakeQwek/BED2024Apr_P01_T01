@@ -7,6 +7,9 @@ const searchResultsContainer = document.getElementById("searchResultsContainer")
 
 // set variables
 let accountName;
+apikey = "ad61a3b55ab20ed21479950c798b39d9";
+url = 'https://gnews.io/api/v4/top-headlines?category=health&lang=en&country=sg&max=10&apikey=' + apikey;
+let news = [];
 
 // function that checks if the username in the get request matches with the username in the jwt token
 async function checkAccountName() {
@@ -86,11 +89,12 @@ async function createDiscussion() {
 
 // function to get random posts from random public discussions
 async function Posts() {
-    const res = await fetch("http://localhost:3000/posts");
+    const res = await fetch("http://localhost:3000/publicPosts");
     const posts = await res.json();
 
-    for (let i = 0; i < posts.length; i++) {
-        const homePostsHTML = `<div class="flex justify-center w-full">
+    for (let j = 0; j < 3; j++) {
+        for (let i = 0; i < 5; i++) {
+            const homePostsHTML = `<div class="flex justify-center w-full">
                                     <div class="card w-5/6 bg-white">
                                         <div class="card-body">
                                             <div class="flex justify-between">
@@ -135,13 +139,33 @@ async function Posts() {
                                     </div>
                                 </div>`;
 
+            homePosts.insertAdjacentHTML("beforeend", homePostsHTML);
+        }
+        let randomNews = news[Math.floor(Math.random() * 10)];
+
+        const homePostsHTML = `<div class="flex justify-center w-full">
+                                    <div class="card w-5/6 bg-white">
+                                        <div class="card-body">
+                                            <div class="flex justify-between">
+                                                <div class="flex items-center gap-2">
+                                                    <img src="../images/account-circle-outline.svg" width="30px" />
+                                                    <h2 class="text-md">` + randomNews.source.name + `</h2>
+                                                </div>
+                                            </div>
+                                            <h2 class="card-title">` + randomNews.title + `</h2>
+                                            <img class="rounded" src=` + randomNews.image + `>
+                                            <p>` + randomNews.description + `</p>
+                                        </div>
+                                    </div>
+                                </div>`;
+
         homePosts.insertAdjacentHTML("beforeend", homePostsHTML);
     }
 }
 
-// searchBar.addEventListener("focusout", () => {
-//     searchResultsContainer.classList.add("invisible");
-// })
+searchBar.addEventListener("focusout", () => {
+    searchResultsContainer.classList.add("invisible");
+})
 
 // function to search all discussions
 async function searchDiscussions(searchTerm) {
@@ -247,5 +271,24 @@ function goToProfile(accName) {
     window.location.href = url;
 }
 
-Posts();
+async function getNews() {
+    fetch(url)
+    .then(res => {
+        if(!res.ok){
+            throw new Error('Error retrieving news');
+        }
+        return res.json();
+    })
+    .then(newsData => {
+        for (i = 0; i < 10; i++) {
+            news.push(newsData.articles[i])
+        }
+        Posts();
+    })
+    .catch(error => {
+        console.error(error);
+    });
+}
+
+getNews();
 sidebar();
