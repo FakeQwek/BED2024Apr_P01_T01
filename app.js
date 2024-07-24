@@ -30,9 +30,10 @@ const verifyPostOwner = require("./mvc/middlewares/verifyPostOwner");
 const verifyDiscussionMember = require("./mvc/middlewares/verifyDiscussionMember");
 const verifyCommentOwner = require("./mvc/middlewares/verifyCommentOwner");
 const verifyAccount = require("./mvc/middlewares/verifyAccount");
+const verifyDiscussionAdmin = require("./mvc/middlewares/verifyDiscussionAdmin");
 
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
 
 const JWT_SECRET = '3f3a94e1c0b5f11a8e0f2747d2a5e2f7a9a1c3b7d4d6e1e2f7b8c9d1a3e4f6a2';
 
@@ -84,6 +85,7 @@ app.get("/mutedaccounts", accountsController.getAccountsIsMuted);
 
 // Post routes
 app.get("/posts", postsController.getAllPosts); // admin
+app.get("/publicPosts", postsController.getAllPublicPosts)
 app.get("/posts/:dscName", verifyDiscussionMember, postsController.getPostsByDiscussion); // member
 app.get("/postsOrderByLikes/:dscName", verifyDiscussionMember, postsController.getPostsByDiscussionOrderByLikes); // member
 app.get("/post/:postId", postsController.getPostById); // public

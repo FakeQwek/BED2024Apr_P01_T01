@@ -10,6 +10,16 @@ const getAllPosts = async (req, res) => {
     }
 };
 
+const getAllPublicPosts = async (req, res) => {
+    try {
+        const posts = await Post.getAllPublicPosts();
+        res.json(posts);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Error retrieving posts");
+    }
+}
+
 const getPostById = async (req, res) => {
     const postId = req.params.postId;
     try {
@@ -125,6 +135,7 @@ const approvePost = async (req, res) => {
 
 module.exports = {
     getAllPosts,
+    getAllPublicPosts,
     getPostById,
     getPostOwnerByPostId,
     getPostsByDiscussion,
