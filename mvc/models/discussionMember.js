@@ -92,6 +92,100 @@ class DiscussionMember {
 
         return result;
     }
+
+    static async getAccountsIsBanned(dscName) {
+        const connection = await sql.connect(dbConfig);
+        const sqlQuery = `SELECT * FROM DiscussionMember WHERE isBanned = 'True' AND DscName = @dscName`;
+        const request = connection.request();
+        request.input("dscName", sql.VarChar, dscName);
+        const result = await request.query(sqlQuery);
+        connection.close();
+        return result.recordset.map((row) => new DiscussionMember(
+            row.DscMemID,
+            row.DscMemRole,
+            row.isMuted,
+            row.isBanned,
+            row.AccName,
+            row.DscName
+        ));
+    }
+
+    static async banUser(accName, dscName) {
+        const connection = await sql.connect(dbConfig);
+        const sqlQuery = `UPDATE DiscussionMember SET isBanned = 'True' WHERE AccName = @accName AND DscName = @dscName`;
+        const request = connection.request();
+        request.input("accName", sql.VarChar, accName);
+        request.input("dscName", sql.VarChar, dscName);
+        await request.query(sqlQuery);
+        connection.close();
+    }
+
+    static async unbanAccount(accName, dscName) {
+        const connection = await sql.connect(dbConfig);
+        const sqlQuery = `UPDATE DiscussionMember SET isBanned = 'False' WHERE AccName = @accName AND DscName = @dscName`;
+        const request = connection.request();
+        request.input("accName", sql.VarChar, accName);
+        request.input("dscName", sql.VarChar, dscName);
+        await request.query(sqlQuery);
+        connection.close();
+    }
+
+    static async getAccountsIsMuted(dscName) {
+        const connection = await sql.connect(dbConfig);
+        const sqlQuery = `SELECT * FROM DiscussionMember WHERE isMuted = 'True' AND DscName = @dscName`;
+        const request = connection.request();
+        request.input("dscName", sql.VarChar, dscName);
+        const result = await request.query(sqlQuery);
+        connection.close();
+        return result.recordset.map((row) => new DiscussionMember(
+            row.DscMemID,
+            row.DscMemRole,
+            row.isMuted,
+            row.isBanned,
+            row.AccName,
+            row.DscName
+        ));
+    }
+
+    static async muteUser(accName, dscName) {
+        const connection = await sql.connect(dbConfig);
+        const sqlQuery = `UPDATE DiscussionMember SET isMuted = 'True' WHERE AccName = @accName AND DscName = @dscName`;
+        const request = connection.request();
+        request.input("accName", sql.VarChar, accName);
+        request.input("dscName", sql.VarChar, dscName);
+        await request.query(sqlQuery);
+        connection.close();
+    }
+
+    static async unmuteAccount(accName, dscName) {
+        const connection = await sql.connect(dbConfig);
+        const sqlQuery = `UPDATE DiscussionMember SET isMuted = 'False' WHERE AccName = @accName AND DscName = @dscName`;
+        const request = connection.request();
+        request.input("accName", sql.VarChar, accName);
+        request.input("dscName", sql.VarChar, dscName);
+        await request.query(sqlQuery);
+        connection.close();
+    }
+
+    static async promoteUser(accName, dscName) {
+        const connection = await sql.connect(dbConfig);
+        const sqlQuery = `UPDATE DiscussionMember SET DscMemRole = 'Admin' WHERE AccName = @accName AND DscName = @dscName`;
+        const request = connection.request();
+        request.input("accName", sql.VarChar, accName);
+        request.input("dscName", sql.VarChar, dscName);
+        await request.query(sqlQuery);
+        connection.close();
+    }
+
+    static async demoteUser(accName, dscName) {
+        const connection = await sql.connect(dbConfig);
+        const sqlQuery = `UPDATE DiscussionMember SET DscMemRole = 'Member' WHERE AccName = @accName AND DscName = @dscName`;
+        const request = connection.request();
+        request.input("accName", sql.VarChar, accName);
+        request.input("dscName", sql.VarChar, dscName);
+        await request.query(sqlQuery);
+        connection.close();
+    }
 }
 
 // export discussion member

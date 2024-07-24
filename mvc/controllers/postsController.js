@@ -112,6 +112,20 @@ const deletePost = async (req, res) => {
     }
 };
 
+const admindeletePost = async (req, res) => {
+    const postId = req.params.postId;
+    try {
+        const success = await Post.deletePost(postId);
+        if (!success) {
+            return res.status(404).send("Post not found");
+        }
+        res.status(204).send();
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Error deleting post");
+    }
+};
+
 const approvePost = async (req, res) => {
     const postId = req.params.postId;
     try {
@@ -134,4 +148,5 @@ module.exports = {
     updatePost,
     getUnapprovedPostsByDiscussion,
     approvePost,
+    admindeletePost
 };
