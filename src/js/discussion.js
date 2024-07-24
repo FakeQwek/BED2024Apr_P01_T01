@@ -4,7 +4,7 @@ const urlParams = new URLSearchParams(queryString);
 const discussionName = urlParams.get("discussionName");
 
 // set variables
-let accountName = 'zultest';
+let accountName;
 let isAdmin = false;
 let isMember = false;
 let isMuted = false;
@@ -363,7 +363,7 @@ async function DiscussionMembers() {
     }
 
     for (let i = 0; i < discussionMembers.length; i++) {
-        if (discussionMembers[i].accName == accountName && discussionMembers[i].dscName == discussionName && discussionMembers[i].dscMemRole == 'admin') {
+        if (discussionMembers[i].accName == accountName && discussionMembers[i].dscName == discussionName && discussionMembers[i].dscMemRole == 'Admin') {
             isAdmin = true;
             
             if (discussionMembers[i].isMuted == "True") {
