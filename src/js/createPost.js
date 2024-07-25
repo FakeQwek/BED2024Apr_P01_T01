@@ -34,6 +34,8 @@ async function checkAccountName() {
 
     // stores the account name in the accountName variable if username matches
     accountName = account.accName;
+
+    sidebar();
 }
 
 checkAccountName();
@@ -216,4 +218,3 @@ function goToProfile(accName) {
 }
 
 Discussion();
-sidebar();

@@ -89,6 +89,7 @@ app.get("/posts", postsController.getAllPosts); // admin
 app.get("/publicPosts", postsController.getAllPublicPosts)
 app.get("/posts/:dscName", verifyDiscussionMember, postsController.getPostsByDiscussion); // member
 app.get("/postsOrderByLikes/:dscName", verifyDiscussionMember, postsController.getPostsByDiscussionOrderByLikes); // member
+app.get("/postsOrderByDate/:dscName", verifyDiscussionMember, postsController.getPostsByDiscussionOrderByPostDate); // member
 app.get("/post/:postId", postsController.getPostById); // public
 app.get("/postOwner/:postId", postsController.getPostOwnerByPostId); // public
 app.post("/post/:dscName", verifyDiscussionMember, postsController.createPost); // member

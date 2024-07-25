@@ -28,6 +28,8 @@ async function checkAccountName() {
     }
 
     accountName = account.accName;
+
+    sidebar();
 }
 
 checkAccountName();
@@ -214,6 +216,7 @@ async function createPostReport(postId) {
 async function sidebar() {
     const res = await fetch("http://localhost:3000/discussionMemberTop3Discussions/" + accountName);
     const discussionMembers = await res.json();
+    console.log(discussionMembers);
 
     const joinedDiscussions = document.getElementById("joinedDiscussions");
     
@@ -291,4 +294,3 @@ async function getNews() {
 }
 
 getNews();
-sidebar();

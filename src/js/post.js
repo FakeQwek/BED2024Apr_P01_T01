@@ -85,9 +85,9 @@ async function Post() {
 
     // set post details in variables
     postNameHTML = `<h2>` + post.postName + '</h2>';
-    postDescHTML = '<p>' + post.postDesc + '<p>';
-    postAccountHTML = '<p>' + post.accName + '<p>';
-    postDateHTML = '<p>' + post.postDate + '<p>';
+    postDescHTML = `<p>` + post.postDesc + `<p>`;
+    postAccountHTML = `<p onclick="goToProfile('` + post.accName + `')">` + post.accName + `<p>`;
+    postDateHTML = `<p>` + post.postDate + `<p>`;
 
     // if user is the post owner show them additional options to delete and edit the post
     if (post.accName == accountName) {
@@ -115,7 +115,7 @@ async function Comments() {
                                         <div class="flex justify-between">
                                             <div class="flex items-center gap-2">
                                                 <img src="../images/account-circle-outline.svg" width="30px" />
-                                                <h2>` + comments[i].accName + `</h2>
+                                                <h2 onclick="goToProfile('` + comments[i].accName + `')">` + comments[i].accName + `</h2>
                                             </div>
                                             <!-- options dropdown -->
                                             <div class="dropdown dropdown-end">
@@ -175,7 +175,7 @@ async function createComment() {
         method: "POST",
         body: JSON.stringify({
             cmtDesc: commentDesc.value,
-            accName: "box",
+            accName: accountName,
             postId: postId
         }),
         headers: {
@@ -249,7 +249,7 @@ async function createPostReport() {
         body: JSON.stringify({
             postRptCat: postReportCat.value,
             postRptDesc: postReportDesc.value,
-            accName: "box",
+            accName: accountName,
             postId: postId
         }),
         headers: {
@@ -269,7 +269,7 @@ async function createDiscussionReport() {
         body: JSON.stringify({
             dscRptCat: dscReportCat.value,
             dscRptDesc: dscReportDesc.value,
-            accName: "box",
+            accName: accountName,
             dscName: discussionName
         }),
         headers: {
