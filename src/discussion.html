@@ -22,8 +22,8 @@
             </div>
         </div>
         <div id="loginSignUp" class="flex justify-end items-center w-1/4">
-            <button class="btn btn-sm mr-4 max-[820px]:hidden">Login</button>
-            <button class="btn btn-sm mr-4 max-[820px]:hidden">Sign Up</button>
+            <a href="./Login.html"><button class="btn btn-sm mr-4 max-[820px]:hidden">Login</button></a>
+            <a href="signup.html"><button class="btn btn-sm mr-4 max-[820px]:hidden">Sign Up</button></a>
         </div>
     </div>
 
@@ -47,6 +47,7 @@
                         <li><a href="./index.html"><span class="flex items-center w-full gap-2"><img src="../images/home-variant-outline.svg" width="30px" />Home</span></a></li>
                         <li><a href="./profile.html"><span class="flex items-center w-full gap-2"><img src="../images/account-circle-outline.svg" width="30px" />Profile</span></a></li>
                         <li><a href="./news.html"><span class="flex items-center w-full gap-2"><img src="../images/newspaper-variant-outline.svg" width="30px" />News</span></a></li>
+                        <li><a href="./countries.html"><span class="flex items-center w-full gap-2"><img src="../images/globe.svg" width="30px" />Countries</span></a></li>
                     </div>
                     <div id="joinedDiscussions" class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
                         <h2 class="font-bold mb-2">FOR YOU</h2>
@@ -54,6 +55,7 @@
                     <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
                         <h2 class="font-bold mb-2">LEARN MORE</h2>
                         <li><a href="./about.html"><span class="flex items-center w-full gap-2"><img src="../images/information-outline.svg" width="30px" />About Us</span></a></li>
+                        <li><a href="./joinUs.html"><span class="flex items-center w-full gap-2"><img src="../images/joinus.svg" width="30px" />Join Us</span></a></li>
                         <li><a href="./contact-us.html"><span class="flex items-center w-full gap-2"><img src="../images/phone-in-talk.svg" width="30px" />Contact Us</span></a></li>
                         <li><a><span class="flex items-center w-full gap-2"><img src="../images/finance.svg" width="30px" />User Statistics</span></a></li>
                     </div>
@@ -80,7 +82,7 @@
                         <div class="flex justify-between w-full h-fit mt-4">
                             <div>
                                 <button class="btn btn-sm bg-white ml-8 max-[820px]:hidden" onclick="getPostsByDiscussionOrderByLikes()"><img src="../images/fire.svg" width="20px" />Hot</button>
-                                <button class="btn btn-sm bg-white ml-4"><img src="../images/finance.svg" width="20px" />Trending</button>
+                                <button class="btn btn-sm bg-white ml-4" onclick="getPostsByDiscussionOrderByPostDate()"><img src="../images/finance.svg" width="20px" />Trending</button>
                             </div>
                             <div>
                                 <button id="joinButton" class="btn btn-sm bg-white mr-4 max-[820px]:mr-2" onclick="createDiscussionMember()"><img src="../images/plus.svg" width="20px" />Join</button>

@@ -23,6 +23,15 @@ class Post {
         return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.PostDate, row.PostEventDate, row.OwnerID, row.DscName));
     }
 
+    static async getAllPublicPosts() {
+        const connection = await sql.connect(dbConfig);
+        const sqlQuery = `SELECT p.* FROM Post p JOIN Discussion d ON p.DscName = d.DscName AND d.DscType = 'Public'`;
+        const result = await connection.request().query(sqlQuery);
+        connection.close();
+
+        return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.PostDate, row.PostEventDate, row.OwnerID, row.DscName));
+    }
+
     static async getPostById(postId) {
         const connection = await sql.connect(dbConfig);
         const sqlQuery = `SELECT * FROM Post WHERE PostID = @postId`;
@@ -54,7 +63,7 @@ class Post {
         const result = await request.query(sqlQuery);
         connection.close();
 
-        return result.recordset[0].OwnerID;
+        return result.recordset[0] ? result.recordset[0].OwnerID : null;
     }
 
     static async getPostsByDiscussion(dscName) {
@@ -70,17 +79,25 @@ class Post {
 
     static async getPostsByDiscussionOrderByLikes(dscName) {
         const connection = await sql.connect(dbConfig);
-
         const sqlQuery = `SELECT Post.PostID, Post.PostName, Post.PostDesc, Post.isEvent, Post.isApproved, Post.PostDate, Post.PostEventDate, Post.OwnerID, Post.DscName, COUNT(PostLike.PostLikeID) AS LikeCount FROM Post
                           LEFT JOIN PostLike ON Post.PostID = PostLike.PostID
                           WHERE Post.DscName = @dscName
                           GROUP BY Post.PostID, Post.PostName, Post.PostDesc, Post.isEvent, Post.isApproved, Post.PostDate, Post.PostEventDate, Post.OwnerID, Post.DscName
-                          ORDER BY LikeCount DESC;`;
-
+                          ORDER BY LikeCount DESC`;
         const request = connection.request();
         request.input("dscName", dscName);
         const result = await request.query(sqlQuery);
+        connection.close();
 
+        return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.PostDate, row.PostEventDate, row.OwnerID, row.DscName));
+    }
+
+    static async getPostsByDiscussionOrderByPostDate(dscName) {
+        const connection = await sql.connect(dbConfig);
+        const sqlQuery = `SELECT * FROM Post WHERE DscName = @dscName ORDER BY CONVERT(DATE, PostDate, 103) DESC`;
+        const request = connection.request();
+        request.input("dscName", dscName);
+        const result = await request.query(sqlQuery);
         connection.close();
 
         return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.PostDate, row.PostEventDate, row.OwnerID, row.DscName));
@@ -110,9 +127,8 @@ class Post {
 
     static async createPost(newPostData) {
         const connection = await sql.connect(dbConfig);
-        
-        const sqlQuery = `INSERT INTO Post (PostID, PostName, PostDesc, isEvent, isApproved, PostDate, PostEventDate, OwnerID, DscName) SELECT CASE WHEN COUNT(*) = 0 THEN 1 ELSE MAX(PostID) + 1 END, @postName, @postDesc, @isEvent, 'False', @postDate, @postEventDate, @accName, @dscName FROM Post;`;
-
+        const sqlQuery = `INSERT INTO Post (PostID, PostName, PostDesc, isEvent, isApproved, PostDate, PostEventDate, OwnerID, DscName) 
+                          SELECT CASE WHEN COUNT(*) = 0 THEN 1 ELSE MAX(PostID) + 1 END, @postName, @postDesc, @isEvent, 'False', @postDate, @postEventDate, @accName, @dscName FROM Post`;
         const request = connection.request();
         request.input("postName", newPostData.postName);
         request.input("postDesc", newPostData.postDesc);
@@ -127,16 +143,13 @@ class Post {
 
     static async updatePost(postId, newPostData) {
         const connection = await sql.connect(dbConfig);
-
         const sqlQuery = `UPDATE Post SET PostName = @postName, PostDesc = @postDesc, isEvent = @isEvent, PostEventDate = @postEventDate WHERE PostID = @postId`;
-
         const request = connection.request();
         request.input("postId", postId);
         request.input("postName", newPostData.postName || null);
         request.input("postDesc", newPostData.postDesc || null);
         request.input("isEvent", newPostData.isEvent);
         request.input("postEventDate", newPostData.postEventDate);
-
         await request.query(sqlQuery);
         connection.close();
 

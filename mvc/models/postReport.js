@@ -66,6 +66,18 @@ class PostReport {
 
         connection.close();
     }
+
+    static async deletePostReport(postId) {
+        const connection = await sql.connect(dbConfig);
+
+        const sqlQuery = `DELETE FROM PostReport WHERE postId = @postId`;
+
+        const request = connection.request();
+        request.input("postId", postId);
+        const result = await request.query(sqlQuery);
+
+        connection.close();
+    }
 }
 
 // export post report
