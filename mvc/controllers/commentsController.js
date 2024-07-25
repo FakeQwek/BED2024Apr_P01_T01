@@ -35,6 +35,17 @@ const getCommentOwnerByCommentId = async (req, res) => {
     }
 }
 
+const getCommentsByUser = async (req, res) => {
+    const username = req.params.username;
+    try {
+        const comments = await Comment.getCommentsByUser(username);
+        res.json(comments);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Error retrieving comments");
+    }
+};
+
 const createComment = async (req, res) => {
     const newComment = req.body;
     try {
@@ -81,4 +92,5 @@ module.exports = {
     createComment,
     updateComment,
     deleteComment,
+    getCommentsByUser,
 };

@@ -61,6 +61,16 @@ class DiscussionReport {
         connection.close();
     }
 
+    // warn discussion report
+    static async warnDiscussionReport(dscRptId) {
+        const connection = await sql.connect(dbConfig);
+        const sqlQuery = `UPDATE DiscussionReport SET Warned = 1 WHERE DscRptID = @dscRptId`;
+        const request = connection.request();
+        request.input("dscRptId", dscRptId);
+        await request.query(sqlQuery);
+        connection.close();
+    }
+
     // delete discussion report
     static async deleteDiscussionReport(dscRptId) {
         const connection = await sql.connect(dbConfig);

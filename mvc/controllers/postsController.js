@@ -60,7 +60,6 @@ const getPostsByDiscussionOrderByLikes = async (req, res) => {
     }
 };
 
-
 const getUnapprovedPostsByDiscussion = async (req, res) => {
     const dscName = req.params.dscName;
     try {
@@ -69,6 +68,17 @@ const getUnapprovedPostsByDiscussion = async (req, res) => {
     } catch (error) {
         console.error('Error fetching unapproved posts:', error);
         res.status(500).send("Error fetching unapproved posts");
+    }
+};
+
+const getPostsByUser = async (req, res) => {
+    const username = req.params.username;
+    try {
+        const posts = await Post.getPostsByUser(username);
+        res.json(posts);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Error retrieving posts");
     }
 };
 
@@ -134,4 +144,5 @@ module.exports = {
     updatePost,
     getUnapprovedPostsByDiscussion,
     approvePost,
+    getPostsByUser,
 };

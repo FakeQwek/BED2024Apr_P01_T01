@@ -305,23 +305,24 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            const username = localStorage.getItem('username') || 'banana';
-            const email = localStorage.getItem('email') || 'banana@gmail.com';
-            const emailNotification = localStorage.getItem('emailNotification') || 'Not allowed';
-            const gender = localStorage.getItem('gender') || 'NIL';
-            const language = localStorage.getItem('language') || 'English';
-            const phoneNumber = localStorage.getItem('phoneNumber') || '123-456-7890';
+    const username = localStorage.getItem('username') || 'undefined';
+    const email = localStorage.getItem('email') || 'undefined';
+    const emailNotification = localStorage.getItem('emailNotification') || 'Not allowed';
+    const gender = localStorage.getItem('gender') || 'NIL';
+    const language = localStorage.getItem('language') || 'English';
+    const phoneNumber = localStorage.getItem('phoneNumber') || '123-456-7890';
 
-            document.getElementById('profileUsername').textContent = `u:${username}`;
-            document.getElementById('profileUsernameDisplay').textContent = username;
-            document.getElementById('profileEmail').textContent = email;
-            document.getElementById('profileEmailNotification').textContent = emailNotification;
-            document.getElementById('profileGender').textContent = gender;
-            document.getElementById('profileLanguage').textContent = language;
-            document.getElementById('profilePhoneNumber').textContent = phoneNumber;
+    document.getElementById('profileUsername').textContent = `u:${username}`;
+    document.getElementById('profileUsernameDisplay').textContent = username;
+    document.getElementById('profileEmail').textContent = email;
+    document.getElementById('profileEmailNotification').textContent = emailNotification;
+    document.getElementById('profileGender').textContent = gender;
+    document.getElementById('profileLanguage').textContent = language;
+    document.getElementById('profilePhoneNumber').textContent = phoneNumber;
 
-            checkServerStatus();
-        });
+    document.getElementById('username').value = username;
+});
+
 
         function navigateToConfirmDelete() {
             window.location.href = 'confirm_delete.html';
@@ -384,51 +385,40 @@
         }
 
         function updateProfile() {
-            const username = document.getElementById('profileUsernameDisplay').textContent;
-            const email = document.getElementById('profileEmail').textContent;
-            const phoneNumber = document.getElementById('profilePhoneNumber').textContent;
-            const emailNotification = document.getElementById('profileEmailNotification').textContent;
-            const gender = document.getElementById('profileGender').textContent;
-            const language = document.getElementById('profileLanguage').textContent;
-            const currentEmail = localStorage.getItem('email');
+    const username = document.getElementById('profileUsernameDisplay').textContent;
+    const email = document.getElementById('profileEmail').textContent;
+    const phoneNumber = document.getElementById('profilePhoneNumber').textContent;
+    const emailNotification = document.getElementById('profileEmailNotification').textContent;
+    const gender = document.getElementById('profileGender').textContent;
+    const language = document.getElementById('profileLanguage').textContent;
+    const currentEmail = localStorage.getItem('email');
 
-            const allowedEmailNotifications = ['allowed', 'Not allowed'];
-            const allowedGenders = ['Male', 'Female'];
-            const allowedLanguages = ['English'];
-            const emailPattern = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
-
-            if (!allowedEmailNotifications.includes(emailNotification) || !allowedGenders.includes(gender) || !allowedLanguages.includes(language) || !/^\d{8}$/.test(phoneNumber) || !emailPattern.test(email) || username.length > 12) {
-                alert('Input field for gender, email notification, language, phone number, email, or username is not correct');
-                return;
-            }
-
-            fetch('http://localhost:3000/updateProfile', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ currentEmail, username, email, phoneNumber, emailNotification, gender })
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to update profile. Status: ' + response.status);
-                }
-                return response.json();
-            })
-            .then(data => {
-                alert('Profile updated successfully!');
-                localStorage.setItem('username', username);
-                localStorage.setItem('email', email);
-                localStorage.setItem('emailNotification', emailNotification);
-                localStorage.setItem('gender', gender);
-                localStorage.setItem('language', language);
-                localStorage.setItem('phoneNumber', phoneNumber);
-            })
-            .catch(error => {
-                console.error('Error updating profile:', error);
-                alert('Error updating profile: ' + error.message);
-            });
+    fetch('http://localhost:3000/updateProfile', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ currentEmail, username, email, phoneNumber, emailNotification, gender })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.message === 'Profile updated successfully') {
+            alert('Profile updated successfully!');
+            localStorage.setItem('username', username);
+            localStorage.setItem('email', email);
+            localStorage.setItem('emailNotification', emailNotification);
+            localStorage.setItem('gender', gender);
+            localStorage.setItem('language', language);
+            localStorage.setItem('phoneNumber', phoneNumber);
+        } else {
+            alert('Failed to update profile');
         }
+    })
+    .catch(error => {
+        console.error('Error updating profile:', error);
+    });
+}
+
     </script>
 </body>
 </html>

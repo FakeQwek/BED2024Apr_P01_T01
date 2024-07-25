@@ -24,7 +24,6 @@ const invitesController = require("./mvc/controllers/invitesController");
 const siteadminPostReportController = require("./mvc/controllers/siteadminPostReportController");
 const feedbackController = require("./mvc/controllers/feedbackController");
 
-// import middlewares
 const verifyDiscussionOwner = require("./mvc/middlewares/verifyDiscussionOwner");
 const verifyPostOwner = require("./mvc/middlewares/verifyPostOwner");
 const verifyDiscussionMember = require("./mvc/middlewares/verifyDiscussionMember");
@@ -33,7 +32,7 @@ const verifyAccount = require("./mvc/middlewares/verifyAccount");
 const verifyDiscussionAdmin = require('./mvc/middlewares/verifyDiscussionAdmin');
 
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
 
 const JWT_SECRET = '3f3a94e1c0b5f11a8e0f2747d2a5e2f7a9a1c3b7d4d6e1e2f7b8c9d1a3e4f6a2';
 
@@ -92,6 +91,7 @@ app.get("/postOwner/:postId", postsController.getPostOwnerByPostId); // public
 app.post("/post/:dscName", verifyDiscussionMember, postsController.createPost); // member
 app.put('/post/approve/:postId', postsController.approvePost);
 app.put("/post/:postId", verifyPostOwner, postsController.updatePost); // post owner
+app.get("/posts/user/:username", postsController.getPostsByUser); // New route
 
 // Discussion routes
 app.get("/discussions", discussionController.getAllDiscussions); // admin
@@ -108,6 +108,7 @@ app.get("/commentOwner/:cmtId", commentsController.getCommentOwnerByCommentId); 
 app.post("/comment/:dscName", verifyDiscussionMember, commentsController.createComment); // member
 app.put("/comment/:cmtId", verifyCommentOwner, commentsController.updateComment); // comment owner
 app.delete("/comment/:cmtId", verifyCommentOwner, commentsController.deleteComment); // comment owner
+app.get("/comments/user/:username", commentsController.getCommentsByUser); // New route
 
 // Post report routes
 app.get("/postReports", postReportsController.getAllPostReports); // admin

@@ -1,10 +1,7 @@
-// imports
 const sql = require("mssql");
 const dbConfig = require("../../dbConfig");
 
-// post class
 class Post {
-    // post constructor
     constructor(postId, postName, postDesc, isEvent, isApproved, postDate, postEventDate, accName, dscName) {
         this.postId = postId;
         this.postName = postName;
@@ -17,7 +14,6 @@ class Post {
         this.dscName = dscName;
     }
 
-    // get all posts
     static async getAllPosts() {
         const connection = await sql.connect(dbConfig);
         const sqlQuery = `SELECT * FROM Post`;
@@ -27,7 +23,6 @@ class Post {
         return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.PostDate, row.PostEventDate, row.OwnerID, row.DscName));
     }
 
-    // get post by post id
     static async getPostById(postId) {
         const connection = await sql.connect(dbConfig);
         const sqlQuery = `SELECT * FROM Post WHERE PostID = @postId`;
@@ -51,7 +46,6 @@ class Post {
             : null;
     }
 
-    // get owner of post by post id
     static async getPostOwnerByPostId(postId) {
         const connection = await sql.connect(dbConfig);
         const sqlQuery = `SELECT OwnerID FROM Post WHERE PostID = @postId`;
@@ -63,7 +57,6 @@ class Post {
         return result.recordset[0].OwnerID;
     }
 
-    // get posts that belong to discussion with discussion name
     static async getPostsByDiscussion(dscName) {
         const connection = await sql.connect(dbConfig);
         const sqlQuery = `SELECT * FROM Post WHERE DscName = @dscName`;
@@ -75,7 +68,6 @@ class Post {
         return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.PostDate, row.PostEventDate, row.OwnerID, row.DscName));
     }
 
-    // get posts that belong to discussion with discussion name ordered by likes in descending order
     static async getPostsByDiscussionOrderByLikes(dscName) {
         const connection = await sql.connect(dbConfig);
 
@@ -105,7 +97,17 @@ class Post {
         return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.PostDate, row.PostEventDate, row.OwnerID, row.DscName));
     }
 
-    // create post
+    static async getPostsByUser(username) {
+        const connection = await sql.connect(dbConfig);
+        const sqlQuery = `SELECT * FROM Post WHERE OwnerID = @username`;
+        const request = connection.request();
+        request.input("username", username);
+        const result = await request.query(sqlQuery);
+        connection.close();
+
+        return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.PostDate, row.PostEventDate, row.OwnerID, row.DscName));
+    }
+
     static async createPost(newPostData) {
         const connection = await sql.connect(dbConfig);
         
@@ -123,7 +125,6 @@ class Post {
         connection.close();
     }
 
-    // update post
     static async updatePost(postId, newPostData) {
         const connection = await sql.connect(dbConfig);
 
@@ -142,7 +143,6 @@ class Post {
         return this.getPostById(postId);
     }
 
-    // delete post
     static async deletePost(postId) {
         const connection = await sql.connect(dbConfig);
         const sqlQuery = `DELETE FROM Post WHERE PostID = @postId`;
@@ -162,5 +162,4 @@ class Post {
     }
 }
 
-// export post
 module.exports = Post;

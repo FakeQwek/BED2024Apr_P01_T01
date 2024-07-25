@@ -95,38 +95,9 @@ const login = async (req, res) => {
         const user = result.recordset[0];
         const passwordMatch = await bcrypt.compare(password, user.Password);
 
-        const response = await fetch("http://localhost:3000/discussions");
-        const allDiscussions = await response.json();
-
-        let userDiscussions = [];
-
-        for (let i = 0; i < allDiscussions.length; i++) {
-            if (allDiscussions[i].accName == "box") {
-                userDiscussions.push(allDiscussions[i].dscName);
-            }
-        }
-
-        const response2 = await fetch("http://localhost:3000/posts");
-        const allPosts = await response2.json();
-
-        let userPosts = [];
-
-        for (let i = 0; i < allPosts.length; i++) {
-            if (allPosts[i].accName == "box") {
-                userPosts.push(allPosts[i].postId);
-            }
-        }
-
-        const payload = {
-            username: user.AccName,
-            email: user.AccEmail,
-            discussionOwner: userDiscussions,
-            postOwner: userPosts
-        }
-
         if (passwordMatch) {
-            const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
-            res.status(200).json({ token, payload });
+            const token = jwt.sign({ username: user.AccName, email: user.AccEmail }, JWT_SECRET, { expiresIn: '1h' });
+            res.status(200).json({ token, username: user.AccName, email: user.AccEmail });
         } else {
             return res.status(401).send('Invalid credentials');
         }
@@ -143,16 +114,6 @@ const updateProfile = async (req, res) => {
         return res.status(400).send('Current email, Username, and New email are required');
     }
 
-    const allowedEmailNotifications = ['allowed', 'Not allowed'];
-    if (emailNotification && !allowedEmailNotifications.includes(emailNotification)) {
-        return res.status(400).send('Invalid value for email notifications. Allowed values are "allowed" and "Not allowed".');
-    }
-
-    const allowedGenders = ['Male', 'Female'];
-    if (gender && !allowedGenders.includes(gender)) {
-        return res.status(400).send('Invalid value for gender. Allowed values are "Male" and "Female".');
-    }
-
     let transaction;
 
     try {
@@ -160,7 +121,7 @@ const updateProfile = async (req, res) => {
         transaction = new sql.Transaction(pool);
         await transaction.begin();
 
-        // Create a request for checking username existence
+        // Check if the new username already exists
         const checkUsernameRequest = new sql.Request(transaction);
         const checkUsernameQuery = `
             SELECT COUNT(*) as count
@@ -176,11 +137,29 @@ const updateProfile = async (req, res) => {
             return res.status(400).send('The new username already exists.');
         }
 
-        // Disable foreign key constraints
-        const disableFKRequest = new sql.Request(transaction);
-        await disableFKRequest.query('ALTER TABLE Feedback NOCHECK CONSTRAINT ALL');
+        // Temporarily remove foreign key constraint in Feedback table
+        const removeFKConstraintRequest = new sql.Request(transaction);
+        const removeFKConstraintQuery = `
+            ALTER TABLE Feedback NOCHECK CONSTRAINT FK__Feedback__Userna__00AA174D
+        `;
+        await removeFKConstraintRequest.query(removeFKConstraintQuery);
 
-        // Create a request for updating the account
+        // Update the feedback table first
+        const feedbackUpdateRequest = new sql.Request(transaction);
+        const queryFeedbackUpdate = `
+            UPDATE Feedback
+            SET 
+                Username = @newUsername
+            WHERE Username = (
+                SELECT AccName FROM Account WHERE AccEmail = @currentEmail
+            )
+        `;
+        await feedbackUpdateRequest
+            .input('newUsername', sql.VarChar, username)
+            .input('currentEmail', sql.VarChar, currentEmail)
+            .query(queryFeedbackUpdate);
+
+        // Update the account
         const accountUpdateRequest = new sql.Request(transaction);
         const queryAccountUpdate = `
             UPDATE Account
@@ -201,36 +180,26 @@ const updateProfile = async (req, res) => {
             .input('currentEmail', sql.VarChar, currentEmail)
             .query(queryAccountUpdate);
 
-        // Create a request for updating the feedback
-        const feedbackUpdateRequest = new sql.Request(transaction);
-        const queryFeedbackUpdate = `
-            UPDATE Feedback
-            SET 
-                Username = @newUsername
-            WHERE Username = (
-                SELECT AccName
-                FROM Account
-                WHERE AccEmail = @currentEmail
-            )
+        // Reinstate the foreign key constraint
+        const reinstateFKConstraintRequest = new sql.Request(transaction);
+        const reinstateFKConstraintQuery = `
+            ALTER TABLE Feedback CHECK CONSTRAINT FK__Feedback__Userna__00AA174D
         `;
-        await feedbackUpdateRequest
-            .input('newUsername', sql.VarChar, username)
-            .input('currentEmail', sql.VarChar, currentEmail)
-            .query(queryFeedbackUpdate);
-
-        // Re-enable foreign key constraints
-        const enableFKRequest = new sql.Request(transaction);
-        await enableFKRequest.query('ALTER TABLE Feedback CHECK CONSTRAINT ALL');
+        await reinstateFKConstraintRequest.query(reinstateFKConstraintQuery);
 
         await transaction.commit();
 
         res.json({ message: 'Profile updated successfully' });
+
     } catch (err) {
         if (transaction) await transaction.rollback();
         console.error('Database error:', err);
         res.status(500).send('Failed to update profile');
     }
 };
+
+
+
 
 
 

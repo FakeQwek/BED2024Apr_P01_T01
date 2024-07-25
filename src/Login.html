@@ -212,55 +212,55 @@
 
     <script>
         document.getElementById('loginForm').addEventListener('submit', async function(event) {
-        event.preventDefault();
+            event.preventDefault();
         
-        const usernameOrEmail = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-        const loginMessage = document.getElementById('loginMessage');
+            const usernameOrEmail = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const loginMessage = document.getElementById('loginMessage');
 
-        // Email validation regex for @gmail.com addresses only
-        const emailRegex = /^[^\s@]+@gmail\.com$/;
-        // Password length validation
-        const isPasswordValid = password.length <= 12;
+            // Email validation regex for @gmail.com addresses only
+            const emailRegex = /^[^\s@]+@gmail\.com$/;
+            // Password length validation
+            const isPasswordValid = password.length <= 12;
 
-        if (!emailRegex.test(usernameOrEmail)) {
-            loginMessage.innerHTML = '<p class="text-red-600">Invalid email format. Must be in the format "test1@gmail.com".</p>';
-            return;
-        }
+            if (!emailRegex.test(usernameOrEmail)) {
+                loginMessage.innerHTML = '<p class="text-red-600">Invalid email format. Must be in the format "test1@gmail.com".</p>';
+                return;
+            }
 
-        if (!isPasswordValid) {
-            loginMessage.innerHTML = '<p class="text-red-600">Password cannot be more than 12 characters.</p>';
-            return;
-        }
+            if (!isPasswordValid) {
+                loginMessage.innerHTML = '<p class="text-red-600">Password cannot be more than 12 characters.</p>';
+                return;
+            }
 
-        const response = await fetch('http://localhost:3000/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ usernameOrEmail, password })
+            const response = await fetch('http://localhost:3000/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ usernameOrEmail, password })
+            });
+
+            if (response.ok) {
+                const userData = await response.json();
+                loginMessage.innerHTML = '<p class="text-green-600">Login successful!</p>';
+                
+                localStorage.setItem('username', userData.username);
+                localStorage.setItem('email', userData.email);
+                localStorage.setItem('token', userData.token);
+
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 3000);
+            } else {
+                const errorMessage = await response.text();
+                loginMessage.innerHTML = `<p class="text-red-600">${errorMessage}</p>`;
+            }
         });
 
-        if (response.ok) {
-            const userData = await response.json();
-            loginMessage.innerHTML = '<p class="text-green-600">Login successful!</p>';
-            
-            localStorage.setItem('username', userData.username);
-            localStorage.setItem('email', userData.email);
-            localStorage.setItem('token', userData.token);
-
-            setTimeout(() => {
-                window.location.href = 'index.html';
-            }, 3000);
-        } else {
-            const errorMessage = await response.text();
-            loginMessage.innerHTML = `<p class="text-red-600">${errorMessage}</p>`;
-        }
-    });
-
-    document.getElementById('signupButton').addEventListener('click', function() {
-        window.location.href = 'signup.html';
-    });
+        document.getElementById('signupButton').addEventListener('click', function() {
+            window.location.href = 'signup.html';
+        });
     </script>
 </body>
 </html>
