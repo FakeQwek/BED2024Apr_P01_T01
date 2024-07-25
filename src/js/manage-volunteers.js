@@ -26,6 +26,7 @@ async function checkAccountName() {
     accountName = account.accName;
 
     Post();
+    sidebar();
 }
 
 checkAccountName();
@@ -127,7 +128,7 @@ async function approveVolunteerAsync(volId) {
 
 // function to get user details to be displayed on the sidebar
 async function sidebar() {
-    const res = await fetch("http://localhost:3000/discussionMemberTop3Discussions/" + "AppleTan");
+    const res = await fetch("http://localhost:3000/discussionMemberTop3Discussions/" + accountName);
     const discussionMembers = await res.json();
 
     const joinedDiscussions = document.getElementById("joinedDiscussions");
@@ -176,4 +177,3 @@ function goToProfile(accName) {
 }
 
 Volunteers();
-sidebar();

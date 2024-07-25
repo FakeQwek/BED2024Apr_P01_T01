@@ -104,6 +104,21 @@ class Post {
         return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.PostDate, row.PostEventDate, row.OwnerID, row.DscName));
     }
 
+    // get posts that belong to discussion with discussion name ordered by post date in descending order
+    static async getPostsByDiscussionOrderByPostDate(dscName) {
+        const connection = await sql.connect(dbConfig);
+
+        const sqlQuery = `SELECT * FROM Post ORDER BY CONVERT(DATE, PostDate, 103) DESC;`;
+
+        const request = connection.request();
+        request.input("dscName", dscName);
+        const result = await request.query(sqlQuery);
+
+        connection.close();
+
+        return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.PostDate, row.PostEventDate, row.OwnerID, row.DscName));
+    }
+
     static async getUnapprovedPostsByDiscussion(dscName) {
         const connection = await sql.connect(dbConfig);
         const sqlQuery = `SELECT * FROM Post WHERE DscName = @dscName AND isApproved = 'False'`;
