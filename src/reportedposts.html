@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="output.css" rel="stylesheet">
-    <title>- Reported Posts</title>
+    <title>Reported Posts</title>
     <style>
         .content-container {
             overflow-y: auto;
@@ -97,9 +97,9 @@
                 <div class="flex flex-col bg-white p-4 rounded-lg shadow">
                     <div class="flex justify-between items-center border-b pb-4 mb-4">
                         <div class="flex items-center gap-8">
-                            <a href="reportedposts.html" class="underline-animation active text-gray-700 font-bold border-b-2 border-gray-700 pb-2">Reported posts</a>
-                            <a href="bannedusers.html" class="underline-animation text-gray-500 pb-2">Banned users</a>
-                            <a href="mutedusers.html" class="underline-animation text-gray-500 pb-2">Muted users</a>
+                            <a href="#" class="underline-animation active text-gray-700 font-bold border-b-2 border-gray-700 pb-2">Reported posts</a>
+                            <a href="#" class="underline-animation text-gray-500 pb-2" onclick = "gotobannedusers()">Banned users</a>
+                            <a href="#" class="underline-animation text-gray-500 pb-2" onclick = "gotomutedusers()">Muted users</a>
                         </div>
                     </div>
 
@@ -119,6 +119,8 @@
             </div>
         </div>
     </div>
+
+
     <script src="./js/reportedposts.js"></script>
     <script>
         // JavaScript for tab navigation

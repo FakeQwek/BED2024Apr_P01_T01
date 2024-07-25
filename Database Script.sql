@@ -156,7 +156,9 @@ CREATE TABLE BanInfo (
     banDate DATETIME NOT NULL DEFAULT GETDATE(),
     banReason varchar(255) NOT NULL,
     bannedBy varchar(16) NOT NULL,
-    CONSTRAINT FK_Account_BanInfo FOREIGN KEY (AccName) REFERENCES Account (AccName)
+    DscName varchar(16) NOT NULL,
+    CONSTRAINT FK_Account_BanInfo FOREIGN KEY (AccName) REFERENCES Account (AccName),
+    CONSTRAINT FK_DscName_BanInfo FOREIGN KEY (DscName) REFERENCES Discussion (DscName)
 );
 
 CREATE TABLE MuteInfo (
@@ -164,7 +166,9 @@ CREATE TABLE MuteInfo (
     muteDate DATETIME NOT NULL DEFAULT GETDATE(),
     muteReason VARCHAR(255) NOT NULL,
     mutedBy VARCHAR(16) NOT NULL,
-    CONSTRAINT FK_Account_MuteInfo FOREIGN KEY (AccName) REFERENCES Account (AccName)
+    DscName varchar(16) NOT NULL,
+    CONSTRAINT FK_Account_MuteInfo FOREIGN KEY (AccName) REFERENCES Account (AccName),
+    CONSTRAINT FK_DscName_MuteInfo FOREIGN KEY (DscName) REFERENCES Discussion (DscName)
 );
 
 CREATE TABLE Question (

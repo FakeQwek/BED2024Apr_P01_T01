@@ -19,7 +19,7 @@ class Comment {
         const result = await connection.request().query(sqlQuery);
         connection.close();
 
-        return result.recordset.map(row => new Comment(row.CmtID, row.CmtDesc, row.OwnerID, row.PostID));
+        return result.recordset.map(row => new Comment(row.CmtID, row.CmtDesc, row.OwnerID, row.PostId));
     }
 
     // get comments that belong to post with post id
@@ -86,6 +86,18 @@ class Comment {
 
         const request = connection.request();
         request.input("cmtId", cmtId);
+
+        await request.query(sqlQuery);
+        connection.close();
+    }
+
+    static async deleteCommentsByPost(postId) {
+        const connection = await sql.connect(dbConfig);
+
+        const sqlQuery = `DELETE FROM Comment WHERE postId  = @postId`;
+
+        const request = connection.request();
+        request.input("PostID", sql.VarChar, postId);
 
         await request.query(sqlQuery);
         connection.close();

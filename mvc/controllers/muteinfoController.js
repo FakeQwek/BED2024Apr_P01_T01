@@ -4,8 +4,9 @@ const MuteInfo = require("../models/muteinfo.js");
 
 const getMuteInfo = async (req, res) => {
     const accName = req.params.accName;
+    const dscName = req.params.dscName;
     try {
-        const muteInfo = await MuteInfo.getMuteInfoByAccount(accName);
+        const muteInfo = await MuteInfo.getMuteInfoByAccount(accName, dscName);
         if (muteInfo.length === 0) {
             return res.status(404).send("No mute information found for this user");
         }
@@ -17,9 +18,9 @@ const getMuteInfo = async (req, res) => {
 };
 
 const addMuteInfo = async (req, res) => {
-    const { accName, muteDate, muteReason, mutedBy } = req.body;
+    const { accName, muteDate, muteReason, mutedBy, dscName } = req.body;
     try {
-        await MuteInfo.addMuteInfo(accName, muteDate, muteReason, mutedBy);
+        await MuteInfo.addMuteInfo(accName, muteDate, muteReason, mutedBy, dscName);
         res.status(201).send("Mute information added successfully");
     } catch (error) {
         console.error('Error adding mute information:', error);
@@ -29,8 +30,9 @@ const addMuteInfo = async (req, res) => {
 
 const removeMuteInfo = async (req, res) => {
     const accName = req.params.accName;
+    const dscName = req.params.dscName;
     try {
-        await MuteInfo.removeMuteInfo(accName);
+        await MuteInfo.removeMuteInfo(accName, dscName);
         res.status(200).send(`User ${accName} has been unmuted.`);
     } catch (error) {
         console.error('Error removing mute information:', error);
