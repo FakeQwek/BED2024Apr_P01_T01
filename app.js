@@ -7,6 +7,10 @@ const morgan = require("morgan");
 const jwt = require("jsonwebtoken");
 const dbConfig = require("./dbConfig");
 
+// swagger
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = require("./swagger-output.json"); // Import generated spec
+
 const accountsController = require("./mvc/controllers/accountsController");
 const postsController = require("./mvc/controllers/postsController");
 const discussionController = require("./mvc/controllers/discussionController");
@@ -200,6 +204,9 @@ app.delete('/feedback/:feedbackID', feedbackController.deleteFeedback);
 app.get('/protected', authenticateJWT, (req, res) => {
     res.send('This is a protected route');
 });
+
+// swagger route
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Start the server
 app.listen(port, async () => {
