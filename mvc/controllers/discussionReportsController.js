@@ -11,7 +11,7 @@ const getAllDiscussionReports = async (req, res) => {
 };
 
 const getDiscussionReportById = async (req, res) => {
-    const dscRptId = parseInt(req.params.dscRptId);
+    const dscRptId = req.params.dscRptId; // Treat as string
     try {
         const discussionReport = await DiscussionReport.getDiscussionReportById(dscRptId);
         if (!discussionReport) {
@@ -36,7 +36,7 @@ const createDiscussionReport = async (req, res) => {
 };
 
 const warnDiscussionReport = async (req, res) => {
-    const dscRptId = parseInt(req.params.dscRptId);
+    const dscRptId = req.params.dscRptId; // Treat as string
     try {
         const discussionReport = await DiscussionReport.getDiscussionReportById(dscRptId);
         if (!discussionReport) {
@@ -52,7 +52,7 @@ const warnDiscussionReport = async (req, res) => {
 };
 
 const deleteDiscussionReport = async (req, res) => {
-    const dscRptId = parseInt(req.params.dscRptId);
+    const dscRptId = req.params.dscRptId; // Treat as string
     try {
         console.log(`Attempting to delete discussion report with ID: ${dscRptId}`);
         const discussionReport = await DiscussionReport.getDiscussionReportById(dscRptId);

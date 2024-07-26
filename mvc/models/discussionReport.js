@@ -28,7 +28,7 @@ class DiscussionReport {
         const connection = await sql.connect(dbConfig);
         const sqlQuery = `SELECT * FROM DiscussionReport WHERE DscRptID = @dscRptId`;
         const request = connection.request();
-        request.input("dscRptId", dscRptId);
+        request.input("dscRptId", sql.VarChar, dscRptId); // Treat as varchar
         const result = await request.query(sqlQuery);
         connection.close();
 
@@ -51,7 +51,7 @@ class DiscussionReport {
     static async createDiscussionReport(newDiscussionReportData) {
         const connection = await sql.connect(dbConfig);
         const sqlQuery = `INSERT INTO DiscussionReport (DscRptID, DscRptCat, DscRptDesc, AccName, DscName) 
-                          SELECT CASE WHEN COUNT(*) = 0 THEN 1 ELSE MAX(DscRptID) + 1 END, @dscRptCat, @dscRptDesc, @accName, @dscName FROM DiscussionReport`;
+                          SELECT CASE WHEN COUNT(*) = 0 THEN 'DR001' ELSE 'DR' + RIGHT('000' + CAST(MAX(CAST(SUBSTRING(DscRptID, 3, LEN(DscRptID)) AS INT) + 1 AS VARCHAR)), 3) END, @dscRptCat, @dscRptDesc, @accName, @dscName FROM DiscussionReport`;
         const request = connection.request();
         request.input("dscRptCat", newDiscussionReportData.dscRptCat);
         request.input("dscRptDesc", newDiscussionReportData.dscRptDesc);
@@ -66,7 +66,7 @@ class DiscussionReport {
         const connection = await sql.connect(dbConfig);
         const sqlQuery = `UPDATE DiscussionReport SET Warned = 1 WHERE DscRptID = @dscRptId`;
         const request = connection.request();
-        request.input("dscRptId", dscRptId);
+        request.input("dscRptId", sql.VarChar, dscRptId); // Treat as varchar
         await request.query(sqlQuery);
         connection.close();
     }
@@ -78,7 +78,7 @@ class DiscussionReport {
         // Get the discussion name associated with the report
         const getDscNameQuery = `SELECT DscName FROM DiscussionReport WHERE DscRptID = @dscRptId`;
         const getRequest = connection.request();
-        getRequest.input("dscRptId", dscRptId);
+        getRequest.input("dscRptId", sql.VarChar, dscRptId); // Treat as varchar
         const result = await getRequest.query(getDscNameQuery);
     
         if (result.recordset.length === 0) {
@@ -96,25 +96,25 @@ class DiscussionReport {
             // Delete related comments from Comment table
             const deleteCommentsQuery = `DELETE FROM Comment WHERE PostID IN (SELECT PostID FROM Post WHERE DscName = @dscName)`;
             const deleteCommentsRequest = transaction.request();
-            deleteCommentsRequest.input("dscName", dscName);
+            deleteCommentsRequest.input("dscName", sql.VarChar, dscName);
             await deleteCommentsRequest.query(deleteCommentsQuery);
     
             // Delete related posts from Post table
             const deletePostsQuery = `DELETE FROM Post WHERE DscName = @dscName`;
             const deletePostsRequest = transaction.request();
-            deletePostsRequest.input("dscName", dscName);
+            deletePostsRequest.input("dscName", sql.VarChar, dscName);
             await deletePostsRequest.query(deletePostsQuery);
     
             // Delete from DiscussionReport table
             const deleteReportQuery = `DELETE FROM DiscussionReport WHERE DscRptID = @dscRptId`;
             const deleteReportRequest = transaction.request();
-            deleteReportRequest.input("dscRptId", dscRptId);
+            deleteReportRequest.input("dscRptId", sql.VarChar, dscRptId); // Treat as varchar
             await deleteReportRequest.query(deleteReportQuery);
     
             // Delete from Discussion table
             const deleteDiscussionQuery = `DELETE FROM Discussion WHERE DscName = @dscName`;
             const deleteDiscussionRequest = transaction.request();
-            deleteDiscussionRequest.input("dscName", dscName);
+            deleteDiscussionRequest.input("dscName", sql.VarChar, dscName);
             await deleteDiscussionRequest.query(deleteDiscussionQuery);
     
             // Commit transaction
