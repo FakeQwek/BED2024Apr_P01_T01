@@ -86,6 +86,13 @@
         .sidebar {
             flex: 1;
             padding: 1rem;
+            height: 100vh; /* Makes the sidebar take full viewport height */
+            overflow-y: auto; /* Enables vertical scrolling if content exceeds viewport height */
+            position: fixed; /* Keeps the sidebar fixed while scrolling */
+            top: 0; /* Positions the sidebar at the top */
+            left: 0; /* Positions the sidebar at the left */
+            width: 250px; /* Sets a fixed width for the sidebar */
+            background-color: #fff; /* Optional: background color for the sidebar */
         }
 
         .create-discussion-card {
@@ -242,12 +249,14 @@
                 <div class="flex flex-col bg-white p-4 rounded-lg shadow">
                     <div class="flex justify-between items-center border-b pb-4 mb-4">
                         <div class="flex items-center gap-8">
-                            <a href="profile.html" class="underline-animation active text-gray-500 pb-2">Overview</a>
+                            <a href="profile.html" class="underline-animation text-gray-500 pb-2">Overview</a>
                             <a href="profile-post.html" class="underline-animation text-gray-500 pb-2">Posts</a>
-                            <a href="profile-comment.html" class="underline-animation text-gray-500 pb-2">Comments</a>
+                            <a href="profile-comment.html" class="underline-animation active text-gray-500 pb-2">Comments</a>
                         </div>
                     </div>
-                    <div class="text-center text-gray-500">u/henryneofan2 hasn’t done anything</div>
+                    <div id="comments-container">
+                        <!-- Comments will be injected here -->
+                    </div>
                 </div>
             </div>
         </main>
@@ -258,42 +267,48 @@
             const username = localStorage.getItem('username');
             if (username) {
                 document.getElementById('usernameDisplay').innerText = `u/${username}`;
+                fetchComments(username);
             }
         });
 
-        const overviewButton = document.getElementById('overviewButton');
-        const postsButton = document.getElementById('postsButton');
-        const commentsButton = document.getElementById('commentsButton');
-        const overviewSection = document.getElementById('overviewSection');
-        const postsSection = document.getElementById('postsSection');
-        const commentsSection = document.getElementById('commentsSection');
-
-        overviewButton.addEventListener('click', () => {
-            overviewSection.classList.remove('hidden');
-            postsSection.classList.add('hidden');
-            commentsSection.classList.add('hidden');
-            overviewButton.classList.add('active');
-            postsButton.classList.remove('active');
-            commentsButton.classList.remove('active');
+        async function fetchComments(username) {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`http://localhost:3000/comments/user/${username}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
         });
 
-        postsButton.addEventListener('click', () => {
-            overviewSection.classList.add('hidden');
-            postsSection.classList.remove('hidden');
-            commentsSection.classList.add('hidden');
-            postsButton.classList.add('active');
-            overviewButton.classList.remove('active');
-            commentsButton.classList.remove('active');
-        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
 
-        commentsButton.addEventListener('click', () => {
-            overviewSection.classList.add('hidden');
-            postsSection.classList.add('hidden');
-            commentsSection.classList.remove('hidden');
-            commentsButton.classList.add('active');
-            overviewButton.classList.remove('active');
-            postsButton.classList.remove('active');
+        const text = await response.text();
+        const comments = text ? JSON.parse(text) : [];
+        const commentsContainer = document.getElementById('comments-container');
+        commentsContainer.innerHTML = '';
+        comments.forEach(comment => {
+            const commentElement = document.createElement('div');
+            commentElement.className = 'post-card';
+            commentElement.innerHTML = `
+                <div class="post-header">
+                    <img src="../images/person.png" alt="User Profile Picture">
+                    <div>
+                        <div class="post-meta">u/${comment.accName}</div>
+                        <div class="post-title">${comment.cmtDesc}</div>
+                    </div>
+                </div>
+            `;
+            commentsContainer.appendChild(commentElement);
         });
+    } catch (error) {
+        console.error('Error fetching comments:', error);
+    }
+}
+
     </script>
 </body>
 </html>

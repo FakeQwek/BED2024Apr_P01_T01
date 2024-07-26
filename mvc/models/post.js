@@ -118,12 +118,19 @@ class Post {
         const connection = await sql.connect(dbConfig);
         const sqlQuery = `SELECT * FROM Post WHERE OwnerID = @username`;
         const request = connection.request();
-        request.input("username", username);
+        request.input("username", sql.VarChar, username);
         const result = await request.query(sqlQuery);
         connection.close();
-
-        return result.recordset.map((row) => new Post(row.PostID, row.PostName, row.PostDesc, row.isEvent, row.isApproved, row.PostDate, row.PostEventDate, row.OwnerID, row.DscName));
+    
+        return result.recordset.map((row) => ({
+            PostName: row.PostName,
+            PostDesc: row.PostDesc,
+            OwnerID: row.OwnerID
+        }));
     }
+    
+    
+    
 
     static async createPost(newPostData) {
         const connection = await sql.connect(dbConfig);

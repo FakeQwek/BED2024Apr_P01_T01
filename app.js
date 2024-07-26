@@ -62,6 +62,8 @@ app.use(cors({
 app.use(helmet());
 app.use(morgan('combined'));
 
+app.get('/comments/user/:username', authenticateJWT, commentsController.getCommentsByUser);
+
 // Routes
 app.delete('/deleteAccount', accountsController.deleteAccount);
 app.put('/updateProfile', accountsController.updateProfile);
@@ -139,7 +141,7 @@ app.delete("/volunteer/:postId/:volId", verifyPostOwner, volunteersController.de
 app.get("/discussionMembers", discussionMembersController.getAllDiscussionMembers); // admin
 app.get("/discussionMembers/:dscName", discussionMembersController.getDiscussionMembersByDiscussion); // public
 app.get("/discussionMemberTop3Discussions/:accName", discussionMembersController.getDiscussionMemberTop3Discussions); // self
-app.post("/discussionMember/:dscName", discussionMembersController.createDiscussionMember); // logged in user
+app.post("/discussionMember/:dscName", verifyDiscussionMember, discussionMembersController.createDiscussionMember); // logged in user
 app.delete("/discussionMember/:accName/:dscName", verifyDiscussionMember, discussionMembersController.deleteDiscussionMember); // member
 
 // Post like routes
@@ -187,6 +189,7 @@ app.delete("/postReport/:postId", postReportsController.deletePostReport);
 app.delete("/siteadminApprove/:reportId", siteadminPostReportController.deletePostReport);
 app.delete("/siteadminDeny/:postId", siteadminPostReportController.deletePostReport);
 app.delete("/siteadminPost/:postId", siteadminPostReportController.deletePost);
+app.put('/updateProfile', accountsController.updateProfile);
 
 // Feedback routes
 app.post('/feedback', feedbackController.createFeedback);

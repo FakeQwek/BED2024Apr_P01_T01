@@ -37,12 +37,18 @@ const getCommentOwnerByCommentId = async (req, res) => {
 
 const getCommentsByUser = async (req, res) => {
     const username = req.params.username;
+    console.log(`Fetching comments for user: ${username}`);
     try {
         const comments = await Comment.getCommentsByUser(username);
+        console.log(`Comments fetched: ${JSON.stringify(comments)}`);
+        if (!comments || comments.length === 0) {
+            console.log('No comments found for user');
+            return res.status(404).json({ message: 'No comments found for user' });
+        }
         res.json(comments);
     } catch (error) {
-        console.error(error);
-        res.status(500).send("Error retrieving comments");
+        console.error('Error retrieving comments:', error);
+        res.status(500).json({ message: 'Error retrieving comments' });
     }
 };
 
