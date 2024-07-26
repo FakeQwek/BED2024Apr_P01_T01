@@ -4,6 +4,7 @@ const homePosts = document.getElementById("homePosts");
 const searchBar = document.getElementById("searchBar");
 const searchResults = document.getElementById("searchResults");
 const searchResultsContainer = document.getElementById("searchResultsContainer");
+const main = document.getElementById("main");
 
 // set variables
 let accountName;
@@ -165,10 +166,6 @@ async function Posts() {
     }
 }
 
-searchBar.addEventListener("focusout", () => {
-    searchResultsContainer.classList.add("invisible");
-})
-
 // function to search all discussions
 async function searchDiscussions(searchTerm) {
     const res = await fetch("http://localhost:3000/discussions/search?searchTerm=" + searchTerm);
@@ -191,6 +188,11 @@ searchBar.addEventListener("input", () => {
 // event listener for search bar focus
 searchBar.addEventListener("focus", () => {
     searchResultsContainer.classList.remove("invisible");
+})
+
+// event listener to remove search results when users clicks on anything that is below the navbar
+main.addEventListener("click", () => {
+    searchResultsContainer.classList.add("invisible");
 })
 
 // function to create post report
@@ -221,7 +223,7 @@ async function sidebar() {
     const joinedDiscussions = document.getElementById("joinedDiscussions");
     
     for (let i = 0; i < discussionMembers.length; i++) {
-        const discussionButtonHTML = `<li><a><span class="flex items-center w-full gap-2"><img src="../images/account-circle-outline.svg" width="30px" />` + discussionMembers[i].dscName + `</span></a></li>`;
+        const discussionButtonHTML = `<li><a href="./discussion.html?discussionName=` + discussionMembers[i].dscName + `"><span class="flex items-center w-full gap-2"><img src="../images/account-circle-outline.svg" width="30px" />` + discussionMembers[i].dscName + `</span></a></li>`;
         joinedDiscussions.insertAdjacentHTML("beforeend", discussionButtonHTML);
     }
 }

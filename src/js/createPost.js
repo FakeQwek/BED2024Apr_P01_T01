@@ -10,6 +10,10 @@ const isEventRadio = document.getElementById("isEvent");
 const bannerOptions = document.getElementById("bannerOptions");
 const memberCount = document.getElementById("memberCount");
 const eventContainer = document.getElementById("eventContainer");
+const main = document.getElementById("main");
+const searchBar = document.getElementById("searchBar");
+const searchResults = document.getElementById("searchResults");
+const searchResultsContainer = document.getElementById("searchResultsContainer");
 
 // set variables
 let isMember = false;
@@ -189,7 +193,7 @@ async function sidebar() {
     const joinedDiscussions = document.getElementById("joinedDiscussions");
     
     for (let i = 0; i < discussionMembers.length; i++) {
-        const discussionButtonHTML = `<li><a><span class="flex items-center w-full gap-2"><img src="../images/account-circle-outline.svg" width="30px" />` + discussionMembers[i].dscName + `</span></a></li>`;
+        const discussionButtonHTML = `<li><a href="./discussion.html?discussionName=` + discussionMembers[i].dscName + `"><span class="flex items-center w-full gap-2"><img src="../images/account-circle-outline.svg" width="30px" />` + discussionMembers[i].dscName + `</span></a></li>`;
         joinedDiscussions.insertAdjacentHTML("beforeend", discussionButtonHTML);
     }
 }
@@ -214,6 +218,51 @@ function goToProfile(accName) {
     }
     url = url.substring(0, url.length - 3);
     url = url.concat("profile.html");
+    window.location.href = url;
+}
+
+// function to search all discussions
+async function searchDiscussions(searchTerm) {
+    const res = await fetch("http://localhost:3000/discussions/search?searchTerm=" + searchTerm);
+    const discussions = await res.json();
+
+    searchResults.innerHTML = ``;
+    
+    for (let i = 0; i < discussions.length; i++) {
+        const resultHTML = `<button class="btn mx-4 my-2" onclick="goToDiscussion('` + discussions[i].DscName + `')">` + discussions[i].DscName + `</button>`
+        searchResults.insertAdjacentHTML("beforeend", resultHTML);
+    }
+}
+
+// event listener for search bar input
+searchBar.addEventListener("input", () => {
+    searchResultsContainer.classList.remove("invisible");
+    searchDiscussions(searchBar.value);
+})
+
+// event listener for search bar focus
+searchBar.addEventListener("focus", () => {
+    searchResultsContainer.classList.remove("invisible");
+})
+
+// event listener to remove search results when users clicks on anything that is below the navbar
+main.addEventListener("click", () => {
+    searchResultsContainer.classList.add("invisible");
+})
+
+// direct page to discussion page
+function goToDiscussion(dscName) {
+    var script = document.getElementsByTagName("script");
+    var url = script[script.length-1].src;
+    for (let i = 0; i < url.length; i++) {
+        if (url.slice(-1) != "/") {
+            url = url.substring(0, url.length - 1);
+        } else {
+            break;
+        }
+    }
+    url = url.substring(0, url.length - 3);
+    url = url.concat("discussion.html?discussionName=" + dscName);
     window.location.href = url;
 }
 
