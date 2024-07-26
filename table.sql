@@ -68,7 +68,7 @@ CREATE TABLE Comment (
     CONSTRAINT FK_Comment_PostID FOREIGN KEY (PostID) 
     REFERENCES Post(PostID)); 
  
-CREATE TABLE DiscussionReport ( 
+/*CREATE TABLE DiscussionReport ( 
     DscRptID varchar(10) NOT NULL, 
     DscRptCat varchar(100) NOT NULL, 
     DscRptDesc varchar(100) NOT NULL, 
@@ -78,7 +78,7 @@ CREATE TABLE DiscussionReport (
     CONSTRAINT FK_DiscussionReport_AccName FOREIGN KEY (AccName) 
     REFERENCES Account(AccName), 
     CONSTRAINT FK_DiscussionReport_DscName FOREIGN KEY (DscName) 
-    REFERENCES Discussion(DscName)); 
+    REFERENCES Discussion(DscName)); */
  
 CREATE TABLE PostReport ( 
     PostRptID varchar(10) NOT NULL, 
