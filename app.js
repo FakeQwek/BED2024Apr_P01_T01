@@ -24,7 +24,6 @@ const invitesController = require("./mvc/controllers/invitesController");
 const siteadminPostReportController = require("./mvc/controllers/siteadminPostReportController");
 const feedbackController = require("./mvc/controllers/feedbackController");
 
-// import middlewares
 const verifyDiscussionOwner = require("./mvc/middlewares/verifyDiscussionOwner");
 const verifyPostOwner = require("./mvc/middlewares/verifyPostOwner");
 const verifyDiscussionMember = require("./mvc/middlewares/verifyDiscussionMember");
@@ -86,14 +85,16 @@ app.get("/mutedaccount/:dscName", discussionMembersController.getAccountsIsMuted
 
 // Post routes
 app.get("/posts", postsController.getAllPosts); // admin
-app.get("/publicPosts", postsController.getAllPublicPosts)
+app.get("/publicPosts", postsController.getAllPublicPosts);
 app.get("/posts/:dscName", verifyDiscussionMember, postsController.getPostsByDiscussion); // member
 app.get("/postsOrderByLikes/:dscName", verifyDiscussionMember, postsController.getPostsByDiscussionOrderByLikes); // member
+app.get("/postsOrderByDate/:dscName", verifyDiscussionMember, postsController.getPostsByDiscussionOrderByPostDate); // member
 app.get("/post/:postId", postsController.getPostById); // public
 app.get("/postOwner/:postId", postsController.getPostOwnerByPostId); // public
 app.post("/post/:dscName", verifyDiscussionMember, postsController.createPost); // member
 app.put('/post/approve/:postId', postsController.approvePost);
 app.put("/post/:postId", verifyPostOwner, postsController.updatePost); // post owner
+app.get("/posts/user/:username", postsController.getPostsByUser); // New route
 
 // Discussion routes
 app.get("/discussions", discussionController.getAllDiscussions); // admin
@@ -110,6 +111,7 @@ app.get("/commentOwner/:cmtId", commentsController.getCommentOwnerByCommentId); 
 app.post("/comment/:dscName", verifyDiscussionMember, commentsController.createComment); // member
 app.put("/comment/:cmtId", verifyCommentOwner, commentsController.updateComment); // comment owner
 app.delete("/comment/:cmtId", verifyCommentOwner, commentsController.deleteComment); // comment owner
+app.get("/comments/user/:username", commentsController.getCommentsByUser); // New route
 app.delete("/comments/:postId", commentsController.deleteCommentsByPost); // discussion admin
 
 // Post report routes

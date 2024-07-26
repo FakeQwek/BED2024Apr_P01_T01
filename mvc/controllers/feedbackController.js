@@ -10,6 +10,14 @@ const createFeedback = async (req, res) => {
 
     try {
         const pool = await sql.connect(dbConfig);
+        const accountCheck = await pool.request()
+            .input('Username', sql.VarChar, username)
+            .query('SELECT * FROM Account WHERE AccName = @Username');
+
+        if (accountCheck.recordset.length === 0) {
+            return res.status(404).send({ success: false, message: 'Username not found in Account table' });
+        }
+
         await pool.request()
             .input('Username', sql.VarChar, username)
             .input('RatingStar', sql.Int, rating)

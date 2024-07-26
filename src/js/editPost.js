@@ -34,6 +34,7 @@ async function checkAccountName() {
     accountName = account.accName;
 
     Post();
+    sidebar();
 }
 
 checkAccountName();
@@ -130,7 +131,7 @@ async function createDiscussionReport() {
         body: JSON.stringify({
             dscRptCat: dscReportCat.value,
             dscRptDesc: dscReportDesc.value,
-            accName: "AppleTan",
+            accName: accountName,
             dscName: discussionName
         }),
         headers: {
@@ -149,7 +150,7 @@ async function DiscussionMembers() {
 
     // if user is an owner show them additional options to edit discussion details
     for (let i = 0; i < discussionMembers.length; i++) {
-        if (discussionMembers[i].dscMemRole == "Owner" && discussionMembers[i].accName == "AppleTan") {
+        if (discussionMembers[i].dscMemRole == "Owner" && discussionMembers[i].accName == accountName) {
             const bannerOptionsHTML = `<li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="edit_discussion_modal.showModal()"><span class="w-full">Edit</span></button></li>`;
             bannerOptions.insertAdjacentHTML("beforeend", bannerOptionsHTML);
         } else if (discussionMembers[i].dscMemRole == "Admin") {
@@ -165,7 +166,7 @@ async function DiscussionMembers() {
 
 // function to get user details to be displayed on the sidebar
 async function sidebar() {
-    const res = await fetch("http://localhost:3000/discussionMemberTop3Discussions/" + "AppleTan");
+    const res = await fetch("http://localhost:3000/discussionMemberTop3Discussions/" + accountName);
     const discussionMembers = await res.json();
 
     const joinedDiscussions = document.getElementById("joinedDiscussions");
@@ -193,4 +194,3 @@ function goToProfile(accName) {
 }
 
 DiscussionMembers();
-sidebar();
