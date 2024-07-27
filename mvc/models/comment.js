@@ -33,7 +33,7 @@ class Comment {
         const connection = await sql.connect(dbConfig);
         const sqlQuery = `SELECT OwnerID FROM Comment WHERE CmtID = @cmtId`;
         const request = connection.request();
-        request.input("cmtId", sql.VarChar, cmtId);
+        request.input("cmtId", cmtId);
         const result = await request.query(sqlQuery);
         connection.close();
 
@@ -72,8 +72,8 @@ class Comment {
         const sqlQuery = `UPDATE Comment SET CmtDesc = @cmtDesc WHERE CmtID = @cmtId`;
 
         const request = connection.request();
-        request.input("cmtId", sql.VarChar, cmtId);
-        request.input("cmtDesc", sql.VarChar, newCommentData.cmtDesc || null);
+        request.input("cmtId", cmtId);
+        request.input("cmtDesc", newCommentData.cmtDesc);
 
         const result = await request.query(sqlQuery);
         

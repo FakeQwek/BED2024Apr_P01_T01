@@ -14,6 +14,7 @@ const verifyCommentOwner = async (req, res, next) => {
         }
 
         async function checkCommentOwner() {
+            console.log(cmtId);
             const res = await fetch("http://localhost:3000/commentOwner/" + cmtId);
             const owner = await res.json();
 
