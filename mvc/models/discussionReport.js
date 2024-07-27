@@ -71,58 +71,46 @@ class DiscussionReport {
         connection.close();
     }
 
-    // delete discussion report
     static async deleteDiscussionReport(dscRptId) {
         const connection = await sql.connect(dbConfig);
-
+    
         // Begin transaction
         const transaction = new sql.Transaction(connection);
         await transaction.begin();
-
+    
         try {
             // Get the discussion name associated with the report
             const getDscNameQuery = `SELECT DscName FROM DiscussionReport WHERE DscRptID = @dscRptId`;
             const getRequest = transaction.request();
             getRequest.input("dscRptId", sql.VarChar, dscRptId); // Treat as varchar
             const result = await getRequest.query(getDscNameQuery);
-
+    
             if (result.recordset.length === 0) {
                 connection.close();
                 throw new Error("Discussion report not found");
             }
-
+    
             const dscName = result.recordset[0].DscName;
-
-            // Delete related post likes from PostLike table
+    
+            // Delete related records in the correct order
             const deletePostLikesQuery = `DELETE FROM PostLike WHERE PostID IN (SELECT PostID FROM Post WHERE DscName = @dscName)`;
-            const deletePostLikesRequest = transaction.request();
-            deletePostLikesRequest.input("dscName", sql.VarChar, dscName);
-            await deletePostLikesRequest.query(deletePostLikesQuery);
-
-            // Delete related comments from Comment table
+            await transaction.request().input("dscName", sql.VarChar, dscName).query(deletePostLikesQuery);
+    
             const deleteCommentsQuery = `DELETE FROM Comment WHERE PostID IN (SELECT PostID FROM Post WHERE DscName = @dscName)`;
-            const deleteCommentsRequest = transaction.request();
-            deleteCommentsRequest.input("dscName", sql.VarChar, dscName);
-            await deleteCommentsRequest.query(deleteCommentsQuery);
-
-            // Delete related posts from Post table
+            await transaction.request().input("dscName", sql.VarChar, dscName).query(deleteCommentsQuery);
+    
             const deletePostsQuery = `DELETE FROM Post WHERE DscName = @dscName`;
-            const deletePostsRequest = transaction.request();
-            deletePostsRequest.input("dscName", sql.VarChar, dscName);
-            await deletePostsRequest.query(deletePostsQuery);
-
-            // Delete from DiscussionReport table
-            const deleteReportQuery = `DELETE FROM DiscussionReport WHERE DscRptID = @dscRptId`;
-            const deleteReportRequest = transaction.request();
-            deleteReportRequest.input("dscRptId", sql.VarChar, dscRptId); // Treat as varchar
-            await deleteReportRequest.query(deleteReportQuery);
-
-            // Delete from Discussion table
+            await transaction.request().input("dscName", sql.VarChar, dscName).query(deletePostsQuery);
+    
+            const deleteBanInfoQuery = `DELETE FROM BanInfo WHERE DscName = @dscName`;
+            await transaction.request().input("dscName", sql.VarChar, dscName).query(deleteBanInfoQuery);
+    
+            const deleteDiscussionReportQuery = `DELETE FROM DiscussionReport WHERE DscRptID = @dscRptId`;
+            await transaction.request().input("dscRptId", sql.VarChar, dscRptId).query(deleteDiscussionReportQuery);
+    
             const deleteDiscussionQuery = `DELETE FROM Discussion WHERE DscName = @dscName`;
-            const deleteDiscussionRequest = transaction.request();
-            deleteDiscussionRequest.input("dscName", sql.VarChar, dscName);
-            await deleteDiscussionRequest.query(deleteDiscussionQuery);
-
+            await transaction.request().input("dscName", sql.VarChar, dscName).query(deleteDiscussionQuery);
+    
             // Commit transaction
             await transaction.commit();
         } catch (error) {
