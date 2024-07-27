@@ -81,11 +81,11 @@ class DiscussionAdmin {
                        p.PostName, p.PostDesc, p.isApproved, p.OwnerID, p.DscName
                 FROM PostReport pr
                 JOIN Post p ON pr.PostID = p.PostID
-                WHERE p.DscName = @discussionName;
+                WHERE p.DscName = @dscName;
             `;
             const pool = await sql.connect(dbConfig);
             const result = await pool.request()
-                .input('discussionName', sql.VarChar, dscName)
+                .input('dscName', sql.VarChar, dscName)
                 .query(query);
             return result.recordset;
         } catch (err) {

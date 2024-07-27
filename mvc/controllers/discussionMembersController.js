@@ -187,10 +187,11 @@ const removeAdmin = async (req, res) => {
         res.status(500).send("Error demoting user");
     }
 };
+
 const getPostReportsByDiscussion = async (req, res) => {
-    const { discussionName } = req.params;
+    const dscName = req.params.dscName;
     try {
-        const postReports = await DiscussionAdmin.getPostReportsByDiscussion(discussionName);
+        const postReports = await DiscussionAdmin.getPostReportsByDiscussion(dscName);
         res.json(postReports);
     } catch (err) {
         console.error('Error getting post reports:', err);
