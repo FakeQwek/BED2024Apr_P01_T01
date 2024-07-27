@@ -6,8 +6,8 @@
  
  
  class MutedUsers {
-     constructor(accId, accName) {
-        this.accId = accId;
+     constructor(accName) {
+       
         this.accName = accName;
      }
      
@@ -16,12 +16,12 @@
          
          const connection = await sql.connect(dbConfig);
          const query = 
-         `SELECT AccID, AccName FROM Account WHERE isMuted = 'true'`;
+         `SELECT AccName FROM Account WHERE isMuted = 'true'`;
       
          const request = connection.request();
          const result = await request.query(query);
          connection.close();
-         return result.recordset.map((row) => new MutedUsers(row.AccID, row.AccName));
+         return result.recordset.map((row) => new MutedUsers(row.AccName));
      }
 
      //Retrieves muted users by name (as searched by user)
@@ -29,23 +29,23 @@
         const connection = await sql.connect(dbConfig);
         //Gets the muted user with AccName containing characters from input accName
         const query = 
-        `SELECT AccID, AccName FROM Account WHERE AccName LIKE '%${accName}%' AND isMuted ='true'`;
+        `SELECT AccName FROM Account WHERE AccName LIKE '%${accName}%' AND isMuted ='true'`;
     
         const request = connection.request();
         request.input("accName", accName);
         const result = await request.query(query);
         connection.close();
-        return result.recordset.map((row) => new MutedUsers(row.AccID, row.AccName));
+        return result.recordset.map((row) => new MutedUsers(row.AccName));
      }
 
      //Put operation makes user muted
-     static async unmuteUser(accId) {
+     static async unmuteUser(accName) {
         const connection = await sql.connect(dbConfig);
         const query = 
-        `UPDATE Account SET isMuted = 'false' WHERE AccId = @accId`;
+        `UPDATE Account SET isMuted = 'false' WHERE AccName = @accName`;
     
         const request = connection.request();
-        request.input("accId", accId);
+        request.input("accName", accName);
         const result = await request.query(query);
         connection.close();
 
