@@ -1,3 +1,4 @@
+//Question controller returns question json responses and logs internal server error if unsuccessful
 const Question = require("../models/question");
 
 const getAllQuestions = async (req, res) => {
@@ -6,7 +7,7 @@ const getAllQuestions = async (req, res) => {
         res.json(question);
     } catch (error) {
         console.log(error);
-        res.status(404).send("Error retrieving question");
+        res.status(500).send("Error retrieving question");
     }
 };
 
@@ -14,13 +15,10 @@ const getQuestionById = async (req, res) => {
     const questionId = parseInt(req.params.questionId);
     try {
         const question = await Question.getQuestionById(questionId);
-        if (!question) {
-            return res.status(404).send("Question not found");
-        }
         res.json(question);
     } catch (error) {
         console.log(error);
-        res.status(404).send("Error retrieving question");
+        res.status(500).send("Error retrieving question");
     }
 };
 
@@ -31,10 +29,13 @@ const createQuestion = async (req, res) => {
    
     try {
         const createdQuestion = await Question.createQuestion(newQuestion);
-        res.status(201).json(createdQuestion);
+        if (!createdQuestion) {
+            return res.status(404).send("Question not found");
+        }
+        res.status(204).json(createdQuestion);
     } catch (error) {
         console.log(error);
-        res.status(404).send("Error creating question");
+        res.status(500).send("Error creating question");
     }
 }
 module.exports = {

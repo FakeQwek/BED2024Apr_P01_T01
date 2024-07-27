@@ -16,11 +16,11 @@ class PostReport {
     }
 
    
-
+    //Gets all data necessary for post reports
     static async getAllPostReports() {
         
         const connection = await sql.connect(dbConfig);
-        //This should get all the necessary data for the postreports
+        //Inner join gets related data from account and post tables
        
         const allQuery = 
         `SELECT PostRptID, PostRptDesc, PostName, AccName, Post.PostID
@@ -37,7 +37,7 @@ class PostReport {
         return result.recordset.map((row) => new PostReport(row.PostRptID, row.AccName, row.PostRptDesc, row.PostName, row.PostID));
     }
 
-    //Deletes the PostReports
+    //Deletes post report based on id
     static async deletePostReport(reportId) {
         const connection = await sql.connect(dbConfig);
 
@@ -50,6 +50,7 @@ class PostReport {
         connection.close();
     }
 
+    //Deletes post based on id
     static async deletePost(postId) {
         const connection = await sql.connect(dbConfig);
         const sqlQuery = `DELETE FROM Post WHERE PostID = @postId`;
@@ -60,6 +61,7 @@ class PostReport {
 
     }
 
+    //Gets post report data by newest 
     static async getAllPostReportsByNewest() {
         const connection = await sql.connect(dbConfig);
         const sqlQuery = `SELECT PostRptID, PostRptDesc, PostName, AccName, Post.PostID
@@ -77,6 +79,7 @@ class PostReport {
         return result.recordset.map((row) => new PostReport(row.PostRptID, row.AccName, row.PostRptDesc, row.PostName, row.PostID));
     }
 
+    //Get post reports by id
     static async getPostReportById(postId) {
         const connection = await sql.connect(dbConfig);
         const sqlQuery = `SELECT PostRptID, PostRptDesc, PostName, AccName, Post.PostID
@@ -93,6 +96,7 @@ class PostReport {
         return result.recordset.map((row) => new PostReport(row.PostRptID, row.AccName, row.PostRptDesc, row.PostName, row.PostID));
     }
 
+    //Gets post report data grouped by post id to get most reported posts
     static async getAllCountOfPostReports() {
         const connection = await sql.connect(dbConfig);
         const sqlQuery = `SELECT COUNT(PostID) AS 'Count', PostId From PostReport GROUP BY PostID ORDER BY Count ASC`;

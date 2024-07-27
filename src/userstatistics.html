@@ -9,23 +9,29 @@
 <body class="h-max bg-gray-100">
     <!-- navbar -->
     <div class="flex justify-center items-center h-12 bg-white border-b-2">
-        <img src="../images/socialise2.png" alt="Socialise Logo" class="h-12 w-auto ml-8">
         <div class="flex w-1/4">
-
+            <img src="../images/socialise2.png" alt="Socialise Logo" class="h-12 w-auto ml-8">
+            <label for="my-drawer-2" class="drawer-button bg-white ml-4 lg:hidden">
+                
+                <img src="../images/menu.svg" width="30px" />
+            </label>
         </div>
         <div class="flex justify-center w-1/2">
-            <input type="text" placeholder="Search" class="input input-sm input-bordered w-full rounded-full" />
+            <input id="searchBar" type="text" placeholder="Search" class="input input-sm input-bordered w-full rounded-full" />
+            <div id="searchResultsContainer" class="absolute w-1/2 px-4 invisible z-10">
+                <div id="searchResults" class="flex flex-col bg-white mt-8">
+                </div>
+            </div>
         </div>
         <div class="flex justify-end w-1/4">
-            <button class="btn btn-sm mr-4">Login</button>
-            <button class="btn btn-sm mr-4">Sign Up</button>
+            <button class="btn btn-sm mr-4 max-[820px]:hidden">Login</button>
+            <button class="btn btn-sm mr-4 max-[820px]:hidden">Sign Up</button>
         </div>
     </div>
 
     <!-- main -->
-    <div class="flex flex-row flex-grow">
+    <div class="flex flex-row">
         <!-- sidebar -->
-
         <div class="drawer lg:drawer-open w-1/6 max-[820px]:w-0 z-20">
             <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
             <div class="drawer-content flex flex-col items-center justify-center">
@@ -55,20 +61,38 @@
                         <li><a href="./userstatistics.html"><span class="flex items-center w-full gap-2"><img src="../images/finance.svg" width="30px" />Statistics</span></a></li>
                     </div>
                 </ul>
-
             </div>
         </div>
-            </nav>
-        </aside>
 
-        <!-- News post container -->
-        <div class="flex flex-col w-4/6 h-full" id="news-container">
-           
+        <!-- content -->
+        <div class="flex w-4/6 flex-col h-full mt-8" id="panel-container">
+            <div class="bg-white card h-14 justify-center mb-16" id="title">
+                <h1 class="font-bold text-xl ml-8 flex flex-row items-center">Statistics</h1>
+            </div>
+              <!--Displays the bar charts for user and discussion bar charts-->
+            <div id="stats-box" class="flex flex-row w-4/6 h-full gap-4 max-[820px]:w-full mr-4">
+                <div class="mr-8 ">
+                    <canvas id="userChart" width="300px" height="300px"></canvas>
+                </div>
+                <div>
+                    <canvas id= "discussionChart" width="300px" height="300px"></canvas>
+                </div>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            
+                
+            </div>
+            <!--Displays the pie chart for discussion type-->
+            <div id="stats-box" class="flex flex-row w-4/6 h-full gap-4 max-[820px]:w-full mr-4 mt-2 mb-8">
+                <div>
+                    <div class="justify-center ml-12">Discussion Popularity By Post</div>
+                    <canvas id="discussionType" width="300px" height="300px"></canvas>
+                </div>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            </div>
         </div>
-
         <!-- banner -->
-        <div class="flex w-1/6 h-full">
-            <div class="flex flex-col w-64 h-80 bg-white mt-16">
+        <div class="flex w-1/6 h-full max-[820px]:hidden">
+            <div class="flex flex-col w-64 h-fit bg-white mt-16">
                 <div>
                     <img src="../images/reddit_banner.png" />
                 </div>
@@ -82,47 +106,47 @@
                         <div class="modal-box flex flex-col h-5/6 rounded-3xl gap-2">
                             <h2 class="font-bold text-2xl">Create a discussion</h2>
                             <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                            <input type="text" placeholder="Title" class="input input-bordered w-full my-4" />
+                            <input id="discussionName" type="text" placeholder="Title" class="input input-bordered w-full my-4" />
                             <h2 class="text-xl font-bold ml-4 mb-4">Type of discussion</h2>
                             <div class="flex flex-col gap-8">
                                 <!-- public option -->
-                                <div class="flex flex-row-reverse justify-between items-center mx-8 gap-2">
-                                    <input type="radio" name="radio-1" class="radio radio-xs" />
+                                <div class="flex flex-row justify-between items-center mx-4 gap-2">
                                     <div>
                                         <div class="flex items-center gap-2">
-                                            <img src="../images/web.svg" width="40px" />
+                                            <img src="../images/web.svg" width="30px" />
                                             <h2 class="font-bold">Public</h2>
                                         </div>
-                                        <p>Lorem ipsum dolor sit amet</p>
+                                        <p>Lorem ipsum dolor sit amet</p>   
                                     </div>
+                                    <input id="public" type="radio" name="radio-1" checked="checked" class="radio radio-xs" />
                                 </div>
                                 <!-- restricted option -->
-                                <div class="flex flex-row-reverse justify-between items-center mx-8 gap-2">
-                                    <input type="radio" name="radio-1" class="radio radio-xs" />
+                                <div class="flex flex-row justify-between items-center mx-4 gap-2">
                                     <div>
                                         <div class="flex items-center gap-2">
-                                            <img src="../images/eye-off-outline.svg" width="40px" />
+                                            <img src="../images/eye-off-outline.svg" width="30px" />
                                             <h2 class="font-bold">Restricted</h2>
                                         </div>
                                         <p>Lorem ipsum dolor sit amet</p>
                                     </div>
+                                    <input id="restricted" type="radio" name="radio-1" class="radio radio-xs" />
                                 </div>
                                 <!-- private option -->
-                                <div class="flex flex-row-reverse justify-between items-center mx-8 gap-2">
-                                    <input type="radio" name="radio-1" class="radio radio-xs" />
+                                <div class="flex flex-row justify-between items-center mx-4 gap-2">
                                     <div>
                                         <div class="flex items-center gap-2">
-                                            <img src="../images/lock-outline.svg" width="40px" />
+                                            <img src="../images/lock-outline.svg" width="30px" />
                                             <h2 class="font-bold">Private</h2>
                                         </div>
                                         <p>Lorem ipsum dolor sit amet</p>
                                     </div>
+                                    <input id="private" type="radio" name="radio-1" class="radio radio-xs" />
                                 </div>
                             </div>
                             <div class="modal-action">
                                 <form class="flex gap-4" method="dialog">
                                     <button class="btn btn-sm">Cancel</button>
-                                    <button class="btn btn-sm bg-red-500 text-white">Submit</button>
+                                    <button class="btn btn-sm bg-red-500 text-white" onclick="createDiscussion()">Submit</button>
                                 </form>
                             </div>
                         </div>
@@ -132,5 +156,5 @@
         </div>
     </div>
 </body>
-<script src="./js/individual-news.js"></script>
+<script src="./js/user-stats.js"></script>
 </html>

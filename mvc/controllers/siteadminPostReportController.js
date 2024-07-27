@@ -1,3 +1,5 @@
+//PostReport controller returns post report responses and logs internal server error if unsuccessful
+
 const PostReport = require("../models/siteadmin-postReport");
 
 const getAllPostReports = async (req, res) => {
@@ -11,11 +13,12 @@ const getAllPostReports = async (req, res) => {
 };
 
 
-
+//Report id is taken in as the parameter
 const deletePostReport = async (req, res) => {
     const reportId = parseInt(req.params.reportId);
     try {
         const success = await PostReport.deletePostReport(reportId);
+        //Unsuccessful request will return 404
         if (!success) {
             return res.status(404).send("Post report not found")
         }
@@ -26,11 +29,12 @@ const deletePostReport = async (req, res) => {
     }
 };
 
-
+//Post id is taken in as parameter
 const deletePost = async (req, res) => {
     const postId = parseInt(req.params.postId);
     try {
         const success = await PostReport.deletePost(postId);
+        //Unsuccessful request will return 404
         if (!success) {
             return res.status(404).send("Post report not found")
         }
@@ -61,6 +65,7 @@ const getAllCountOfPostReports = async (req, res) => {
     }
 };
 
+//Post id is taken in as the parameter
 const getPostReportById = async (req,res) => {
     const postId = parseInt(req.params.postId);
     try {

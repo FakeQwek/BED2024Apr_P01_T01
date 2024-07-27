@@ -7,7 +7,7 @@ const Account = require("../models/account");
 const JWT_SECRET = '3f3a94e1c0b5f11a8e0f2747d2a5e2f7a9a1c3b7d4d6e1e2f7b8c9d1a3e4f6a2'; // Replace with your own secret
 
 const signup = async (req, res) => {
-    const { usernameOrEmail, password } = req.body;
+    const { usernameOrEmail, password} = req.body;
 
     if (!usernameOrEmail || !password) {
         return res.status(400).send('Both fields are required');
@@ -20,6 +20,8 @@ const signup = async (req, res) => {
         const isEmail = usernameOrEmail.includes('@');
         const username = isEmail ? usernameOrEmail.split('@')[0] : usernameOrEmail;
         const email = isEmail ? usernameOrEmail : null;
+       
+        
 
         await pool.request()
             .input('AccName', sql.VarChar, username)
@@ -28,7 +30,8 @@ const signup = async (req, res) => {
             .input('isAdmin', sql.VarChar, 'False')
             .input('isMuted', sql.VarChar, 'False')
             .input('isBanned', sql.VarChar, 'False')
-            .query(`INSERT INTO Account (AccName, AccEmail, Password, isAdmin, isMuted, isBanned) 
+            .input('isSiteAdmin', sql.VarChar, isSiteAdmin)
+            .query(`INSERT INTO Account (AccName, AccEmail, Password, isAdmin, isMuted, isBanned, isSiteAdmin) 
                     VALUES (@AccName, @AccEmail, @Password, @isAdmin, @isMuted, @isBanned)`);
 
         res.status(201).send('User created successfully');

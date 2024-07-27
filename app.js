@@ -27,7 +27,11 @@ const postLikesController = require("./mvc/controllers/postLikesController");
 const invitesController = require("./mvc/controllers/invitesController");
 const siteadminPostReportController = require("./mvc/controllers/siteadminPostReportController");
 const feedbackController = require("./mvc/controllers/feedbackController");
+const siteadminMutedUserController = require("./mvc/controllers/siteadminMutedUserController");
+const siteadminBannedUserController = require("./mvc/controllers/siteadminBannedUserController.js");
+const statisticsController = require("./mvc/controllers/userStatisticsController.js");
 
+//Middlewares
 const verifyDiscussionOwner = require("./mvc/middlewares/verifyDiscussionOwner");
 const verifyPostOwner = require("./mvc/middlewares/verifyPostOwner");
 const verifyDiscussionMember = require("./mvc/middlewares/verifyDiscussionMember");
@@ -75,19 +79,43 @@ app.post('/signup', accountsController.signup);
 app.post('/login', accountsController.login);
 app.get('/ping', (req, res) => res.send('Server is running'));
 
-app.get('/siteadminPostReport', siteadminPostReportController.getAllPostReports);
-app.get('/postReports/:discussionName', discussionMembersController.getPostReportsByDiscussion);
-app.get('/login', accountsController.login);
+
+//Route Definitions
+app.get('/ping', (req, res) => res.send('Server is running')); // Simple ping endpoint
+//Statistics Routes
+app.get('/statistics/bancount', statisticsController.getCountOfUsersBanned);
+app.get('/statistics/usercount', statisticsController.getCountOfUsers);
+app.get('/statistics/mutedcount', statisticsController.getCountOfUsersMuted);
+app.get('/statistics/admincount', statisticsController.getCountOfAdminUsers);
+app.get('/statistics/commentcount', statisticsController.getCountOfComments);
+app.get('/statistics/discussioncount', statisticsController.getCountOfDiscussions);
+app.get('/statistics/postcount', statisticsController.getCountOfPosts);
+app.get('/statistics/reportcount', statisticsController.getCountOfPostReports);
+app.get('/statistics/discussionreportcount', statisticsController.getCountOfDiscussionReports);
+app.get('/statistics/discussionadmincount', statisticsController.getCountOfDiscussionAdmins);
+app.get('/statistics/discussiontypes', statisticsController.getTypeOfDiscussions);
+
+//Site Admin Routes
+app.get('/siteadmin/postreport', siteadminPostReportController.getAllPostReports);
+app.get("/siteadmin/reportcount", siteadminPostReportController.getAllCountOfPostReports);
+app.get('/siteadmin/newestpostreport', siteadminPostReportController.getAllPostReportsByNewest);
+app.get('/siteadmin/postreport/:postId', siteadminPostReportController.getPostReportById);
+app.get("/siteadmin/mutedusers", siteadminMutedUserController.getAllMutedUsers);
+app.get("/siteadmin/mutedusers/:name", siteadminMutedUserController.getMutedUsersByName);
+app.get("/siteadmin/bannedusers", siteadminBannedUserController.getAllBannedUsers);
+app.get("/siteadmin/bannedusers/:name", siteadminBannedUserController.getBannedUsersByName);
+app.delete("/siteadminApprove/:reportId", siteadminPostReportController.deletePostReport);
+app.delete("/siteadminDeny/:postId", siteadminPostReportController.deletePostReport);
+app.delete("/siteadminPost/:postId", siteadminPostReportController.deletePost);
+
+//Contact Us Routes
 app.get('/question', questionController.getAllQuestions);
 app.get('/question/:questionId', questionController.getQuestionById);
+
+//News Routes
 app.get("/news", newsController.getAllNews);
 app.get("/news/:newsId", newsController.getNewsById);
-app.get("/accounts", accountsController.getAllAccounts);
-app.get("/accounts/:accName", verifyAccount, accountsController.getAccountByName);
-app.get("/bannedaccounts", accountsController.getAccountIsBanned);
-app.get("/mutedaccounts", accountsController.getAccountsIsMuted);
-app.get("/bannedaccount/:dscName", discussionMembersController.getAccountIsBanned);
-app.get("/mutedaccount/:dscName", discussionMembersController.getAccountsIsMuted);
+app.post("/news", newsController.createNews);
 
 // Post routes
 app.get("/posts", postsController.getAllPosts); // admin
@@ -161,15 +189,22 @@ app.post("/invite", invitesController.createInvite); // discussion admin
 app.delete("/invite/:invId", invitesController.deleteInvite); // discussion admin
 
 // Additional routes
+app.get('/login', accountsController.login);
+app.get("/accounts", accountsController.getAllAccounts);
+app.get("/accounts/:accName", verifyAccount, accountsController.getAccountByName);
+app.get("/bannedaccounts", accountsController.getAccountIsBanned);
+app.get("/mutedaccounts", accountsController.getAccountsIsMuted);
+app.get("/bannedaccount/:dscName", discussionMembersController.getAccountIsBanned);
+app.get("/mutedaccount/:dscName", discussionMembersController.getAccountsIsMuted);
+app.get('/postReports/:discussionName', discussionMembersController.getPostReportsByDiscussion);
 app.get("/baninfo/:accName/:dscName", baninfoController.getBanInfo);
 app.get("/muteinfo/:accName/:dscName", muteinfoController.getMuteInfo);
 app.get("/unapprovedposts/:dscName", postsController.getUnapprovedPostsByDiscussion);
-app.post("/question", questionController.createQuestion);
 app.post("/muteinfo", muteinfoController.addMuteInfo);
 app.post("/baninfo", baninfoController.addBanInfo);
 app.post("/signup", accountsController.signup);
 app.post("/login", accountsController.login);
-app.post("/news", newsController.createNews);
+app.put('/updateProfile', accountsController.updateProfile);
 app.put('/promoteUser/:accName', accountsController.promoteUser);
 app.put('/demoteUser/:accName', accountsController.demoteUser);
 app.put("/promoteUsers/:accName/:dscName", discussionMembersController.promoteUser);
@@ -185,15 +220,10 @@ app.put("/account/unban/:accName/:dscName", discussionMembersController.unbanAcc
 app.put("/accounts/unmute/:accName", accountsController.unmuteUser);
 app.put("/account/unmute/:accName/:dscName", discussionMembersController.unmuteUser);
 app.put('/updateProfile', accountsController.updateProfile);
-app.put("/news/:newsId", newsController.updateNews);
-app.delete("/news/:newsId", newsController.deleteNews);
 app.delete("/baninfo/:accName/:dscName", baninfoController.removeBanInfo);
 app.delete("/muteinfo/:accName/:dscName", muteinfoController.removeMuteInfo);
 app.delete("/postReport/:postId", postReportsController.deletePostReport);
-app.delete("/siteadminApprove/:reportId", siteadminPostReportController.deletePostReport);
-app.delete("/siteadminDeny/:postId", siteadminPostReportController.deletePostReport);
-app.delete("/siteadminPost/:postId", siteadminPostReportController.deletePost);
-app.put('/updateProfile', accountsController.updateProfile);
+
 
 // Feedback routes
 app.post('/feedback', feedbackController.createFeedback);
