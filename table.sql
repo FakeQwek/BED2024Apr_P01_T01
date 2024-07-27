@@ -1,8 +1,12 @@
 DROP TABLE Volunteer; 
+DROP TABLE Invite;
+DROP TABLE DiscussionMember;
+DROP TABLE Feedback;
 DROP TABLE DiscussionAdmin; 
 DROP TABLE PostReport; 
 DROP TABLE DiscussionReport; 
 DROP TABLE Comment; 
+DROP TABLE PostLike;
 DROP TABLE Post; 
 DROP TABLE Discussion; 
 DROP TABLE Account;
@@ -12,23 +16,27 @@ DROP TABLE MuteInfo;
 DROP TABLE NewsPost;
 DROP TABLE Question;
  
-CREATE TABLE Account (      
-    AccName varchar(16) NOT NULL,  
-    AccEmail varchar(64) NOT NULL,      
-    Password varchar(255) NOT NULL, 
-    PhoneNumber varchar(15),
-    isAdmin varchar(5) NOT NULL,     
-    isMuted varchar(5) NOT NULL,  
-    isBanned varchar(6) NOT NULL,
-    EmailNotification varchar(20) NOT NULL DEFAULT 'Not allowed',
-    Gender varchar(10) NOT NULL DEFAULT 'NIL',
-    Language varchar(20) NOT NULL DEFAULT 'English',     
-    CONSTRAINT PK_Account PRIMARY KEY (AccName),  
-    CONSTRAINT CHK_Account_isAdmin CHECK (isAdmin IN ('True', 'False')),     
+CREATE TABLE Account (
+    AccName VARCHAR(16) NOT NULL,
+    AccEmail VARCHAR(64) NOT NULL,
+    Password VARCHAR(255) NOT NULL,
+    PhoneNumber VARCHAR(15),
+    isAdmin VARCHAR(5) NOT NULL,
+    isMuted VARCHAR(5) NOT NULL,
+    isBanned VARCHAR(6) NOT NULL,
+    EmailNotification VARCHAR(20) NOT NULL DEFAULT 'Not allowed',
+    Gender VARCHAR(10) NOT NULL DEFAULT 'NIL',
+    Language VARCHAR(20) NOT NULL DEFAULT 'English',
+    isSiteAdmin VARCHAR(5) NOT NULL DEFAULT 'False',
+    CONSTRAINT PK_Account PRIMARY KEY (AccName),
+    CONSTRAINT CHK_Account_isAdmin CHECK (isAdmin IN ('True', 'False')),
     CONSTRAINT CHK_Account_isMuted CHECK (isMuted IN ('True', 'False')),
     CONSTRAINT CHK_Account_isBanned CHECK (isBanned IN ('True', 'False')),
     CONSTRAINT CHK_Account_EmailNotification CHECK (EmailNotification IN ('allowed', 'Not allowed')),
-    CONSTRAINT CHK_Account_Gender CHECK (Gender IN ('Male', 'Female', 'NIL')));
+    CONSTRAINT CHK_Account_Gender CHECK (Gender IN ('Male', 'Female', 'NIL')),
+    CONSTRAINT CHK_Account_isSiteAdmin CHECK (isSiteAdmin IN ('True', 'False'))
+);
+
  
 CREATE TABLE Discussion ( 
     DscName varchar(16) NOT NULL, 
@@ -161,6 +169,16 @@ CREATE TABLE Invite (
     CONSTRAINT FK_Invite FOREIGN KEY (DscName)
     REFERENCES Discussion(DscName),
     CONSTRAINT AK_Invite_AccName_DscName UNIQUE (AccName, DscName));
+
+CREATE TABLE BanInfo (
+    AccName varchar(16) NOT NULL,
+    banDate DATETIME NOT NULL DEFAULT GETDATE(),
+    banReason varchar(255) NOT NULL,
+    bannedBy varchar(16) NOT NULL,
+    DscName varchar(16) NOT NULL,
+    CONSTRAINT FK_Account_BanInfo FOREIGN KEY (AccName) REFERENCES Account (AccName),
+    CONSTRAINT FK_DscName_BanInfo FOREIGN KEY (DscName) REFERENCES Discussion (DscName)
+);
 
 CREATE TABLE MuteInfo (
     AccName VARCHAR(16) NOT NULL,

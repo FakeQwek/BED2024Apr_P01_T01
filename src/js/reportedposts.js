@@ -6,7 +6,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(queryString);
     const discussionName = urlParams.get("discussionName");
 
-    let accountName = 'zultest';
+    let accountName;
+
+    async function checkAccountName() {
+        const res = await fetch("http://localhost:3000/accounts/" + localStorage.getItem("username"), {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("token")
+            }
+        });
+        const account = await res.json();
+    
+        // set html for account if the user is logged in
+        if (account.accName != null) {
+            const loginSignUp = document.getElementById("loginSignUp");
+            loginSignUp.innerHTML = `<button class="btn btn-sm mr-4 max-[820px]:hidden" onclick="goToProfile('` + account.accName + `')"><img src="../images/account-circle-outline.svg" width="20px" />` + account.accName + `</button>`;
+        }
+    
+        accountName = account.accName;
+    }
+    
+    checkAccountName();
 
     try {
         const response = await fetch(`http://localhost:3000/discussions/${encodeURIComponent(discussionName)}`);
@@ -27,7 +47,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
-        const response = await fetch(`http://localhost:3000/postReports/${encodeURIComponent(discussionName)}`);
+        const response = await fetch(`http://localhost:3000/postReport/${encodeURIComponent(discussionName)}`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -261,6 +281,8 @@ async function banUser(accName, banReason, bannedBy, postId, dscName, banDate) {
         console.error('Error banning user, deleting post and comments:', error);
     }
 }
+
+
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);

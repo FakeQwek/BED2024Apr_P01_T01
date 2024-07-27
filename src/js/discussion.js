@@ -344,96 +344,73 @@ async function DiscussionMembers() {
     const res = await fetch("http://localhost:3000/discussionMembers/" + discussionName);
     const discussionMembers = await res.json();
     
-    // sets the discussion member count
+    // Set the discussion member count
     memberCount.innerHTML = `<h2 class="font-bold">` + discussionMembers.length + `</h2>`;
 
     const joinButton = document.getElementById("joinButton");
 
-    // check if user is a member, muted or banned
+    // Check if user is a member, muted, banned, or admin
     for (let i = 0; i < discussionMembers.length; i++) {
         if (discussionMembers[i].accName == accountName && discussionMembers[i].dscName == discussionName) {
             isMember = true;
             
             if (discussionMembers[i].isMuted == "True") {
-                isMuted = "True";
+                isMuted = true;
             }
 
             if (discussionMembers[i].isBanned == "True") {
-                isBanned = "True";
+                isBanned = true;
+            }
+
+            if (discussionMembers[i].dscMemRole == 'Admin') {
+                isAdmin = true;
             }
         }
     }
 
-    for (let i = 0; i < discussionMembers.length; i++) {
-        if (discussionMembers[i].accName == accountName && discussionMembers[i].dscName == discussionName && discussionMembers[i].dscMemRole == 'Admin') {
-            isAdmin = true;
-            
-            if (discussionMembers[i].isMuted == "True") {
-                isMuted = "True";
-            }
-
-            if (discussionMembers[i].isBanned == "True") {
-                isBanned = "True";
-            }
-        }
+    // Redirect to admin page if the user is an admin
+    if (isAdmin) {
+        window.location.href = `discussion-admin.html?discussionName=${discussionName}`;
+        return;
     }
 
-    // display user is banned message if user is banned
-    if (!isBanned) {
-        // if discussion is not public check if user is a member
-        if (!isPublic) {
-            for (let i = 0; i < discussionMembers.length; i++) {
-                if (discussionMembers[i].accName == accountName && discussionMembers[i].dscName == discussionName) {
-                    Posts();
-                    isMember = true;
-                }
-            }
-            if (isAdmin){
-                window.location.href = `discussion-admin.html?discussionName=${discussionName}`;
+    // Display user is banned message if user is banned
+    if (isBanned) {
+        const discussionPosts = document.getElementById("discussionPosts");
+        discussionPosts.innerHTML = `<div class="flex flex-col justify-center items-center h-full">
+                                        <img src="../images/cancel.svg" width="100px" />
+                                        <h2 class="text-2xl font-bold">You are banned from this discussion</h2>
+                                    </div>`;
+        return;
+    }
 
-            }
-            // display user is not a member message
-            if (!isMember) {
-                const discussionPosts = document.getElementById("discussionPosts");
-    
-                const postHTML = `<div class="flex flex-col justify-center items-center h-full">
-                                    <img src="../images/lock-outline.svg" width="100px" />
-                                    <h2 class="text-2xl font-bold">You are not a member of this disucssion</h2>
-                                </div>`;
-    
-                discussionPosts.insertAdjacentHTML("beforeend", postHTML);
-            } else {
-                // set button text to leave if user is a member
-                joinButton.innerHTML = `<img src="../images/plus.svg" width="20px" />Leave`;
-            }
-            // remove the join button if the discussion is not public
-            if (joinButton) {
-                joinButton.remove();
-            }
+    // If discussion is not public, check if user is a member
+    if (!isPublic) {
+        if (!isMember) {
+            const discussionPosts = document.getElementById("discussionPosts");
+            const postHTML = `<div class="flex flex-col justify-center items-center h-full">
+                                <img src="../images/lock-outline.svg" width="100px" />
+                                <h2 class="text-2xl font-bold">You are not a member of this discussion</h2>
+                            </div>`;
+            discussionPosts.insertAdjacentHTML("beforeend", postHTML);
+            return;
         } else {
-            if (isMember) {
-                // set button text to leave if user is a member
-                joinButton.innerHTML = `<img src="../images/plus.svg" width="20px" />Leave`;
-            }
+            joinButton.innerHTML = `<img src="../images/plus.svg" width="20px" />Leave`;
             Posts();
         }
+    } else {
+        if (isMember) {
+            joinButton.innerHTML = `<img src="../images/plus.svg" width="20px" />Leave`;
+        }
+        Posts();
     }
 
     for (let i = 0; i < discussionMembers.length; i++) {
-        // display user is banned message
-        if (isBanned) {
-            const discussionPosts = document.getElementById("discussionPosts");
-            discussionPosts.innerHTML = `<div class="flex flex-col justify-center items-center h-full">
-                                            <img src="../images/cancel.svg" width="100px" />
-                                            <h2 class="text-2xl font-bold">You are banned from this discussion</h2>
-                                        </div>`;
-        }
-
-        // if user is an owner show them additional options to edit discussion details
+        // If user is an owner, show them additional options to edit discussion details
         if (discussionMembers[i].dscMemRole == "Owner" && discussionMembers[i].accName == accountName) {
             let bannerOptionsHTML;
 
-            // if discussion is restricted add an extra option for the owner to invite users
+            // If discussion is restricted, add an extra option for the owner to invite users
             if (discussionType == "Restricted") {
                 bannerOptionsHTML = `<li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="edit_discussion_modal.showModal()"><span class="w-full">Edit</span></button></li>
                                         <li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="invite_modal.showModal()"><span class="w-full">Invite</span></button></li>`;
@@ -443,11 +420,12 @@ async function DiscussionMembers() {
 
             bannerOptions.insertAdjacentHTML("beforeend", bannerOptionsHTML);
             
-            // remove the join button
+            // Remove the join button
             if (joinButton) {
                 joinButton.remove();
             }
-        } else if (discussionMembers[i].dscMemRole == "Admin") { // if user is an admin add their name to the banner
+        } else if (discussionMembers[i].dscMemRole == "Admin") {
+            // If user is an admin, add their name to the banner
             const discussionAdmins = document.getElementById("discussionAdmins");
             const discussionAdminsHTML = `<div class="flex items-center gap-2">
                                             <img src="../images/account-circle-outline.svg" width="30px" />
@@ -457,6 +435,7 @@ async function DiscussionMembers() {
         }
     }
 }
+
 
 // function to delete post
 async function deletePost(postId) {
@@ -648,8 +627,8 @@ async function getPostsByDiscussionOrderByLikes() {
     if (isMember) {
         discussionPosts.innerHTML = `<div class="flex justify-between w-full h-fit mt-4">
                                         <div>
-                                            <button class="btn btn-sm bg-white ml-8 max-[820px]:hidden" onclick="getPostsByDiscussionOrderByLikes()"><img src="../images/fire.svg" width="20px" />Hot</button>
-                                            <button class="btn btn-sm bg-white ml-4"><img src="../images/finance.svg" width="20px" />Trending</button>
+                                            <button class="btn btn-sm bg-white ml-8 max-[820px]:hidden" onclick="getPostsByDiscussionOrderByLikes()"><img src="../images/fire.svg" width="20px" />Top</button>
+                                            <button class="btn btn-sm bg-white ml-4"><img src="../images/finance.svg" width="20px" />Newest</button>
                                         </div>
                                         <div>
                                             <button id="joinButton" class="btn btn-sm bg-white mr-4 max-[820px]:mr-2" onclick="createDiscussionMember()"><img src="../images/plus.svg" width="20px" />Leave</button>
@@ -659,8 +638,8 @@ async function getPostsByDiscussionOrderByLikes() {
     } else {
         discussionPosts.innerHTML = `<div class="flex justify-between w-full h-fit mt-4">
                                         <div>
-                                            <button class="btn btn-sm bg-white ml-8 max-[820px]:hidden" onclick="getPostsByDiscussionOrderByLikes()"><img src="../images/fire.svg" width="20px" />Hot</button>
-                                            <button class="btn btn-sm bg-white ml-4"><img src="../images/finance.svg" width="20px" />Trending</button>
+                                            <button class="btn btn-sm bg-white ml-8 max-[820px]:hidden" onclick="getPostsByDiscussionOrderByLikes()"><img src="../images/fire.svg" width="20px" />Top</button>
+                                            <button class="btn btn-sm bg-white ml-4"><img src="../images/finance.svg" width="20px" />Newest</button>
                                         </div>
                                         <div>
                                             <button id="joinButton" class="btn btn-sm bg-white mr-4 max-[820px]:mr-2" onclick="createDiscussionMember()"><img src="../images/plus.svg" width="20px" />Join</button>
@@ -937,8 +916,8 @@ async function getPostsByDiscussionOrderByPostDate() {
     if (isMember) {
         discussionPosts.innerHTML = `<div class="flex justify-between w-full h-fit mt-4">
                                         <div>
-                                            <button class="btn btn-sm bg-white ml-8 max-[820px]:hidden" onclick="getPostsByDiscussionOrderByLikes()"><img src="../images/fire.svg" width="20px" />Hot</button>
-                                            <button class="btn btn-sm bg-white ml-4" onclick="getPostsByDiscussionOrderByPostDate()"><img src="../images/finance.svg" width="20px" />Trending</button>
+                                            <button class="btn btn-sm bg-white ml-8 max-[820px]:hidden" onclick="getPostsByDiscussionOrderByLikes()"><img src="../images/fire.svg" width="20px" />Top</button>
+                                            <button class="btn btn-sm bg-white ml-4" onclick="getPostsByDiscussionOrderByPostDate()"><img src="../images/finance.svg" width="20px" />Newest</button>
                                         </div>
                                         <div>
                                             <button id="joinButton" class="btn btn-sm bg-white mr-4 max-[820px]:mr-2" onclick="createDiscussionMember()"><img src="../images/plus.svg" width="20px" />Leave</button>
@@ -948,8 +927,8 @@ async function getPostsByDiscussionOrderByPostDate() {
     } else {
         discussionPosts.innerHTML = `<div class="flex justify-between w-full h-fit mt-4">
                                         <div>
-                                            <button class="btn btn-sm bg-white ml-8 max-[820px]:hidden" onclick="getPostsByDiscussionOrderByLikes()"><img src="../images/fire.svg" width="20px" />Hot</button>
-                                            <button class="btn btn-sm bg-white ml-4" onclick="getPostsByDiscussionOrderByPostDate()"><img src="../images/finance.svg" width="20px" />Trending</button>
+                                            <button class="btn btn-sm bg-white ml-8 max-[820px]:hidden" onclick="getPostsByDiscussionOrderByLikes()"><img src="../images/fire.svg" width="20px" />Top</button>
+                                            <button class="btn btn-sm bg-white ml-4" onclick="getPostsByDiscussionOrderByPostDate()"><img src="../images/finance.svg" width="20px" />Newest</button>
                                         </div>
                                         <div>
                                             <button id="joinButton" class="btn btn-sm bg-white mr-4 max-[820px]:mr-2" onclick="createDiscussionMember()"><img src="../images/plus.svg" width="20px" />Join</button>

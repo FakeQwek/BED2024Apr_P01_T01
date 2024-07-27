@@ -34,15 +34,20 @@
 </head>
 <body class="h-screen bg-gray-100">
     <!-- navbar -->
-    <div class="fixed w-full z-10 bg-white border-b-2">
-        <div class="flex justify-center items-center h-12">
-            <div class="flex w-1/4"></div>
-            <div class="flex justify-center w-1/2">
-                <input type="text" placeholder="Search" class="input input-sm input-bordered w-full rounded-full" />
+    <div class="flex justify-center items-center h-12 bg-white border-b-2">
+        <div class="flex w-1/4">
+            <label for="my-drawer-2" class="drawer-button bg-white ml-4 lg:hidden">
+                <img src="../images/menu.svg" width="30px" />
+            </label>
+        </div>
+        <div class="flex justify-center w-1/2">
+            <input id="searchBar" type="text" placeholder="Search" class="input input-sm input-bordered w-full rounded-full" />
+            <div id="searchResultsContainer" class="absolute w-1/2 px-4 invisible z-10">
+                <div id="searchResults" class="flex flex-col bg-white mt-8"></div>
             </div>
-            <div class="flex justify-end w-1/4">
-                <img src="../images/account-circle-outline.svg" width="30px" />
-            </div>
+        </div>
+        <div class="flex justify-end w-1/4">
+            <div id="loginSignUp"></div>
         </div>
     </div>
 
