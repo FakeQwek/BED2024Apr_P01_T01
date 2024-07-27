@@ -1,4 +1,4 @@
-apikey = `90e9569a674059687d8ded8f456f9cab`
+apikey = `ad61a3b55ab20ed21479950c798b39d9`
 url = 'https://gnews.io/api/v4/top-headlines?category=health&lang=en&country=sg&max=10&apikey=' + apikey;
 const newsContainer = document.getElementById("news-container");
 const loadButton = document.getElementById("load-button");
