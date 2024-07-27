@@ -64,8 +64,19 @@ const updateDiscussion = async (req, res) => {
     const dscName = req.params.dscName;
     const { dscDesc } = req.body;
 
+    // Check if dscDesc is provided
+    if (!dscDesc) {
+        return res.status(400).send('dscDesc is required');
+    }
+
     try {
-        await Discussion.updateDiscussion(dscName, dscDesc);
+        // Log the received data
+        console.log('Received data for updating discussion:', {
+            dscName,
+            dscDesc
+        });
+
+        await Discussion.updateDiscussion(dscName, { dscDesc }); // Pass dscDesc as an object
         res.status(200).send('Discussion updated successfully');
     } catch (error) {
         console.error('Error updating discussion:', error);

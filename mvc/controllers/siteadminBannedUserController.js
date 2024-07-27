@@ -11,6 +11,7 @@ const getAllBannedUsers = async (req, res) => {
     }
 };
 
+
 //Takes name as parameter
 const getBannedUsersByName = async (req,res) => {
     try {
