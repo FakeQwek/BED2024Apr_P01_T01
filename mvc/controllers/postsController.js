@@ -103,6 +103,11 @@ const getPostsByUser = async (req, res) => {
     }
 };
 
+
+
+
+
+
 const createPost = async (req, res) => {
     const newPost = req.body;
     try {

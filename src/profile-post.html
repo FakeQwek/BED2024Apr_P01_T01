@@ -175,7 +175,6 @@
             transform: scaleX(1);
             transform-origin: bottom left;
         }
-
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col">
@@ -233,35 +232,46 @@
             </div>
         </div>
 
-        <!-- Main Content Area -->
-        <main class="flex-1 p-8">
-            <div class="bg-white p-8 rounded-2xl shadow-lg max-w-2xl mx-auto">
-                <div class="flex items-center mb-8">
-                    <img src="../images/person.png" alt="User Profile Picture" class="rounded-full h-20 w-20 mr-4">
-                    <h2 class="text-3xl font-bold">u:</h2>
+       <!-- Main Content Area -->
+    <main class="flex-1 p-8">
+        <div class="bg-white p-8 rounded-2xl shadow-lg max-w-2xl mx-auto">
+            <div class="flex items-center mb-8">
+                <img src="../images/person.png" alt="User Profile Picture" class="rounded-full h-20 w-20 mr-4">
+                <h2 class="text-3xl font-bold" id="usernameDisplay">u:</h2>
+            </div>
+            <div class="flex flex-col bg-white p-4 rounded-lg shadow">
+                <div class="flex justify-between items-center border-b pb-4 mb-4">
+                    <div class="flex items-center gap-8">
+                        <a href="profile.html" class="underline-animation text-gray-500 pb-2">Overview</a>
+                        <a href="profile-post.html" class="underline-animation active text-gray-500 pb-2">Posts</a>
+                        <a href="profile-comment.html" class="underline-animation text-gray-500 pb-2">Comments</a>
+                    </div>
                 </div>
-                <div class="flex flex-col bg-white p-4 rounded-lg shadow">
-                    <div class="flex justify-between items-center border-b pb-4 mb-4">
-                        <div class="flex items-center gap-8">
-                            <a href="profile.html" class="underline-animation text-gray-500 pb-2">Overview</a>
-                            <a href="display-post.html" class="underline-animation active text-gray-500 pb-2">Posts</a>
-                            <a href="display-comment.html" class="underline-animation text-gray-500 pb-2">Comments</a>
-                        </div>
-                    </div>
-                    <div id="posts-container">
-                        <!-- Posts will be injected here -->
-                    </div>
+                <div id="posts-container">
+                    <!-- Posts will be injected here -->
+                </div>
                 </div>
             </div>
         </main>
     </div>
 
     <script>
-        async function fetchPosts() {
+        document.addEventListener('DOMContentLoaded', () => {
+            const username = localStorage.getItem('username');
+            if (username) {
+                document.getElementById('usernameDisplay').innerText = `u/${username}`;
+                fetchPosts(username);
+            } else {
+                console.error('Username not found in localStorage');
+            }
+        });
+
+        async function fetchPosts(username) {
             try {
-                const response = await fetch('http://localhost:3000/posts');
+                const response = await fetch(`http://localhost:3000/posts/user/${username}`);
                 const posts = await response.json();
                 const postsContainer = document.getElementById('posts-container');
+                postsContainer.innerHTML = ''; // Clear existing posts
                 posts.forEach(post => {
                     const postElement = document.createElement('div');
                     postElement.className = 'post-card';
@@ -269,11 +279,11 @@
                         <div class="post-header">
                             <img src="../images/person.png" alt="User Profile Picture">
                             <div>
-                                <div class="post-meta">u:${post.ownerID}</div>
-                                <div class="post-title">${post.postName}</div>
+                                <div class="post-meta">u/${post.OwnerID}</div>
+                                <div class="post-title">${post.PostName}</div>
                             </div>
                         </div>
-                        <div class="post-body">${post.postDesc}</div>
+                        <div class="post-body">${post.PostDesc}</div>
                     `;
                     postsContainer.appendChild(postElement);
                 });
@@ -281,8 +291,6 @@
                 console.error('Error fetching posts:', error);
             }
         }
-
-        window.onload = fetchPosts;
     </script>
 </body>
 </html>

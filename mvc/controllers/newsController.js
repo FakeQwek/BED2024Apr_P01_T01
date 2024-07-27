@@ -1,3 +1,4 @@
+//News controller returns news json responses and logs internal server error if unsuccessful
 const News = require("../models/news");
 
 const getAllNews = async (req, res) => {
@@ -47,7 +48,7 @@ const updateNews = async (req, res) => {
     try {
         const updatedNews = await News.updateNews(newsId, newNewsData);
         if (!updateNews) {
-            return res.status(500).send("News not found");
+            return res.status(404).send("News not found");
         }
         res.json(updateNews);
     } catch (error) {
@@ -61,7 +62,7 @@ const deleteNews = async (req, res) => {
     try {
         const success = await News.deleteNews(newsId);
         if (!success) {
-            return res.status(500).send("News not found")
+            return res.status(404).send("News not found")
         }
         res.status(204).send();
     } catch (error) {

@@ -1,4 +1,4 @@
-apikey = "ad61a3b55ab20ed21479950c798b39d9";
+apikey = `ad61a3b55ab20ed21479950c798b39d9`
 url = 'https://gnews.io/api/v4/top-headlines?category=health&lang=en&country=sg&max=10&apikey=' + apikey;
 const newsContainer = document.getElementById("news-container");
 const loadButton = document.getElementById("load-button");
@@ -18,6 +18,7 @@ loadButton.addEventListener("click", function (){
     for (i = 0; i < 5; i++){
 
         newsIndex = lastIndex + i;
+        //If the news index exceeds the amount of news, displays 'no more news to populate'
         if (newsIndex >= storednewsData.length) {
             console.log("No more news to populate!");
             loadButton.innerHTML = `End of News`
@@ -25,6 +26,7 @@ loadButton.addEventListener("click", function (){
         }
         article = storednewsData[newsIndex];
         console.log(article["newsId"]);
+        //Creates news post with article data
         loadContainer.insertAdjacentHTML("beforebegin",
             `<div class="flex justify-center w-full">
                 <div class="card w-5/6 bg-white news-card">

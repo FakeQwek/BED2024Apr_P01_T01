@@ -86,6 +86,13 @@
         .sidebar {
             flex: 1;
             padding: 1rem;
+            height: 100vh; /* Makes the sidebar take full viewport height */
+            overflow-y: auto; /* Enables vertical scrolling if content exceeds viewport height */
+            position: fixed; /* Keeps the sidebar fixed while scrolling */
+            top: 0; /* Positions the sidebar at the top */
+            left: 0; /* Positions the sidebar at the left */
+            width: 250px; /* Sets a fixed width for the sidebar */
+            background-color: #fff; /* Optional: background color for the sidebar */
         }
 
         .create-discussion-card {
@@ -193,41 +200,45 @@
         </div>
     </header>
 
-    <!-- Main Content -->
-    <div class="flex flex-row h-full">
-        <!-- Sidebar -->
-        <div class="drawer lg:drawer-open w-1/6 max-[820px]:w-0 z-20">
-            <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
-            <div class="drawer-content flex flex-col items-center justify-center">
-                <!-- Page content here -->
+    <!-- main -->
+    <div class="flex flex-row flex-grow">
+        <!-- sidebar -->
+        <div class="flex flex-col items-center w-1/6 min-h-screen bg-white border-r-2">
+            <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+                <div class="flex items-center">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none" onclick="window.location.href='index.html'"><span class="flex items-center w-full gap-2"><img src="../images/home-variant-outline.svg" width="30px" />Home</span></button>
+                </div>
+                <div class="flex items-center">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none" onclick="window.location.href='profilesetting.html'"><span class="flex items-center w-full gap-2"><img src="../images/account-circle-outline.svg" width="30px" />Profile</span></button>
+                </div>
+                <div class="flex items-center">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none" onclick="window.location.href='news.html'"><span class="flex items-center w-full gap-2"><img src="../images/newspaper-variant-outline.svg" width="30px" />News</span></button>
+                </div>
+                <div class="flex items-center">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none" onclick="window.location.href='feedback.html'"><span class="flex items-center w-full gap-2"><img src="../images/feedback.svg" width="30px" />Feedback</span></button>
+                </div>
             </div>
-            <div class="drawer-side w-2/3">
-                <ul class="menu bg-white text-base-content min-h-full w-full items-center border-r-2">
-                    <!-- Sidebar content here -->
-                    <div class="flex w-full m-2 lg:hidden">
-                        <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay">
-                            <img src="../images/chevron-left.svg" width="30px" />
-                        </label>
-                    </div>
-                    <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
-                        <li><a href="./index.html"><span class="flex items-center w-full gap-2"><img src="../images/home-variant-outline.svg" width="30px" />Home</span></a></li>
-                        <li><a href="./profile.html"><span class="flex items-center w-full gap-2"><img src="../images/account-circle-outline.svg" width="30px" />Profile</span></a></li>
-                        <li><a href="./news.html"><span class="flex items-center w-full gap-2"><img src="../images/newspaper-variant-outline.svg" width="30px" />News</span></a></li>
-                    </div>
-                    <div id="joinedDiscussions" class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
-                        <h2 class="font-bold mb-2">FOR YOU</h2>
-                        
-                    </div>
-                    <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
-                        <h2 class="font-bold mb-2">LEARN MORE</h2>
-                        <li><a href="./about.html"><span class="flex items-center w-full gap-2"><img src="../images/information-outline.svg" width="30px" />About Us</span></a></li>
-                        <li><a href="./contact-us.html"><span class="flex items-center w-full gap-2"><img src="../images/phone-in-talk.svg" width="30px" />Contact Us</span></a></li>
-                        <li><a href="./userstatistics.html"><span class="flex items-center w-full gap-2"><img src="../images/finance.svg" width="30px" />Statistics</span></a></li>
-                    </div>
-                </ul>
-
+            <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+                <h2 class="font-bold mb-2">FOR YOU</h2>
+            </div>
+            <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+                <h2 class="font-bold mb-2">LEARN MORE</h2>
+                <div class="flex items-center">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none" onclick="window.location.href='about.html'"><span class="flex items-center w-full gap-2"><img src="../images/information-outline.svg" width="30px" />About Us</span></button>
+                </div>
+                <div class="flex items-center">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none" onclick="window.location.href='contact-us.html'"><span class="flex items-center w-full gap-2"><img src="../images/phone-in-talk.svg" width="30px" />Contact Us</span></button>
+                </div>
+                <div class="flex items-center">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/finance.svg" width="30px" />User Statistics</span></button>
+                </div>
+                
+                <div class="flex items-center">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/logout.svg" width="30px" />Logout</span></button>
+                </div>
             </div>
         </div>
+
         <!-- Main Content Area -->
         <main class="flex-1 p-8">
             <div class="bg-white p-8 rounded-2xl shadow-lg max-w-2xl mx-auto">
@@ -238,12 +249,14 @@
                 <div class="flex flex-col bg-white p-4 rounded-lg shadow">
                     <div class="flex justify-between items-center border-b pb-4 mb-4">
                         <div class="flex items-center gap-8">
-                            <a href="profile.html" class="underline-animation active text-gray-500 pb-2">Overview</a>
+                            <a href="profile.html" class="underline-animation text-gray-500 pb-2">Overview</a>
                             <a href="profile-post.html" class="underline-animation text-gray-500 pb-2">Posts</a>
-                            <a href="profile-comment.html" class="underline-animation text-gray-500 pb-2">Comments</a>
+                            <a href="profile-comment.html" class="underline-animation active text-gray-500 pb-2">Comments</a>
                         </div>
                     </div>
-                    <div class="text-center text-gray-500">u/henryneofan2 hasn’t done anything</div>
+                    <div id="comments-container">
+                        <!-- Comments will be injected here -->
+                    </div>
                 </div>
             </div>
         </main>
@@ -254,42 +267,48 @@
             const username = localStorage.getItem('username');
             if (username) {
                 document.getElementById('usernameDisplay').innerText = `u/${username}`;
+                fetchComments(username);
             }
         });
 
-        const overviewButton = document.getElementById('overviewButton');
-        const postsButton = document.getElementById('postsButton');
-        const commentsButton = document.getElementById('commentsButton');
-        const overviewSection = document.getElementById('overviewSection');
-        const postsSection = document.getElementById('postsSection');
-        const commentsSection = document.getElementById('commentsSection');
-
-        overviewButton.addEventListener('click', () => {
-            overviewSection.classList.remove('hidden');
-            postsSection.classList.add('hidden');
-            commentsSection.classList.add('hidden');
-            overviewButton.classList.add('active');
-            postsButton.classList.remove('active');
-            commentsButton.classList.remove('active');
+        async function fetchComments(username) {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`http://localhost:3000/comments/user/${username}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
         });
 
-        postsButton.addEventListener('click', () => {
-            overviewSection.classList.add('hidden');
-            postsSection.classList.remove('hidden');
-            commentsSection.classList.add('hidden');
-            postsButton.classList.add('active');
-            overviewButton.classList.remove('active');
-            commentsButton.classList.remove('active');
-        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
 
-        commentsButton.addEventListener('click', () => {
-            overviewSection.classList.add('hidden');
-            postsSection.classList.add('hidden');
-            commentsSection.classList.remove('hidden');
-            commentsButton.classList.add('active');
-            overviewButton.classList.remove('active');
-            postsButton.classList.remove('active');
+        const text = await response.text();
+        const comments = text ? JSON.parse(text) : [];
+        const commentsContainer = document.getElementById('comments-container');
+        commentsContainer.innerHTML = '';
+        comments.forEach(comment => {
+            const commentElement = document.createElement('div');
+            commentElement.className = 'post-card';
+            commentElement.innerHTML = `
+                <div class="post-header">
+                    <img src="../images/person.png" alt="User Profile Picture">
+                    <div>
+                        <div class="post-meta">u/${comment.accName}</div>
+                        <div class="post-title">${comment.cmtDesc}</div>
+                    </div>
+                </div>
+            `;
+            commentsContainer.appendChild(commentElement);
         });
+    } catch (error) {
+        console.error('Error fetching comments:', error);
+    }
+}
+
     </script>
 </body>
 </html>

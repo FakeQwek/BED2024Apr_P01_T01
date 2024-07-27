@@ -1,4 +1,4 @@
-//Note id is equivalent to name
+//News model contains crud operations to manipulate newspost data
 
 const sql =  require("mssql");
 const dbConfig = require("../../dbConfig");
@@ -14,7 +14,8 @@ class News {
         this.newsUrl = newsUrl;
         this.newsDate = newsDate;
     }
-
+    
+    //Gets all newspost data ordered by newest data first
     static async getAllNews() {
         const connection = await sql.connect(dbConfig);
        
@@ -28,6 +29,7 @@ class News {
         return result.recordset.map((row) => new News(row.NewsID, row.NewsImage, row.NewsDesc, row.NewsSource));
     }
 
+    //Gets newspost data by its newsId
     static async getNewsById(newsId) {
         const connection = await sql.connect(dbConfig);
      
@@ -43,7 +45,7 @@ class News {
     }
 
     
-
+    //Creates a newspost 
     static async createNews(newNewsData) {
         const connection = await sql.connect(dbConfig);
         
@@ -62,35 +64,7 @@ class News {
         connection.close();
     }
 
-    static async updateNews(newsId, newNewsData) {
-        const connection = await sql.connect(dbConfig);
 
-        const sqlQuery = `UPDATE NewsPost SET NewsImage = @newsImage, NewsDesc = @newsDesc, NewsSource = @newsSource, WHERE NewsID = @newsId`;
-
-        const request = connection.request();
-        request.input("newsId", newsId);
-        request.input("newsImage", newNewsData.newsImage || null);
-        request.input("newsDesc", newNewsData.newsDesc || null);
-        request.input("newsSource", newNewsData.newsSource || null);
-
-        await request.query(sqlQuery);
-
-        connection.close();
-
-        return this.getNewsById(newsId);
-    }
-
-    static async deleteNews(newsId) {
-        const connection = await sql.connect(dbConfig);
-
-        const sqlQuery = `DELETE FROM NewsPost WHERE NewsID = @newsId`;
-
-        const request = connection.request();
-        request.input("newsId", newsId);
-        const result = await request.query(sqlQuery);
-
-        connection.close();
-    }
 }
 
 module.exports = News;

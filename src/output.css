@@ -3229,6 +3229,10 @@ html:has(.drawer-toggle:checked) {
   margin-bottom: 2rem;
 }
 
+.mb-16 {
+  margin-bottom: 4rem;
+}
+
 .ml-12 {
   margin-left: 3rem;
 }
@@ -3469,6 +3473,10 @@ html:has(.drawer-toggle:checked) {
 
 .flex-grow {
   flex-grow: 1;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
 }
 
 .transform {

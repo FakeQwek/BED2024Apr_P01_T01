@@ -1,5 +1,6 @@
 require('dotenv').config();
 const jwt = require("jsonwebtoken");
+const fetch = require("node-fetch");
 
 const verifyDiscussionMember = async (req, res, next) => {
     const authHeader = req.headers['authorization'];
@@ -14,21 +15,42 @@ const verifyDiscussionMember = async (req, res, next) => {
         }
 
         async function getDiscussion() {
-            const res = await fetch("http://localhost:3000/discussions/" + dscName);
-            const discussion = await res.json();
+            const response = await fetch("http://localhost:3000/discussions/" + dscName);
+            
+            if (!response.ok) {
+                // If the discussion is not found, handle the error
+                if (response.status === 404) {
+                    return res.status(404).json({ message: "Discussion not found" });
+                } else {
+                    return res.status(500).json({ message: "Error retrieving discussion" });
+                }
+            }
+
+            const discussion = await response.json();
 
             if (discussion.dscType == "Public") {
                 next();
             } else {
                 async function getDiscussionMember() {
-                    const res = await fetch("http://localhost:3000/discussionMembers/" + dscName);
-                    const discussionMembers = await res.json();
+                    const response = await fetch("http://localhost:3000/discussionMembers/" + dscName);
+                    
+                    if (!response.ok) {
+                        // If discussion members are not found, handle the error
+                        if (response.status === 404) {
+                            return res.status(404).json({ message: "Discussion members not found" });
+                        } else {
+                            return res.status(500).json({ message: "Error retrieving discussion members" });
+                        }
+                    }
+
+                    const discussionMembers = await response.json();
         
                     for (let i = 0; i < discussionMembers.length; i++) {
                         if (discussionMembers[i].accName == decoded.username) {
-                            next();
+                            return next();
                         }
                     }
+                    return res.status(403).json({ message: "Forbidden" }); // Add this line to handle when user is not a member
                 }
                 getDiscussionMember();
             }

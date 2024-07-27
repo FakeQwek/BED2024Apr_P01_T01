@@ -10,7 +10,8 @@
         this.accId = accId;
         this.accName = accName;
      }
- 
+     
+     //Retrieves all muted users
      static async getAllMutedUsers() {
          
          const connection = await sql.connect(dbConfig);
@@ -23,8 +24,10 @@
          return result.recordset.map((row) => new MutedUsers(row.AccID, row.AccName));
      }
 
+     //Retrieves muted users by name (as searched by user)
      static async getMutedUsersByName(accName) {
         const connection = await sql.connect(dbConfig);
+        //Gets the muted user with AccName containing characters from input accName
         const query = 
         `SELECT AccID, AccName FROM Account WHERE AccName LIKE '%${accName}%' AND isMuted ='true'`;
     
@@ -35,6 +38,7 @@
         return result.recordset.map((row) => new MutedUsers(row.AccID, row.AccName));
      }
 
+     //Put operation makes user muted
      static async unmuteUser(accId) {
         const connection = await sql.connect(dbConfig);
         const query = 

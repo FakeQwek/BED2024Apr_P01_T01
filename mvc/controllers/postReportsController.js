@@ -1,3 +1,5 @@
+//Post Report controller returns post report json responses and logs internal server error if unsuccessful
+
 const PostReport = require("../models/postReport");
 
 const getAllPostReports = async (req, res) => {
@@ -9,6 +11,10 @@ const getAllPostReports = async (req, res) => {
         res.status(500).send("Error retrieving post reports");
     }
 };
+
+
+
+//Takes post report id as parameter
 
 const getPostReportById = async (req, res) => {
     const postRptId = parseInt(req.params.postRptId);

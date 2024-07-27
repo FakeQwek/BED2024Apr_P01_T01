@@ -68,7 +68,7 @@ CREATE TABLE Comment (
     CONSTRAINT FK_Comment_PostID FOREIGN KEY (PostID) 
     REFERENCES Post(PostID)); 
  
-CREATE TABLE DiscussionReport ( 
+/*CREATE TABLE DiscussionReport ( 
     DscRptID varchar(10) NOT NULL, 
     DscRptCat varchar(100) NOT NULL, 
     DscRptDesc varchar(100) NOT NULL, 
@@ -78,7 +78,7 @@ CREATE TABLE DiscussionReport (
     CONSTRAINT FK_DiscussionReport_AccName FOREIGN KEY (AccName) 
     REFERENCES Account(AccName), 
     CONSTRAINT FK_DiscussionReport_DscName FOREIGN KEY (DscName) 
-    REFERENCES Discussion(DscName)); 
+    REFERENCES Discussion(DscName)); */
  
 CREATE TABLE PostReport ( 
     PostRptID varchar(10) NOT NULL, 
@@ -177,3 +177,24 @@ CREATE TABLE Question (
     Email varchar(255) NOT NULL,
     Query varchar(255) NOT NULL,
     CONSTRAINT PK_Question PRIMARY KEY(QuestionID));
+
+CREATE TABLE Feedback (
+    FeedbackID INT IDENTITY(1,1) PRIMARY KEY,
+    Username VARCHAR(255) NOT NULL,
+    RatingStar INT NOT NULL,
+    FeedbackDescription VARCHAR(MAX) NOT NULL
+);
+
+CREATE TABLE DiscussionReport (
+    DscRptID varchar(10) NOT NULL,
+    DscRptCat varchar(100) NOT NULL,
+    DscRptDesc varchar(100) NOT NULL,
+    AccName varchar(16) NOT NULL,
+    DscName varchar(16) NOT NULL,
+    Warned BIT DEFAULT 0,
+    CONSTRAINT PK_DiscussionReport PRIMARY KEY (DscRptID),
+    CONSTRAINT FK_DiscussionReport_AccName FOREIGN KEY (AccName)
+    REFERENCES Account(AccName),
+    CONSTRAINT FK_DiscussionReport_DscName FOREIGN KEY (DscName)
+    REFERENCES Discussion(DscName)
+);

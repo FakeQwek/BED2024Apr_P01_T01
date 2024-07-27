@@ -272,6 +272,8 @@
                             </div>
                             <button onclick="changeLanguage()" class="text-blue-500 hover:underline">change</button>
                         </div>
+                        <!-- Add the missing username input element here -->
+                        <input type="hidden" id="username">
                     </div>
                 </div>
                 <div class="text-right">
@@ -305,24 +307,28 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-    const username = localStorage.getItem('username') || 'undefined';
-    const email = localStorage.getItem('email') || 'undefined';
-    const emailNotification = localStorage.getItem('emailNotification') || 'Not allowed';
-    const gender = localStorage.getItem('gender') || 'NIL';
-    const language = localStorage.getItem('language') || 'English';
-    const phoneNumber = localStorage.getItem('phoneNumber') || '123-456-7890';
+            const username = localStorage.getItem('username') || 'undefined';
+            const email = localStorage.getItem('email') || 'undefined';
+            const emailNotification = localStorage.getItem('emailNotification') || 'Not allowed';
+            const gender = localStorage.getItem('gender') || 'NIL';
+            const language = localStorage.getItem('language') || 'English';
+            const phoneNumber = localStorage.getItem('phoneNumber') || '123-456-7890';
 
-    document.getElementById('profileUsername').textContent = `u:${username}`;
-    document.getElementById('profileUsernameDisplay').textContent = username;
-    document.getElementById('profileEmail').textContent = email;
-    document.getElementById('profileEmailNotification').textContent = emailNotification;
-    document.getElementById('profileGender').textContent = gender;
-    document.getElementById('profileLanguage').textContent = language;
-    document.getElementById('profilePhoneNumber').textContent = phoneNumber;
+            document.getElementById('profileUsername').textContent = `u:${username}`;
+            document.getElementById('profileUsernameDisplay').textContent = username;
+            document.getElementById('profileEmail').textContent = email;
+            document.getElementById('profileEmailNotification').textContent = emailNotification;
+            document.getElementById('profileGender').textContent = gender;
+            document.getElementById('profileLanguage').textContent = language;
+            document.getElementById('profilePhoneNumber').textContent = phoneNumber;
 
-    document.getElementById('username').value = username;
-});
-
+            const usernameInput = document.getElementById('username');
+            if (usernameInput) {
+                usernameInput.value = username;
+            } else {
+                console.error("Element with id 'username' not found.");
+            }
+        });
 
         function navigateToConfirmDelete() {
             window.location.href = 'confirm_delete.html';
@@ -390,7 +396,6 @@
     const phoneNumber = document.getElementById('profilePhoneNumber').textContent;
     const emailNotification = document.getElementById('profileEmailNotification').textContent;
     const gender = document.getElementById('profileGender').textContent;
-    const language = document.getElementById('profileLanguage').textContent;
     const currentEmail = localStorage.getItem('email');
 
     fetch('http://localhost:3000/updateProfile', {
@@ -402,13 +407,13 @@
     })
     .then(response => response.json())
     .then(data => {
+        console.log("Update Profile Response:", data);
         if (data.message === 'Profile updated successfully') {
             alert('Profile updated successfully!');
             localStorage.setItem('username', username);
             localStorage.setItem('email', email);
             localStorage.setItem('emailNotification', emailNotification);
             localStorage.setItem('gender', gender);
-            localStorage.setItem('language', language);
             localStorage.setItem('phoneNumber', phoneNumber);
         } else {
             alert('Failed to update profile');
@@ -418,6 +423,8 @@
         console.error('Error updating profile:', error);
     });
 }
+
+
 
     </script>
 </body>

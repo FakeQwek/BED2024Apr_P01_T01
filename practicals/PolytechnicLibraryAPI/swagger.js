@@ -11,4 +11,5 @@ const doc = {
   host: "localhost:3000", // Replace with your actual host if needed
 };
 
+
 swaggerAutogen(outputFile, routes, doc);

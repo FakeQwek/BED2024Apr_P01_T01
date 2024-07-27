@@ -8,6 +8,9 @@ const confirm = document.getElementById("confirm");
 const mutedPage = document.getElementById("muted-button");
 const bannedPage = document.getElementById("banned-button");
 const reportedPostPage = document.getElementById("reported-button");
+const discussionPage = document.getElementById("discussion-button");
+const sidebar = document.getElementById("sidebar");
+
 
 var selection = "none";
 var data = [];
@@ -17,32 +20,41 @@ var bannedUsers = [];
 getBannedUsers();
 addPopupListeners();
 
-//Tries to get all users by name
+//Tries to get all users by name after clicking search button
 searchButton.addEventListener("click", function(e) {
     query = searchBox.value;
     bannedUsers = [];
     getBannedUsersByName(query);
 })
 
+//Links to muted users page
 mutedPage.addEventListener("click", function(e) {
     window.location.href= "./siteadmin-mutedusers.html";
 })
 
+//Links to banned users page
 bannedPage.addEventListener("click", function(e) {
     window.location.href= "./siteadmin-bannedusers.html";
 })
 
+//Links to reported posts page
 reportedPostPage.addEventListener("click", function(e) {
     window.location.href= "./siteadmin-reportedposts.html";
 })
 
+//Links to reported discussions page
+discussionPage.addEventListener("click", function(e) {
+    window.location.href= "./siteadmin.html";
+})
 
+//Populates each banned user in the html
 function populateUsers(bannedUsers) {
     userBox.innerHTML = "";
     length = bannedUsers.length;
+    //If there are no banned users left 'No more banned users' is displayed
     if (length == 0) {
         userBox.insertAdjacentHTML("beforeEnd",`
-            <div class = "bg-white w-70per m-auto rounded-xl flex justify-center">No more Banned Users</div>
+            <div class = "bg-white w-70per m-auto rounded-xl flex justify-center p-2">No more Banned Users</div>
             `)
     }
     for (i = 0; i < length; i++ ) {
@@ -56,6 +68,7 @@ function populateUsers(bannedUsers) {
     addUserListeners();
 }
 
+//Get banned users from the local database
 async function getBannedUsers() {
     response = await fetch("http://localhost:3000/siteadmin/bannedusers")
     .then(response => {
@@ -80,6 +93,7 @@ async function getBannedUsers() {
 
 }
 
+//Get all banned users by name
 async function getBannedUsersByName(accName) {
     console.log(accName);
     response = await fetch(`http://localhost:3000/siteadmin/bannedusers/${accName}`)
@@ -105,6 +119,8 @@ async function getBannedUsersByName(accName) {
 
 }
 
+
+//Unbans user
 async function unbanUser(accId) {
     const response = await fetch(`http://localhost:3000/siteadmin/unban/${accId}`, {
         method: "PUT",
@@ -122,13 +138,14 @@ async function unbanUser(accId) {
 }
 
 
-
+//Add banned user listeners to open popup
 function addUserListeners() {
     const users = document.getElementsByClassName('user');
     const popup = document.getElementById("popup");
     const background = document.getElementById("background");
     const namebox = document.getElementById("name-box");
     console.log("active");
+    //Assigns respective user data for each banned user
     for (i = 0; i < users.length; i++) {
         
         users[i].addEventListener("click", function(e) {
@@ -136,8 +153,10 @@ function addUserListeners() {
             values = event.currentTarget.id.split(",");
             accId = values[0];
             accName = values[1];
+            //Makes popup visible
             popup.style.visibility = "visible";
             background.style.visibility = "visible";
+            sidebar.classList.remove('z-20');
             namebox.innerHTML = `<b>u:${accName}</b>`;
             data = [];
             data.push(accId);
@@ -146,7 +165,9 @@ function addUserListeners() {
     }
 }
 
+//Adds event listeners to popups
 function addPopupListeners() {
+    //Allows selection between ban/unban options
     banBox.addEventListener("click", function(e) {
         banBox.style.backgroundColor = "lightgray";
         unbanBox.style.backgroundColor = "white";
@@ -158,10 +179,12 @@ function addPopupListeners() {
         banBox.style.backgroundColor = "white";
         selection = "unban";
     });
+    //Close popup
     cancel.addEventListener('click', function(e) {
         popup.style.visibility = "hidden";
         background.style.visibility = "hidden";
     });
+    //Unbans selected user
     confirm.addEventListener('click', function(e) {
         accId = data[0];
         accName = data[1];
