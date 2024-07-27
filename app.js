@@ -39,6 +39,13 @@ const verifyCommentOwner = require("./mvc/middlewares/verifyCommentOwner");
 const verifyAccount = require("./mvc/middlewares/verifyAccount");
 const verifyDiscussionAdmin = require("./mvc/middlewares/verifyDiscussionAdmin");
 
+// validation middlewares
+const validateDiscussionName = require("./mvc/middlewares/validateDiscussionName");
+const validateDiscussionDesc = require("./mvc/middlewares/validateDiscussionDesc");
+const validatePost = require("./mvc/middlewares/validatePost");
+const validateComment = require("./mvc/middlewares/validateComment");
+const validateEditComment = require("./mvc/middlewares/validateEditComment");
+
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -67,8 +74,8 @@ app.use(cors({
     credentials: true,
     origin: true
 }));
-app.use(helmet());
-app.use(morgan('combined'));
+// app.use(helmet());
+// app.use(morgan('combined'));
 
 app.get('/comments/user/:username', authenticateJWT, commentsController.getCommentsByUser);
 
@@ -127,7 +134,7 @@ app.get("/postsOrderByLikes/:dscName", verifyDiscussionMember, postsController.g
 app.get("/postsOrderByDate/:dscName", verifyDiscussionMember, postsController.getPostsByDiscussionOrderByPostDate); // member
 app.get("/post/:postId", postsController.getPostById); // public
 app.get("/postOwner/:postId", postsController.getPostOwnerByPostId); // public
-app.post("/post/:dscName", verifyDiscussionMember, postsController.createPost); // member
+app.post("/post/:dscName", verifyDiscussionMember, validatePost, postsController.createPost); // member
 app.put('/post/approve/:postId', postsController.approvePost);
 app.put("/post/:postId", verifyPostOwner, postsController.updatePost); // post owner
 app.get("/posts/user/:username", postsController.getPostsByUser); // New route
@@ -136,16 +143,16 @@ app.get("/posts/user/:username", postsController.getPostsByUser); // New route
 app.get("/discussions", discussionController.getAllDiscussions); // admin
 app.get("/discussions/search", discussionController.searchDiscussions); // public
 app.get("/discussions/:dscName", discussionController.getDiscussionByName); // public
-app.post("/discussion", discussionController.createDiscussion); // logged in user
+app.post("/discussion", validateDiscussionName, discussionController.createDiscussion); // logged in user
 app.put("/discussions/:dscName", discussionController.updateDiscussion); // discussion owner?
-app.put("/discussion/:dscName", verifyDiscussionOwner, discussionController.updateDiscussionDescription); // discussion owner
+app.put("/discussion/:dscName", verifyDiscussionOwner, validateDiscussionDesc, discussionController.updateDiscussionDescription); // discussion owner
 
 // Comment routes
 app.get("/comments", commentsController.getAllComments); // admin
 app.get("/comments/:dscName/:postId", verifyDiscussionMember, commentsController.getCommentsByPost); // member
 app.get("/commentOwner/:cmtId", commentsController.getCommentOwnerByCommentId); // public
-app.post("/comment/:dscName", verifyDiscussionMember, commentsController.createComment); // member
-app.put("/comment/:cmtId", verifyCommentOwner, commentsController.updateComment); // comment owner
+app.post("/comment/:dscName", verifyDiscussionMember, validateComment, commentsController.createComment); // member
+app.put("/comment/:cmtId", verifyCommentOwner, validateEditComment, commentsController.updateComment); // comment owner
 app.delete("/comment/:cmtId", verifyCommentOwner, commentsController.deleteComment); // comment owner
 app.get("/comments/user/:username", commentsController.getCommentsByUser); // New route
 app.delete("/comments/:postId", commentsController.deleteCommentsByPost); // discussion admin
