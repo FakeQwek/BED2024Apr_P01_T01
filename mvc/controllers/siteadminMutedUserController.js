@@ -26,8 +26,8 @@ const getMutedUsersByName = async (req,res) => {
 //Takes accId as parameter
 const unmuteUser = async (req, res) => {
     try {
-        const accId = req.params.accId;
-        const unmute = await MutedUsers.unmuteUser(accId);
+        const accName = req.params.accName;
+        const unmute = await MutedUsers.unmuteUser(accName);
         if (!unmute) {
             return res.status(404).send("Muted user not found")
         }
