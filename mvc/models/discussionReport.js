@@ -51,7 +51,7 @@ class DiscussionReport {
     static async createDiscussionReport(newDiscussionReportData) {
         const connection = await sql.connect(dbConfig);
         const sqlQuery = `INSERT INTO DiscussionReport (DscRptID, DscRptCat, DscRptDesc, AccName, DscName) 
-                          SELECT CASE WHEN COUNT(*) = 0 THEN 'DR001' ELSE 'DR' + RIGHT('000' + CAST(MAX(CAST(SUBSTRING(DscRptID, 3, LEN(DscRptID)) AS INT) + 1 AS VARCHAR)), 3) END, @dscRptCat, @dscRptDesc, @accName, @dscName FROM DiscussionReport`;
+                          SELECT CASE WHEN COUNT(*) = 0 THEN 1 ELSE MAX(DscRptID) + 1 END, @dscRptCat, @dscRptDesc, @accName, @dscName FROM DiscussionReport`;
         const request = connection.request();
         request.input("dscRptCat", newDiscussionReportData.dscRptCat);
         request.input("dscRptDesc", newDiscussionReportData.dscRptDesc);
