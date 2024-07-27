@@ -1,8 +1,12 @@
 DROP TABLE Volunteer; 
+DROP TABLE Invite;
+DROP TABLE DiscussionMember;
+DROP TABLE Feedback;
 DROP TABLE DiscussionAdmin; 
 DROP TABLE PostReport; 
 DROP TABLE DiscussionReport; 
 DROP TABLE Comment; 
+DROP TABLE PostLike;
 DROP TABLE Post; 
 DROP TABLE Discussion; 
 DROP TABLE Account;
@@ -161,6 +165,16 @@ CREATE TABLE Invite (
     CONSTRAINT FK_Invite FOREIGN KEY (DscName)
     REFERENCES Discussion(DscName),
     CONSTRAINT AK_Invite_AccName_DscName UNIQUE (AccName, DscName));
+
+CREATE TABLE BanInfo (
+    AccName varchar(16) NOT NULL,
+    banDate DATETIME NOT NULL DEFAULT GETDATE(),
+    banReason varchar(255) NOT NULL,
+    bannedBy varchar(16) NOT NULL,
+    DscName varchar(16) NOT NULL,
+    CONSTRAINT FK_Account_BanInfo FOREIGN KEY (AccName) REFERENCES Account (AccName),
+    CONSTRAINT FK_DscName_BanInfo FOREIGN KEY (DscName) REFERENCES Discussion (DscName)
+);
 
 CREATE TABLE MuteInfo (
     AccName VARCHAR(16) NOT NULL,

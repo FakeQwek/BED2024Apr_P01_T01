@@ -5,6 +5,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(queryString);
     const discussionName = urlParams.get("discussionName");
 
+    async function checkAccountName() {
+        const res = await fetch("http://localhost:3000/accounts/" + localStorage.getItem("username"), {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("token")
+            }
+        });
+        const account = await res.json();
+    
+        // set html for account if the user is logged in
+        if (account.accName != null) {
+            const loginSignUp = document.getElementById("loginSignUp");
+            loginSignUp.innerHTML = `<button class="btn btn-sm mr-4 max-[820px]:hidden" onclick="goToProfile('` + account.accName + `')"><img src="../images/account-circle-outline.svg" width="20px" />` + account.accName + `</button>`;
+        }
+    
+        accountName = account.accName;
+    }
+    
+    checkAccountName();
+
     async function fetchDiscussionDetails(discussionName) {
         try {
             const response = await fetch(`http://localhost:3000/discussions/${encodeURIComponent(discussionName)}`);
@@ -36,6 +56,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function fetchBannedUsers(dscName) {
         try {
+            const response = await fetch(`http://localhost:3000/bannedaccount/${encodeURIComponent(dscName)}`);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
             const bannedUsers = await response.json();
             const container = document.getElementById('bannedUsersContainer');
             container.innerHTML = '';
@@ -89,7 +113,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             }
 
                             alert(`User ${accName} has been unbanned.`);
-                            fetchBannedUsers(dscName);  // Pass dscName to refresh the list
+                            fetchBannedUsers(dscName);
                         } catch (error) {
                             console.error('Error unbanning user:', error);
                         }
@@ -102,7 +126,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     await fetchDiscussionDetails(discussionName);
-    fetchBannedUsers(discussionName);  // Pass discussionName to fetchBannedUsers
+    fetchBannedUsers(discussionName);
 });
 
 const queryString = window.location.search;

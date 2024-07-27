@@ -98,65 +98,22 @@ async function DiscussionMembers() {
         }
     }
 
-    // Display user is banned message if user is banned
-    if (!isBanned) {
-        // If discussion is not public check if user is a member
-        if (!isPublic) {
-            if (!isAdmin || isBanned || isMuted) {
-                const discussionPosts = document.getElementById("discussionPosts");
 
-                const postHTML = `<div class="flex flex-col justify-center items-center h-full">
+    if ((!isAdmin) || isBanned || isMuted) {
+        const discussionPosts = document.getElementById("discussionPosts");
+
+        const postHTML = `<div class="flex flex-col justify-center items-center h-full">
                                     <img src="../images/lock-outline.svg" width="100px" />
                                     <h2 class="text-2xl font-bold">You are not an admin of this discussion</h2>
                                 </div>`;
 
-                discussionPosts.insertAdjacentHTML("beforeend", postHTML);
-            } else {
-                if (isAdmin) {
-                    Posts();
-                }
-            }
-
+        discussionPosts.insertAdjacentHTML("beforeend", postHTML);
+    } else {
+        if (isAdmin){
+            Posts();
         }
     }
 
-    for (let i = 0; i < discussionMembers.length; i++) {
-        // Display user is banned message
-        if (isBanned) {
-            const discussionPosts = document.getElementById("discussionPosts");
-            discussionPosts.innerHTML = `<div class="flex flex-col justify-center items-center h-full">
-                                            <img src="../images/cancel.svg" width="100px" />
-                                            <h2 class="text-2xl font-bold">You are banned from this discussion</h2>
-                                        </div>`;
-        }
-
-        // If user is an owner show them additional options to edit discussion details
-        if (discussionMembers[i].dscMemRole === "Owner" && discussionMembers[i].accName === accountName) {
-            let bannerOptionsHTML;
-
-            // If discussion is restricted add an extra option for the owner to invite users
-            if (discussionType === "Restricted") {
-                bannerOptionsHTML = `<li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="edit_discussion_modal.showModal()"><span class="w-full">Edit</span></button></li>
-                                        <li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="invite_modal.showModal()"><span class="w-full">Invite</span></button></li>`;
-            } else {
-                bannerOptionsHTML = `<li><button class="btn btn-sm bg-white border-0 text-start shadow-none" onclick="edit_discussion_modal.showModal()"><span class="w-full">Edit</span></button></li>`;
-            }
-
-            bannerOptions.insertAdjacentHTML("beforeend", bannerOptionsHTML);
-
-            // Remove the join button
-            if (joinButton) {
-                joinButton.remove();
-            }
-        } else if (discussionMembers[i].dscMemRole === "Admin") { // If user is an admin add their name to the banner
-            const discussionAdmins = document.getElementById("discussionAdmins");
-            const discussionAdminsHTML = `<div class="flex items-center gap-2">
-                                            <img src="../images/account-circle-outline.svg" width="30px" />
-                                            <h2>` + discussionMembers[i].accName + `</h2>
-                                        </div>`;
-            discussionAdmins.insertAdjacentHTML("beforeend", discussionAdminsHTML);
-        }
-    }
 }
 
 function initializeDropdowns() {
@@ -351,6 +308,7 @@ async function Posts() {
        }
    });
 }
+
 
 // Function to handle user click for promoting or demoting users
 function handleUserClick(accName) {
@@ -830,14 +788,10 @@ document.getElementById('cancelPromoteButton').addEventListener('click', () => {
 
 // Initialize the page by fetching discussion details and setting the sidebar
 document.addEventListener('DOMContentLoaded', async () => {
-   await Discussion();
-   sidebar();
-
-   // Add event listeners for mute and ban actions
+    await Discussion();
+    sidebar();
 });
 
 function goToReportedPosts() {
    window.location.href = `reportedposts.html?discussionName=${discussionName}`;
 }
-
-posts();

@@ -30,8 +30,7 @@ const signup = async (req, res) => {
             .input('isAdmin', sql.VarChar, 'False')
             .input('isMuted', sql.VarChar, 'False')
             .input('isBanned', sql.VarChar, 'False')
-            .input('isSiteAdmin', sql.VarChar, isSiteAdmin)
-            .query(`INSERT INTO Account (AccName, AccEmail, Password, isAdmin, isMuted, isBanned, isSiteAdmin) 
+            .query(`INSERT INTO Account (AccName, AccEmail, Password, isAdmin, isMuted, isBanned) 
                     VALUES (@AccName, @AccEmail, @Password, @isAdmin, @isMuted, @isBanned)`);
 
         res.status(201).send('User created successfully');

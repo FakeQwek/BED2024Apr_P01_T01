@@ -197,7 +197,7 @@ app.get("/bannedaccounts", accountsController.getAccountIsBanned);
 app.get("/mutedaccounts", accountsController.getAccountsIsMuted);
 app.get("/bannedaccount/:dscName", discussionMembersController.getAccountIsBanned);
 app.get("/mutedaccount/:dscName", discussionMembersController.getAccountsIsMuted);
-app.get('/postReports/:discussionName', discussionMembersController.getPostReportsByDiscussion);
+app.get("/postReport/:dscName", discussionMembersController.getPostReportsByDiscussion);
 app.get("/baninfo/:accName/:dscName", baninfoController.getBanInfo);
 app.get("/muteinfo/:accName/:dscName", muteinfoController.getMuteInfo);
 app.get("/unapprovedposts/:dscName", postsController.getUnapprovedPostsByDiscussion);
