@@ -7,6 +7,7 @@ const mutedPage = document.getElementById("muted-button");
 const bannedPage = document.getElementById("banned-button");
 const reportedPostPage = document.getElementById("reported-button");
 const discussionPage = document.getElementById("discussion-button");
+const sidebar = document.getElementById("sidebar");
 //Begins by getting all reported posts from local database
 getAllReportedPosts("http://localhost:3000/siteadmin/postreport");
 
@@ -56,7 +57,7 @@ function populatePosts(reportedPosts) {
     //Displays 'no more post reports' if there are no posts remaining
     if (length == 0) {
         reportedPostBox.insertAdjacentHTML("beforeEnd",`
-            <div class = "bg-white w-70per m-auto rounded-xl flex justify-center">No more Post Reports</div>
+            <div class = "bg-white w-70per m-auto rounded-xl flex justify-center p-2">No more Post Reports</div>
             `)
     }
     //Creates html for a post for every post in reportedPosts
@@ -98,6 +99,7 @@ function addApproveDenyListeners() {
             reportId = ids[1];
             deletePostReport(reportId);
             deletePost(postId);
+            sidebar.classList.remove('z-20');
            
             console.log(postId + reportId + " denied");
             alert("Post rejected!");
@@ -153,6 +155,13 @@ async function getPostsSortedByMostReported() {
         }
        
         countLength = countData.length;
+        if(countLength < 1) {
+                reportedPostBox.insertAdjacentHTML("beforeEnd",`
+                    <div class = "bg-white w-70per m-auto rounded-xl flex justify-center p-2">No more Post Reports</div>
+                    `)
+            
+        }
+
         //For each set of data counts, get a post report by id
         for (i = 0; i < countLength; i++) {
             reportInstance = countData[i];
@@ -163,7 +172,7 @@ async function getPostsSortedByMostReported() {
     
         }
         console.log(countLength, reportedPosts );
-        //Populates post report box with each of the posts gotten by id
+        
        
        
     })

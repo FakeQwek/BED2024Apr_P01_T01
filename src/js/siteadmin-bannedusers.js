@@ -9,6 +9,7 @@ const mutedPage = document.getElementById("muted-button");
 const bannedPage = document.getElementById("banned-button");
 const reportedPostPage = document.getElementById("reported-button");
 const discussionPage = document.getElementById("discussion-button");
+const sidebar = document.getElementById("sidebar");
 
 
 var selection = "none";
@@ -53,7 +54,7 @@ function populateUsers(bannedUsers) {
     //If there are no banned users left 'No more banned users' is displayed
     if (length == 0) {
         userBox.insertAdjacentHTML("beforeEnd",`
-            <div class = "bg-white w-70per m-auto rounded-xl flex justify-center">No more Banned Users</div>
+            <div class = "bg-white w-70per m-auto rounded-xl flex justify-center p-2">No more Banned Users</div>
             `)
     }
     for (i = 0; i < length; i++ ) {
@@ -155,6 +156,7 @@ function addUserListeners() {
             //Makes popup visible
             popup.style.visibility = "visible";
             background.style.visibility = "visible";
+            sidebar.classList.remove('z-20');
             namebox.innerHTML = `<b>u:${accName}</b>`;
             data = [];
             data.push(accId);

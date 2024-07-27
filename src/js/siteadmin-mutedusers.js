@@ -11,6 +11,7 @@ const mutedPage = document.getElementById("muted-button");
 const bannedPage = document.getElementById("banned-button");
 const reportedPostPage = document.getElementById("reported-button");
 const discussionPage = document.getElementById("discussion-button");
+const sidebar = document.getElementById("sidebar");
 
 var selection = "none";
 var data = [];
@@ -56,7 +57,7 @@ function populateUsers(mutedUsers) {
     //If no more muted users are present, displays no more muted users
     if (length == 0) {
         userBox.insertAdjacentHTML("beforeEnd",`
-            <div class = "bg-white w-70per m-auto rounded-xl flex justify-center">No more Muted Users</div>
+            <div class = "bg-white w-70per m-auto rounded-xl flex justify-center p-2">No more Muted Users</div>
             `)
     }
     //Populates muted users before adding listeners to each user
@@ -156,6 +157,7 @@ function addUserListeners() {
             //Makes popup visible after clicking
             popup.style.visibility = "visible";
             background.style.visibility = "visible";
+            sidebar.classList.remove('z-20');
             //Assigns name in popup
             namebox.innerHTML = `<b>u:${accName}</b>`;
             data = [];

@@ -105,8 +105,6 @@ CREATE TABLE PostReport (
  PostRptDesc varchar(100) NOT NULL, 
  AccName varchar(16) NOT NULL, 
  PostID varchar(10) NOT NULL,
-
-
  CONSTRAINT PK_PostReport PRIMARY KEY (PostRptID), 
  CONSTRAINT FK_PostReport_AccName FOREIGN KEY (AccName) 
  REFERENCES Account(AccName), 
