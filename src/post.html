@@ -21,14 +21,14 @@
                 </div>
             </div>
         </div>
-        <div class="flex justify-end w-1/4">
-            <button class="btn btn-sm mr-4 max-[820px]:hidden">Login</button>
-            <button class="btn btn-sm mr-4 max-[820px]:hidden">Sign Up</button>
+        <div id="loginSignUp" class="flex justify-end items-center w-1/4">
+            <a href="./Login.html"><button class="btn btn-sm mr-4 max-[820px]:hidden">Login</button></a>
+            <a href="signup.html"><button class="btn btn-sm mr-4 max-[820px]:hidden">Sign Up</button></a>
         </div>
     </div>
 
     <!-- main -->
-    <div class="flex flex-row h-full">
+    <div id="main" class="flex flex-row h-full">
         <!-- sidebar -->
         <div class="drawer lg:drawer-open w-1/6 max-[820px]:w-0 z-20">
             <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
@@ -47,6 +47,7 @@
                         <li><a href="./index.html"><span class="flex items-center w-full gap-2"><img src="../images/home-variant-outline.svg" width="30px" />Home</span></a></li>
                         <li><a href="./profile.html"><span class="flex items-center w-full gap-2"><img src="../images/account-circle-outline.svg" width="30px" />Profile</span></a></li>
                         <li><a href="./news.html"><span class="flex items-center w-full gap-2"><img src="../images/newspaper-variant-outline.svg" width="30px" />News</span></a></li>
+                        <li><a href="./countries.html"><span class="flex items-center w-full gap-2"><img src="../images/globe.svg" width="30px" />Countries</span></a></li>
                     </div>
                     <div id="joinedDiscussions" class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
                         <h2 class="font-bold mb-2">FOR YOU</h2>
@@ -55,6 +56,7 @@
                     <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
                         <h2 class="font-bold mb-2">LEARN MORE</h2>
                         <li><a href="./about.html"><span class="flex items-center w-full gap-2"><img src="../images/information-outline.svg" width="30px" />About Us</span></a></li>
+                        <li><a href="./joinUs.html"><span class="flex items-center w-full gap-2"><img src="../images/joinus.svg" width="30px" />Join Us</span></a></li>
                         <li><a href="./contact-us.html"><span class="flex items-center w-full gap-2"><img src="../images/phone-in-talk.svg" width="30px" />Contact Us</span></a></li>
                         <li><a><span class="flex items-center w-full gap-2"><img src="../images/finance.svg" width="30px" />User Statistics</span></a></li>
                     </div>
@@ -69,7 +71,7 @@
                 <!-- discussion content -->
                 <div class="flex flex-row h-full">
                     <!-- post -->
-                    <div class="flex flex-col w-3/4 h-full mt-4 max-[820px]:w-full">
+                    <div id="postCard" class="flex flex-col w-3/4 h-full mt-4 max-[820px]:w-full">
                         <div class="card w-full h-fit bg-white">
                             <div class="card-body">
                                 <div class="flex justify-between">
@@ -127,19 +129,15 @@
                             </div>
                         </div>
                         <!-- comment -->
-                        <div class="flex w-full h-fit bg-white rounded-2xl my-4 p-4">
+                        <div id="commentInput" class="flex w-full h-fit bg-white rounded-2xl my-4 p-4">
                             <input id="commentDesc" type="text" placeholder="Comment" class="input input-bordered w-full" />
                         </div>
                         <!-- comments -->
-                        <div class="flex w-full h-fit my-4">
-                            <button class="btn btn-sm bg-white ml-8"><img src="../images/fire.svg" width="20px" />Hot</button>
-                            <button class="btn btn-sm bg-white ml-4"><img src="../images/finance.svg" width="20px" />Trending</button>
-                        </div>
                         <div id="postComments" class="flex flex-col gap-4">
                         </div>
                     </div>
                     <!-- banner -->
-                    <div class="flex justify-end w-1/4 max-[820px]:hidden max-[820px]:w-0">
+                    <div class="flex justify-end w-1/4 mt-4 max-[820px]:hidden max-[820px]:w-0">
                         <div class="card w-11/12 h-full bg-white">
                             <div class="card-body">
                                 <div id="discussionBannerName" class="card-title flex justify-between">

@@ -49,56 +49,36 @@
     <!-- main content -->
     <div class="flex pt-12">
         <!-- sidebar -->
-        <div class="flex flex-col items-center w-1/6 h-full bg-white border-r-2 fixed pt-1  "> <!-- Adjusted pt-0 -->
-            <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
-                <div class="flex items-center">
-                    <button class="btn w-full bg-white border-0 text-left shadow-none">
-                        <span class="flex items-center w-full gap-2">
-                            <img src="../images/home-variant-outline.svg" width="30px" />Home
-                        </span>
-                    </button>
-                </div>
-                <div class="flex items-center">
-                    <button class="btn w-full bg-white border-0 text-left shadow-none">
-                        <span class="flex items-center w-full gap-2">
-                            <img src="../images/account-circle-outline.svg" width="30px" />Profile
-                        </span>
-                    </button>
-                </div>
-                <div class="flex items-center">
-                    <button class="btn w-full bg-white border-0 text-left shadow-none">
-                        <span class="flex items-center w-full gap-2">
-                            <img src="../images/newspaper-variant-outline.svg" width="30px" />News
-                        </span>
-                    </button>
-                </div>
+        <div class="drawer lg:drawer-open w-1/6 max-[820px]:w-0 z-20">
+            <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
+            <div class="drawer-content flex flex-col items-center justify-center">
+                <!-- Page content here -->
             </div>
-            <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
-                <h2 class="font-bold mb-2">FOR YOU</h2>
-            </div>
-            <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
-                <h2 class="font-bold mb-2">LEARN MORE</h2>
-                <div class="flex items-center">
-                    <button class="btn w-full bg-white border-0 text-left shadow-none">
-                        <span class="flex items-center w-full gap-2">
-                            <img src="../images/information-outline.svg" width="30px" />About Us
-                        </span>
-                    </button>
-                </div>
-                <div class="flex items-center">
-                    <button class="btn w-full bg-white border-0 text-left shadow-none">
-                        <span class="flex items-center w-full gap-2">
-                            <img src="../images/phone-in-talk.svg" width="30px" />Contact Us
-                        </span>
-                    </button>
-                </div>
-                <div class="flex items-center">
-                    <button class="btn w-full bg-white border-0 text-left shadow-none">
-                        <span class="flex items-center w-full gap-2">
-                            <img src="../images/finance.svg" width="30px" />User Statistics
-                        </span>
-                    </button>
-                </div>
+            <div class="drawer-side w-2/3">
+                <ul class="menu bg-white text-base-content min-h-full w-full items-center border-r-2">
+                    <!-- Sidebar content here -->
+                    <div class="flex w-full m-2 lg:hidden">
+                        <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay">
+                            <img src="../images/chevron-left.svg" width="30px" />
+                        </label>
+                    </div>
+                    <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+                        <li><a href="./index.html"><span class="flex items-center w-full gap-2"><img src="../images/home-variant-outline.svg" width="30px" />Home</span></a></li>
+                        <li><a href="./profile.html"><span class="flex items-center w-full gap-2"><img src="../images/account-circle-outline.svg" width="30px" />Profile</span></a></li>
+                        <li><a href="./news.html"><span class="flex items-center w-full gap-2"><img src="../images/newspaper-variant-outline.svg" width="30px" />News</span></a></li>
+                        <li><a href="./countries.html"><span class="flex items-center w-full gap-2"><img src="../images/globe.svg" width="30px" />Countries</span></a></li>
+                    </div>
+                    <div id="joinedDiscussions" class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+                        <h2 class="font-bold mb-2">FOR YOU</h2>
+                    </div>
+                    <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+                        <h2 class="font-bold mb-2">LEARN MORE</h2>
+                        <li><a href="./about.html"><span class="flex items-center w-full gap-2"><img src="../images/information-outline.svg" width="30px" />About Us</span></a></li>
+                        <li><a href="./joinUs.html"><span class="flex items-center w-full gap-2"><img src="../images/joinus.svg" width="30px" />Join Us</span></a></li>
+                        <li><a href="./contact-us.html"><span class="flex items-center w-full gap-2"><img src="../images/phone-in-talk.svg" width="30px" />Contact Us</span></a></li>
+                        <li><a><span class="flex items-center w-full gap-2"><img src="../images/finance.svg" width="30px" />User Statistics</span></a></li>
+                    </div>
+                </ul>
             </div>
         </div>
 
@@ -119,9 +99,9 @@
                 <div class="flex flex-col bg-white p-4 rounded-lg shadow">
                     <div class="flex justify-between items-center border-b pb-4 mb-4">
                         <div class="flex items-center gap-8">
-                            <a href="reportedposts.html" class="underline-animation text-gray-500 pb-2">Reported posts</a>
-                            <a href="bannedusers.html" class="underline-animation active text-gray-700 font-bold border-b-2 border-gray-700 pb-2">Banned users</a>
-                            <a href="mutedusers.html" class="underline-animation text-gray-500 pb-2">Muted users</a>
+                            <a href="#" class="underline-animation text-gray-500 pb-2" onclick = "goToReportedPosts()">Reported posts</a>
+                            <a href="#" class="underline-animation active text-gray-700 font-bold border-b-2 border-gray-700 pb-2">Banned users</a>
+                            <a href="#" class="underline-animation text-gray-500 pb-2" onclick = "goToMutedUsers()">Muted users</a>
                         </div>
                     </div>
 

@@ -27,7 +27,6 @@
             background-color: #f1f5f9;
             color: #1f2937;
             width: 50%;
-            max-width: 500px;
         }
 
         .post-card {
@@ -95,24 +94,38 @@
             height: 100vh; /* Full viewport height */
         }
 
-        .create-discussion-card {
-            background-color: #fff;
-            border-radius: 0.375rem;
-            padding: 1rem;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-            margin-bottom: 1rem;
+        .sidebar-button {
+            width: 100%;
+            background-color: white;
+            border: none;
+            text-align: left;
+            box-shadow: none;
+            padding: 0.5rem 0;
             display: flex;
-            flex-direction: column;
             align-items: center;
         }
 
-        .create-discussion-button {
-            background-color: #6366f1;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
-            margin-top: 1rem;
-            text-align: center;
+        .sidebar-button img {
+            margin-right: 0.5rem;
+            width: 30px;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center horizontally */
+        }
+
+        .profile-settings {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
         }
 
         .right-banner {
@@ -137,7 +150,18 @@
         }
 
         .right-banner .create-discussion-button {
-            margin-top: 0.
+            margin-top: 0;
+        }
+
+        /* Remove the white space at the bottom */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .flex-row {
+            flex: 1;
         }
     </style>
 </head>
@@ -157,43 +181,47 @@
         </div>
     </header>
 
-    <!-- Main Content -->
-    <div class="flex flex-row h-full">
-        <!-- Sidebar -->
-        <div class="flex flex-col items-center w-1/6 h-full bg-white border-r-2">
-            <div class="sidebar">
-                <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
-                    <div class="flex items-center">
-                        <button class="btn w-full bg-white border-0 text-left shadow-none" onclick="window.location.href='index.html';"><span class="flex items-center w-full gap-2"><img src="../images/home-variant-outline.svg" width="30px" />Home</span></button>
-                    </div>
-                    <div class="flex items-center">
-                        <button class="btn w-full bg-white border-0 text-left shadow-none" onclick="window.location.href='profilesetting.html';"><span class="flex items-center w-full gap-2"><img src="../images/account-circle-outline.svg" width="30px" />Profile</span></button>
-                    </div>
-                    <div class="flex items-center">
-                        <button class="btn w-full bg-white border-0 text-left shadow-none" onclick="window.location.href='news.html';"><span class="flex items-center w-full gap-2"><img src="../images/newspaper-variant-outline.svg" width="30px" />News</span></button>
-                    </div>
+    <!-- main -->
+    <div class="flex flex-row flex-grow">
+        <!-- sidebar -->
+        <div class="flex flex-col items-center w-1/6 min-h-screen bg-white border-r-2">
+            <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+                <div class="flex items-center">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none" onclick="window.location.href='index.html'"><span class="flex items-center w-full gap-2"><img src="../images/home-variant-outline.svg" width="30px" />Home</span></button>
                 </div>
-                <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
-                    <h2 class="font-bold mb=2">FOR YOU</h2>
+                <div class="flex items-center">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none" onclick="window.location.href='profilesetting.html'"><span class="flex items-center w-full gap-2"><img src="../images/account-circle-outline.svg" width="30px" />Profile</span></button>
                 </div>
-                <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
-                    <h2 class="font-bold mb-2">LEARN MORE</h2>
-                    <div class="flex items-center">
-                        <button class="btn w-full bg-white border-0 text-left shadow-none" onclick="window.location.href='about.html';"><span the="flex items-center w-full gap-2"><img src="../images/information-outline.svg" width="30px" />About Us</span></button>
-                    </div>
-                    <div class="flex items-center">
-                        <button class="btn w-full bg-white border-0 text-left shadow-none" onclick="window.location.href='contact-us.html';"><span class="flex items-center w-full gap-2"><img src="../images/phone-in-talk.svg" width="30px" />Contact Us</span></button>
-                    </div>
-                    <div class="flex items-center">
-                        <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/finance.svg" width="30px" />User Statistics</span></button>
-                    </div>
+                <div class="flex items-center">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none" onclick="window.location.href='news.html'"><span class="flex items-center w-full gap-2"><img src="../images/newspaper-variant-outline.svg" width="30px" />News</span></button>
+                </div>
+                <div class="flex items-center">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none" onclick="window.location.href='feedback.html'"><span class="flex items-center w-full gap-2"><img src="../images/feedback.svg" width="30px" />Feedback</span></button>
+                </div>
+            </div>
+            <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+                <h2 class="font-bold mb-2">FOR YOU</h2>
+            </div>
+            <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
+                <h2 class="font-bold mb-2">LEARN MORE</h2>
+                <div class="flex items-center">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none" onclick="window.location.href='about.html'"><span class="flex items-center w-full gap-2"><img src="../images/information-outline.svg" width="30px" />About Us</span></button>
+                </div>
+                <div class="flex items-center">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none" onclick="window.location.href='contact-us.html'"><span class="flex items-center w-full gap-2"><img src="../images/phone-in-talk.svg" width="30px" />Contact Us</span></button>
+                </div>
+                <div class="flex items-center">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/finance.svg" width="30px" />User Statistics</span></button>
+                </div>
+                
+                <div class="flex items-center">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/logout.svg" width="30px" />Logout</span></button>
                 </div>
             </div>
         </div>
-
         <!-- Main Content Area -->
-        <main class="flex-1 p-8">
-            <div class="bg-white p-8 rounded-2xl shadow-lg max-w-2xl mx-auto">
+        <main class="main-content">
+            <div class="profile-settings">
                 <div class="flex items-center mb-8">
                     <img src="../images/person.png" alt="User Profile Picture" class="rounded-full h-20 w-20 mr-4">
                     <h2 class="text-3xl font-bold" id="profileUsername">u:username</h2>
@@ -244,6 +272,8 @@
                             </div>
                             <button onclick="changeLanguage()" class="text-blue-500 hover:underline">change</button>
                         </div>
+                        <!-- Add the missing username input element here -->
+                        <input type="hidden" id="username">
                     </div>
                 </div>
                 <div class="text-right">
@@ -257,9 +287,28 @@
     </div>
 
     <script>
+        async function checkServerStatus() {
+            try {
+                const response = await fetch('http://localhost:3000/ping');
+                if (!response.ok) throw new Error('Server not reachable');
+            } catch (error) {
+                setFieldsToNull();
+            }
+        }
+
+        function setFieldsToNull() {
+            document.getElementById('profileUsername').textContent = 'u:NULL';
+            document.getElementById('profileUsernameDisplay').textContent = 'NULL';
+            document.getElementById('profileEmail').textContent = 'NULL';
+            document.getElementById('profileEmailNotification').textContent = 'NULL';
+            document.getElementById('profileGender').textContent = 'NULL';
+            document.getElementById('profileLanguage').textContent = 'NULL';
+            document.getElementById('profilePhoneNumber').textContent = 'NULL';
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
-            const username = localStorage.getItem('username') || 'banana';
-            const email = localStorage.getItem('email') || 'banana@gmail.com';
+            const username = localStorage.getItem('username') || 'undefined';
+            const email = localStorage.getItem('email') || 'undefined';
             const emailNotification = localStorage.getItem('emailNotification') || 'Not allowed';
             const gender = localStorage.getItem('gender') || 'NIL';
             const language = localStorage.getItem('language') || 'English';
@@ -272,6 +321,13 @@
             document.getElementById('profileGender').textContent = gender;
             document.getElementById('profileLanguage').textContent = language;
             document.getElementById('profilePhoneNumber').textContent = phoneNumber;
+
+            const usernameInput = document.getElementById('username');
+            if (usernameInput) {
+                usernameInput.value = username;
+            } else {
+                console.error("Element with id 'username' not found.");
+            }
         });
 
         function navigateToConfirmDelete() {
@@ -335,51 +391,41 @@
         }
 
         function updateProfile() {
-            const username = document.getElementById('profileUsernameDisplay').textContent;
-            const email = document.getElementById('profileEmail').textContent;
-            const phoneNumber = document.getElementById('profilePhoneNumber').textContent;
-            const emailNotification = document.getElementById('profileEmailNotification').textContent;
-            const gender = document.getElementById('profileGender').textContent;
-            const language = document.getElementById('profileLanguage').textContent;
-            const currentEmail = localStorage.getItem('email');
+    const username = document.getElementById('profileUsernameDisplay').textContent;
+    const email = document.getElementById('profileEmail').textContent;
+    const phoneNumber = document.getElementById('profilePhoneNumber').textContent;
+    const emailNotification = document.getElementById('profileEmailNotification').textContent;
+    const gender = document.getElementById('profileGender').textContent;
+    const currentEmail = localStorage.getItem('email');
 
-            const allowedEmailNotifications = ['allowed', 'Not allowed'];
-            const allowedGenders = ['Male', 'Female'];
-            const allowedLanguages = ['English'];
-            const emailPattern = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
-
-            if (!allowedEmailNotifications.includes(emailNotification) || !allowedGenders.includes(gender) || !allowedLanguages.includes(language) || !/^\d{8}$/.test(phoneNumber) || !emailPattern.test(email) || username.length > 12) {
-                alert('Input field for gender, email notification, language, phone number, email, or username is not correct');
-                return;
-            }
-
-            fetch('http://localhost:3000/updateProfile', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ currentEmail, username, email, phoneNumber, emailNotification, gender, language })
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to update profile. Status: ' + response.status);
-                }
-                return response.json();
-            })
-            .then(data => {
-                alert('Profile updated successfully!');
-                localStorage.setItem('username', username);
-                localStorage.setItem('email', email);
-                localStorage.setItem('emailNotification', emailNotification);
-                localStorage.setItem('gender', gender);
-                localStorage.setItem('language', language);
-                localStorage.setItem('phoneNumber', phoneNumber);
-            })
-            .catch(error => {
-                console.error('Error updating profile:', error);
-                alert('Error updating profile: ' + error.message);
-            });
+    fetch('http://localhost:3000/updateProfile', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ currentEmail, username, email, phoneNumber, emailNotification, gender })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Update Profile Response:", data);
+        if (data.message === 'Profile updated successfully') {
+            alert('Profile updated successfully!');
+            localStorage.setItem('username', username);
+            localStorage.setItem('email', email);
+            localStorage.setItem('emailNotification', emailNotification);
+            localStorage.setItem('gender', gender);
+            localStorage.setItem('phoneNumber', phoneNumber);
+        } else {
+            alert('Failed to update profile');
         }
+    })
+    .catch(error => {
+        console.error('Error updating profile:', error);
+    });
+}
+
+
+
     </script>
 </body>
 </html>

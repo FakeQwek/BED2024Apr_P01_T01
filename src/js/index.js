@@ -1,11 +1,48 @@
+// get html elements
 const discussionName = document.getElementById("discussionName");
+const homePosts = document.getElementById("homePosts");
+const searchBar = document.getElementById("searchBar");
+const searchResults = document.getElementById("searchResults");
+const searchResultsContainer = document.getElementById("searchResultsContainer");
+const main = document.getElementById("main");
 
+// set variables
+let accountName;
+apikey = "ad61a3b55ab20ed21479950c798b39d9";
+url = 'https://gnews.io/api/v4/top-headlines?category=health&lang=en&country=sg&max=10&apikey=' + apikey;
+let news = [];
+
+// function that checks if the username in the get request matches with the username in the jwt token
+async function checkAccountName() {
+    const res = await fetch("http://localhost:3000/accounts/" + localStorage.getItem("username"), {
+        method: "GET",
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("token")
+        }
+    });
+    const account = await res.json();
+
+    // set html for account if the user is logged in
+    if (account.accName != null) {
+        const loginSignUp = document.getElementById("loginSignUp");
+        loginSignUp.innerHTML = `<button class="btn btn-sm mr-4 max-[820px]:hidden" onclick="goToProfile('` + account.accName +`')"><img src="../images/account-circle-outline.svg" width="20px" />` + account.accName + `</button>`;
+    }
+
+    accountName = account.accName;
+
+    sidebar();
+}
+
+checkAccountName();
+
+// function to create discussion
 async function createDiscussion() {
     const public = document.getElementById("public");
     const restricted = document.getElementById("restricted");
     const private = document.getElementById("private");
     var type;
 
+    // check which discussion type was selected
     if (public.checked == true) {
         type = "Public";
     } else if (restricted.checked) {
@@ -20,7 +57,7 @@ async function createDiscussion() {
             dscName: discussionName.value,
             dscDesc: "",
             dscType: type,
-            accName: "AppleTan"
+            accName: accountName
         }),
         headers: {
             "Content-type": "application/json; charset=UTF-8"
@@ -30,7 +67,7 @@ async function createDiscussion() {
     await fetch("http://localhost:3000/discussionMember/" + discussionName.value, {
         method: "POST",
         body: JSON.stringify({
-            accName: "AppleTan",
+            accName: accountName,
             dscMemRole: "Owner"
         }),
         headers: {
@@ -38,6 +75,7 @@ async function createDiscussion() {
         }
     })
     
+    // direct page to discussion page of newly created discussion
     var script = document.getElementsByTagName("script");
     var url = script[script.length-1].src;
     for (let i = 0; i < url.length; i++) {
@@ -52,20 +90,20 @@ async function createDiscussion() {
     window.location.href = url;
 };
 
-const homePosts = document.getElementById("homePosts");
-
+// function to get random posts from random public discussions
 async function Posts() {
-    const res = await fetch("http://localhost:3000/posts");
+    const res = await fetch("http://localhost:3000/publicPosts");
     const posts = await res.json();
 
-    for (let i = 0; i < posts.length; i++) {
-        const homePostsHTML = `<div class="flex justify-center w-full">
-                                    <div class="card w-5/6 bg-white" onclick="goToPost(` + posts[i].postId + `)">
+    for (let j = 0; j < 3; j++) {
+        for (let i = 0; i < 5; i++) {
+            const homePostsHTML = `<div class="flex justify-center w-full">
+                                    <div class="card w-5/6 bg-white">
                                         <div class="card-body">
                                             <div class="flex justify-between">
                                                 <div class="flex items-center gap-2">
                                                     <img src="../images/account-circle-outline.svg" width="30px" />
-                                                    <h2 class="text-md">d:` + posts[i].dscName + `</h2>
+                                                    <h2 class="text-md" onclick="goToDiscussion('` + posts[i].dscName + `')">d:` + posts[i].dscName + `</h2>
                                                     <h2 class="text-sm">` + posts[i].postDate + `</h2>
                                                 </div>
                                                 <!-- options dropdown -->
@@ -97,6 +135,29 @@ async function Posts() {
                                             </div>
                                             <h2 class="card-title">` + posts[i].postName + `</h2>
                                             <p>` + posts[i].postDesc + `</p>
+                                            <div class="flex justify-end">
+                                                <button id=` + posts[i].postId + ` class="btn btn-sm" onclick="goToPost(` + posts[i].postId + `)">View</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>`;
+
+            homePosts.insertAdjacentHTML("beforeend", homePostsHTML);
+        }
+        let randomNews = news[Math.floor(Math.random() * 10)];
+
+        const homePostsHTML = `<div class="flex justify-center w-full">
+                                    <div class="card w-5/6 bg-white">
+                                        <div class="card-body">
+                                            <div class="flex justify-between">
+                                                <div class="flex items-center gap-2">
+                                                    <img src="../images/account-circle-outline.svg" width="30px" />
+                                                    <h2 class="text-md">` + randomNews.source.name + `</h2>
+                                                </div>
+                                            </div>
+                                            <h2 class="card-title">` + randomNews.title + `</h2>
+                                            <img class="rounded" src=` + randomNews.image + `>
+                                            <p>` + randomNews.description + `</p>
                                         </div>
                                     </div>
                                 </div>`;
@@ -105,19 +166,10 @@ async function Posts() {
     }
 }
 
-const searchBar = document.getElementById("searchBar");
-const searchResults = document.getElementById("searchResults");
-const searchResultsContainer = document.getElementById("searchResultsContainer");
-
-// searchBar.addEventListener("focusout", () => {
-//     searchResultsContainer.classList.add("invisible");
-// })
-
+// function to search all discussions
 async function searchDiscussions(searchTerm) {
     const res = await fetch("http://localhost:3000/discussions/search?searchTerm=" + searchTerm);
     const discussions = await res.json();
-
-    console.log(discussions);
 
     searchResults.innerHTML = ``;
     
@@ -127,15 +179,23 @@ async function searchDiscussions(searchTerm) {
     }
 }
 
+// event listener for search bar input
 searchBar.addEventListener("input", () => {
     searchResultsContainer.classList.remove("invisible");
     searchDiscussions(searchBar.value);
 })
 
+// event listener for search bar focus
 searchBar.addEventListener("focus", () => {
     searchResultsContainer.classList.remove("invisible");
 })
 
+// event listener to remove search results when users clicks on anything that is below the navbar
+main.addEventListener("click", () => {
+    searchResultsContainer.classList.add("invisible");
+})
+
+// function to create post report
 async function createPostReport(postId) {
     const postReportCat = document.getElementById("postReportCat" + postId);
     const postReportDesc = document.getElementById("postReportDesc" + postId);
@@ -145,7 +205,7 @@ async function createPostReport(postId) {
         body: JSON.stringify({
             postRptCat: postReportCat.value,
             postRptDesc: postReportDesc.value,
-            accName: "AppleTan",
+            accName: accountName,
             postId: postId
         }),
         headers: {
@@ -154,33 +214,37 @@ async function createPostReport(postId) {
     })
 }
 
+// function to get user details to be displayed on the sidebar
 async function sidebar() {
-    const res = await fetch("http://localhost:3000/discussionMemberTop3Discussions/" + "AppleTan");
+    const res = await fetch("http://localhost:3000/discussionMemberTop3Discussions/" + accountName);
     const discussionMembers = await res.json();
+    console.log(discussionMembers);
 
     const joinedDiscussions = document.getElementById("joinedDiscussions");
     
     for (let i = 0; i < discussionMembers.length; i++) {
-        const discussionButtonHTML = `<li><a><span class="flex items-center w-full gap-2"><img src="../images/account-circle-outline.svg" width="30px" />` + discussionMembers[i].dscName + `</span></a></li>`;
+        const discussionButtonHTML = `<li><a href="./discussion.html?discussionName=` + discussionMembers[i].dscName + `"><span class="flex items-center w-full gap-2"><img src="../images/account-circle-outline.svg" width="30px" />` + discussionMembers[i].dscName + `</span></a></li>`;
         joinedDiscussions.insertAdjacentHTML("beforeend", discussionButtonHTML);
     }
 }
 
+// direct page to the post page with the post id of the selected post
 function goToPost(postId) {
-    // var script = document.getElementsByTagName("script");
-    // var url = script[script.length-1].src;
-    // for (let i = 0; i < url.length; i++) {
-    //     if (url.slice(-1) != "/") {
-    //         url = url.substring(0, url.length - 1);
-    //     } else {
-    //         break;
-    //     }
-    // }
-    // url = url.substring(0, url.length - 3);
-    // url = url.concat("post.html?postId=" + postId);
-    // window.location.href = url;
+    var script = document.getElementsByTagName("script");
+    var url = script[script.length-1].src;
+    for (let i = 0; i < url.length; i++) {
+        if (url.slice(-1) != "/") {
+            url = url.substring(0, url.length - 1);
+        } else {
+            break;
+        }
+    }
+    url = url.substring(0, url.length - 3);
+    url = url.concat("post.html?postId=" + postId);
+    window.location.href = url;
 }
 
+// direct page to discussion page
 function goToDiscussion(dscName) {
     var script = document.getElementsByTagName("script");
     var url = script[script.length-1].src;
@@ -196,5 +260,39 @@ function goToDiscussion(dscName) {
     window.location.href = url;
 }
 
-Posts();
-sidebar();
+// direct page to profile page
+function goToProfile(accName) {
+    var script = document.getElementsByTagName("script");
+    var url = script[script.length-1].src;
+    for (let i = 0; i < url.length; i++) {
+        if (url.slice(-1) != "/") {
+            url = url.substring(0, url.length - 1);
+        } else {
+            break;
+        }
+    }
+    url = url.substring(0, url.length - 3);
+    url = url.concat("profile.html");
+    window.location.href = url;
+}
+
+async function getNews() {
+    fetch(url)
+    .then(res => {
+        if(!res.ok){
+            throw new Error('Error retrieving news');
+        }
+        return res.json();
+    })
+    .then(newsData => {
+        for (i = 0; i < 10; i++) {
+            news.push(newsData.articles[i])
+        }
+        Posts();
+    })
+    .catch(error => {
+        console.error(error);
+    });
+}
+
+getNews();

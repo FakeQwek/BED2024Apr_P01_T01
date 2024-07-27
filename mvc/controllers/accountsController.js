@@ -1,38 +1,8 @@
-/*const Account = require("../models/account");
-
-/*const getAllAccounts = async (req, res) =>  {
-    try {
-        const accounts = await Account.getAllAccounts();
-        res.json(accounts);
-    } catch (error) {
-        console.log(error);
-        res.status(500).send("Error retrieving accounts");
-    }
-};
-
-const getAccountById = async (req, res) => {
-    const accountId = parseInt(req.params.accId);
-    try {
-        const account = await Account.getAccountById(accountId);
-        if (!account) {
-            return res.status(404).send("Account not found");
-        }
-        res.json(account);
-    } catch (error) {
-        console.log(error);
-        res.status(500).send("Error retrieving account");
-    }
-};
-
-module.exports = {
-    getAllAccounts,
-    getAccountById,
-};*/
-
 const sql = require("mssql");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const dbConfig = require("../../dbConfig");
+const Account = require("../models/account");
 
 const JWT_SECRET = '3f3a94e1c0b5f11a8e0f2747d2a5e2f7a9a1c3b7d4d6e1e2f7b8c9d1a3e4f6a2'; // Replace with your own secret
 
@@ -112,52 +82,82 @@ const login = async (req, res) => {
 const updateProfile = async (req, res) => {
     const { currentEmail, username, email, phoneNumber, emailNotification, gender } = req.body;
 
+    console.log("Update Profile Request Received:", req.body);
+
     if (!currentEmail || !username || !email) {
+        console.error("Missing required fields:", { currentEmail, username, email });
         return res.status(400).send('Current email, Username, and New email are required');
     }
 
-    const allowedEmailNotifications = ['allowed', 'Not allowed'];
-    if (emailNotification && !allowedEmailNotifications.includes(emailNotification)) {
-        return res.status(400).send('Invalid value for email notifications. Allowed values are "allowed" and "Not allowed".');
-    }
-
-    const allowedGenders = ['Male', 'Female'];
-    if (gender && !allowedGenders.includes(gender)) {
-        return res.status(400).send('Invalid value for gender. Allowed values are "Male" and "Female".');
-    }
+    let transaction;
 
     try {
         const pool = await sql.connect(dbConfig);
-        const query = `
-            UPDATE Account
-            SET 
-                AccName = @newUsername,
-                AccEmail = @newEmail,
-                PhoneNumber = @newPhoneNumber,
-                EmailNotification = @newEmailNotification,
-                Gender = @newGender
-            WHERE AccEmail = @currentEmail
-        `;
+        transaction = new sql.Transaction(pool);
+        await transaction.begin();
 
-        const result = await pool.request()
+        // Check if the new username already exists
+        const checkUsernameRequest = new sql.Request(transaction);
+        const checkUsernameQuery = `SELECT COUNT(*) as count FROM Account WHERE AccName = @newUsername`;
+        const usernameCheckResult = await checkUsernameRequest
+            .input('newUsername', sql.VarChar, username)
+            .query(checkUsernameQuery);
+
+        if (usernameCheckResult.recordset[0].count > 0) {
+            console.error('The new username already exists.');
+            await transaction.rollback();
+            return res.status(400).send('The new username already exists.');
+        }
+
+        // Check if the foreign key constraint exists before disabling it
+        const checkConstraintQuery = `SELECT 1 FROM sys.foreign_keys WHERE name = 'FK__Feedback__Userna__00AA174D'`;
+        const constraintCheckResult = await new sql.Request(transaction).query(checkConstraintQuery);
+
+        if (constraintCheckResult.recordset.length > 0) {
+            // Temporarily remove foreign key constraint in Feedback table
+            await new sql.Request(transaction).query(`ALTER TABLE Feedback NOCHECK CONSTRAINT FK__Feedback__Userna__00AA174D`);
+        } else {
+            console.warn("Foreign key constraint 'FK__Feedback__Userna__00AA174D' does not exist.");
+        }
+
+        // Update the feedback table first
+        await new sql.Request(transaction)
+            .input('newUsername', sql.VarChar, username)
+            .input('currentEmail', sql.VarChar, currentEmail)
+            .query(`UPDATE Feedback SET Username = @newUsername WHERE Username = (SELECT AccName FROM Account WHERE AccEmail = @currentEmail)`);
+
+        // Update the account
+        await new sql.Request(transaction)
             .input('newUsername', sql.VarChar, username)
             .input('newEmail', sql.VarChar, email)
             .input('newPhoneNumber', sql.VarChar, phoneNumber || null)
             .input('newEmailNotification', sql.VarChar, emailNotification || 'Not allowed')
             .input('newGender', sql.VarChar, gender || 'NIL')
             .input('currentEmail', sql.VarChar, currentEmail)
-            .query(query);
+            .query(`UPDATE Account SET AccName = @newUsername, AccEmail = @newEmail, PhoneNumber = @newPhoneNumber, EmailNotification = @newEmailNotification, Gender = @newGender WHERE AccEmail = @currentEmail`);
 
-        if (result.rowsAffected[0] > 0) {
-            res.json({ message: 'Profile updated successfully' });
-        } else {
-            res.status(404).send('User not found');
+        // Reinstate the foreign key constraint if it was previously disabled
+        if (constraintCheckResult.recordset.length > 0) {
+            await new sql.Request(transaction).query(`ALTER TABLE Feedback CHECK CONSTRAINT FK__Feedback__Userna__00AA174D`);
         }
+
+        await transaction.commit();
+
+        res.json({ message: 'Profile updated successfully' });
+
     } catch (err) {
+        if (transaction) await transaction.rollback();
         console.error('Database error:', err);
         res.status(500).send('Failed to update profile');
     }
 };
+
+
+
+
+
+
+
 
 const deleteAccount = async (req, res) => {
     const { username, email } = req.body;
@@ -183,8 +183,6 @@ const deleteAccount = async (req, res) => {
         res.status(500).send('Server error');
     }
 };
-
-
 
 const getAllAccounts = async (req, res) => {
     try {
@@ -296,7 +294,7 @@ const unmuteUser = async (req, res) => {
         res.status(200).send(`User ${accName} has been unmuted.`);
     } catch (error) {
         console.error('Error unmuting user:', error);
-        res.status(500).send("Error unmuting user");
+        res.status500.send("Error unmuting user");
     }
 };
 
@@ -322,7 +320,6 @@ const demoteUser = async (req, res) => {
     }
 };
 
-
 module.exports = { 
     signup,
     login,
@@ -340,94 +337,3 @@ module.exports = {
     promoteUser,
     demoteUser,
 };
-
-/*const Account = require("../models/account");
-
-const createAccount = async (req, res) => {
-    const { email, password } = req.body;
-    const username = email.split('@')[0] || email; // Generate a username from the email
-    const account = new Account(username, email, password, 'False', 'False', 'False');
-    
-    try {
-        console.log('Attempting to create account:', account);
-        const success = await Account.createAccount(account);
-        if (success) {
-            res.status(201).json({ success: true });
-        } else {
-            console.log('Account creation failed in the model.');
-            res.status(500).json({ success: false });
-        }
-    } catch (error) {
-        console.log('Error during account creation:', error);
-        res.status(500).json({ success: false });
-    }
-};
-
-const signUp = async (req, res) => {
-    const { email, password } = req.body;
-
-    // Simple validation
-    if (!email || !password) {
-        return res.status(400).json({ success: false, message: "Email and password are required" });
-    }
-
-    const username = email.split("@")[0]; // Generate username from email
-    const newAccount = new Account(username, email, password, "False", "False", "False");
-
-    try {
-        const accountCreated = await Account.createAccount(newAccount);
-        if (accountCreated) {
-            res.status(201).json({ success: true, message: "Account created successfully" });
-        } else {
-            res.status(500).json({ success: false, message: "Error creating account" });
-        }
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ success: false, message: "Error creating account" });
-    }
-};
-
-const testConnection = async (req, res) => {
-    try {
-        const connection = await sql.connect(dbConfig);
-        console.log("Database connection established successfully");
-        connection.close();
-        res.status(200).json({ success: true, message: "Database connection established successfully" });
-    } catch (error) {
-        console.log("Database connection error:", error);
-        res.status(500).json({ success: false, message: "Database connection error", error });
-    }
-};
-
-const getAllAccounts = async (req, res) =>  {
-    try {
-        const accounts = await Account.getAllAccounts();
-        res.json(accounts);
-    } catch (error) {
-        console.log(error);
-        res.status(500).send("Error retrieving accounts");
-    }
-};
-
-const getAccountById = async (req, res) => {
-    const accountId = parseInt(req.params.accId);
-    try {
-        const account = await Account.getAccountById(accountId);
-        if (!account) {
-            return res.status(404).send("Account not found");
-        }
-        res.json(account);
-    } catch (error) {
-        console.log(error);
-        res.status(500).send("Error retrieving account");
-    }
-};
-
-module.exports = {
-    signUp,
-    createAccount,
-    testConnection,
-    getAllAccounts,
-    getAccountById,
-};
-*/

@@ -13,7 +13,9 @@ const getAllPostReports = async (req, res) => {
 };
 
 
+
 //Takes post report id as parameter
+
 const getPostReportById = async (req, res) => {
     const postRptId = parseInt(req.params.postRptId);
     try {
@@ -39,8 +41,23 @@ const createPostReport = async (req, res) => {
     }
 };
 
+const deletePostReport = async (req, res) => {
+    const postId = req.params.postId;
+    try {
+        const success = await PostReport.deletePostReport(postId);
+        if (!success) {
+            return res.status(404).send("Post report not found")
+        }
+        res.status(204).send("Success");
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Error deleting report");
+    }
+};
+
 module.exports = {
     getAllPostReports,
     getPostReportById,
-    createPostReport
+    createPostReport,
+    deletePostReport,
 };

@@ -175,7 +175,6 @@
             transform: scaleX(1);
             transform-origin: bottom left;
         }
-
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col">
@@ -194,31 +193,22 @@
         </div>
     </header>
 
-    <!-- Main Content -->
-    <div class="flex flex-row h-full">
-        <!-- Sidebar -->
-        <div class="flex flex-col items-center w-1/6 h-full bg-white border-r-2">
+    <!-- main -->
+    <div class="flex flex-row flex-grow">
+        <!-- sidebar -->
+        <div class="flex flex-col items-center w-1/6 min-h-screen bg-white border-r-2">
             <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
                 <div class="flex items-center">
-                    <button class="btn w-full bg-white border-0 text-left shadow-none">
-                        <span class="flex items-center w-full gap-2">
-                            <img src="../images/home-variant-outline.svg" width="30px" />Home
-                        </span>
-                    </button>
+                    <button class="btn w-full bg-white border-0 text-left shadow-none" onclick="window.location.href='index.html'"><span class="flex items-center w-full gap-2"><img src="../images/home-variant-outline.svg" width="30px" />Home</span></button>
                 </div>
                 <div class="flex items-center">
-                    <button class="btn w-full bg-white border-0 text-left shadow-none">
-                        <span class="flex items-center w-full gap-2">
-                            <img src="../images/account-circle-outline.svg" width="30px" />Profile
-                        </span>
-                    </button>
+                    <button class="btn w-full bg-white border-0 text-left shadow-none" onclick="window.location.href='profilesetting.html'"><span class="flex items-center w-full gap-2"><img src="../images/account-circle-outline.svg" width="30px" />Profile</span></button>
                 </div>
                 <div class="flex items-center">
-                    <button class="btn w-full bg-white border-0 text-left shadow-none">
-                        <span class="flex items-center w-full gap-2">
-                            <img src="../images/newspaper-variant-outline.svg" width="30px" />News
-                        </span>
-                    </button>
+                    <button class="btn w-full bg-white border-0 text-left shadow-none" onclick="window.location.href='news.html'"><span class="flex items-center w-full gap-2"><img src="../images/newspaper-variant-outline.svg" width="30px" />News</span></button>
+                </div>
+                <div class="flex items-center">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none" onclick="window.location.href='feedback.html'"><span class="flex items-center w-full gap-2"><img src="../images/feedback.svg" width="30px" />Feedback</span></button>
                 </div>
             </div>
             <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
@@ -227,58 +217,61 @@
             <div class="flex flex-col w-4/5 h-fit border-b-2 px-4 py-8 gap-2">
                 <h2 class="font-bold mb-2">LEARN MORE</h2>
                 <div class="flex items-center">
-                    <button class="btn w-full bg-white border-0 text-left shadow-none">
-                        <span class="flex items-center w-full gap-2">
-                            <img src="../images/information-outline.svg" width="30px" />About Us
-                        </span>
-                    </button>
+                    <button class="btn w-full bg-white border-0 text-left shadow-none" onclick="window.location.href='about.html'"><span class="flex items-center w-full gap-2"><img src="../images/information-outline.svg" width="30px" />About Us</span></button>
                 </div>
                 <div class="flex items-center">
-                    <button class="btn w-full bg-white border-0 text-left shadow-none">
-                        <span class="flex items-center w-full gap-2">
-                            <img src="../images/phone-in-talk.svg" width="30px" />Contact Us
-                        </span>
-                    </button>
+                    <button class="btn w-full bg-white border-0 text-left shadow-none" onclick="window.location.href='contact-us.html'"><span class="flex items-center w-full gap-2"><img src="../images/phone-in-talk.svg" width="30px" />Contact Us</span></button>
                 </div>
                 <div class="flex items-center">
-                    <button class="btn w-full bg-white border-0 text-left shadow-none">
-                        <span class="flex items-center w-full gap-2">
-                            <img src="../images/finance.svg" width="30px" />User Statistics
-                        </span>
-                    </button>
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/finance.svg" width="30px" />User Statistics</span></button>
+                </div>
+                
+                <div class="flex items-center">
+                    <button class="btn w-full bg-white border-0 text-left shadow-none"><span class="flex items-center w-full gap-2"><img src="../images/logout.svg" width="30px" />Logout</span></button>
                 </div>
             </div>
         </div>
 
-        <!-- Main Content Area -->
-        <main class="flex-1 p-8">
-            <div class="bg-white p-8 rounded-2xl shadow-lg max-w-2xl mx-auto">
-                <div class="flex items-center mb-8">
-                    <img src="../images/person.png" alt="User Profile Picture" class="rounded-full h-20 w-20 mr-4">
-                    <h2 class="text-3xl font-bold">u:henryneofan2</h2>
+       <!-- Main Content Area -->
+    <main class="flex-1 p-8">
+        <div class="bg-white p-8 rounded-2xl shadow-lg max-w-2xl mx-auto">
+            <div class="flex items-center mb-8">
+                <img src="../images/person.png" alt="User Profile Picture" class="rounded-full h-20 w-20 mr-4">
+                <h2 class="text-3xl font-bold" id="usernameDisplay">u:</h2>
+            </div>
+            <div class="flex flex-col bg-white p-4 rounded-lg shadow">
+                <div class="flex justify-between items-center border-b pb-4 mb-4">
+                    <div class="flex items-center gap-8">
+                        <a href="profile.html" class="underline-animation text-gray-500 pb-2">Overview</a>
+                        <a href="profile-post.html" class="underline-animation active text-gray-500 pb-2">Posts</a>
+                        <a href="profile-comment.html" class="underline-animation text-gray-500 pb-2">Comments</a>
+                    </div>
                 </div>
-                <div class="flex flex-col bg-white p-4 rounded-lg shadow">
-                    <div class="flex justify-between items-center border-b pb-4 mb-4">
-                        <div class="flex items-center gap-8">
-                            <a href="profile.html" class="underline-animation text-gray-500 pb-2">Overview</a>
-                            <a href="display-post.html" class="underline-animation active text-gray-500 pb-2">Posts</a>
-                            <a href="display-comment.html" class="underline-animation text-gray-500 pb-2">Comments</a>
-                        </div>
-                    </div>
-                    <div id="posts-container">
-                        <!-- Posts will be injected here -->
-                    </div>
+                <div id="posts-container">
+                    <!-- Posts will be injected here -->
+                </div>
                 </div>
             </div>
         </main>
     </div>
 
     <script>
-        async function fetchPosts() {
+        document.addEventListener('DOMContentLoaded', () => {
+            const username = localStorage.getItem('username');
+            if (username) {
+                document.getElementById('usernameDisplay').innerText = `u/${username}`;
+                fetchPosts(username);
+            } else {
+                console.error('Username not found in localStorage');
+            }
+        });
+
+        async function fetchPosts(username) {
             try {
-                const response = await fetch('http://localhost:3000/posts');
+                const response = await fetch(`http://localhost:3000/posts/user/${username}`);
                 const posts = await response.json();
                 const postsContainer = document.getElementById('posts-container');
+                postsContainer.innerHTML = ''; // Clear existing posts
                 posts.forEach(post => {
                     const postElement = document.createElement('div');
                     postElement.className = 'post-card';
@@ -286,11 +279,11 @@
                         <div class="post-header">
                             <img src="../images/person.png" alt="User Profile Picture">
                             <div>
-                                <div class="post-meta">u:${post.ownerID}</div>
-                                <div class="post-title">${post.postName}</div>
+                                <div class="post-meta">u/${post.OwnerID}</div>
+                                <div class="post-title">${post.PostName}</div>
                             </div>
                         </div>
-                        <div class="post-body">${post.postDesc}</div>
+                        <div class="post-body">${post.PostDesc}</div>
                     `;
                     postsContainer.appendChild(postElement);
                 });
@@ -298,8 +291,6 @@
                 console.error('Error fetching posts:', error);
             }
         }
-
-        window.onload = fetchPosts;
     </script>
 </body>
 </html>

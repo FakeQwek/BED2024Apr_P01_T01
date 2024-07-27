@@ -11,7 +11,7 @@ const getAllDiscussionReports = async (req, res) => {
 };
 
 const getDiscussionReportById = async (req, res) => {
-    const dscRptId = parseInt(req.params.dscRptId);
+    const dscRptId = req.params.dscRptId; // Treat as string
     try {
         const discussionReport = await DiscussionReport.getDiscussionReportById(dscRptId);
         if (!discussionReport) {
@@ -35,15 +35,28 @@ const createDiscussionReport = async (req, res) => {
     }
 };
 
+const warnDiscussionReport = async (req, res) => {
+    const dscRptId = req.params.dscRptId; // Treat as string
+    try {
+        const discussionReport = await DiscussionReport.getDiscussionReportById(dscRptId);
+        if (!discussionReport) {
+            return res.status(404).send("Discussion Report not found");
+        }
+
+        await DiscussionReport.warnDiscussionReport(dscRptId);
+        res.status(200).send("Discussion Report warned successfully");
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Error warning discussion report");
+    }
+};
+
 const deleteDiscussionReport = async (req, res) => {
-    const dscRptId = parseInt(req.params.dscRptId);
+    const dscRptId = req.params.dscRptId; // Treat as string
     try {
         console.log(`Attempting to delete discussion report with ID: ${dscRptId}`);
         const discussionReport = await DiscussionReport.getDiscussionReportById(dscRptId);
         
-        // Log the retrieved discussion report
-        console.log(`Retrieved Discussion Report: `, discussionReport);
-
         if (!discussionReport) {
             console.log(`Discussion Report with ID: ${dscRptId} not found`);
             return res.status(404).send("Discussion Report not found");
@@ -62,5 +75,6 @@ module.exports = {
     getAllDiscussionReports,
     getDiscussionReportById,
     createDiscussionReport,
+    warnDiscussionReport,
     deleteDiscussionReport,
 };
