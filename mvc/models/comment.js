@@ -22,7 +22,7 @@ class Comment {
         const connection = await sql.connect(dbConfig);
         const sqlQuery = `SELECT * FROM Comment WHERE PostID = @postId`;
         const request = connection.request();
-        request.input("postId", sql.VarChar, postId);
+        request.input("postId", postId);
         const result = await request.query(sqlQuery);
         connection.close();
 
@@ -59,9 +59,9 @@ class Comment {
                           SELECT CASE WHEN COUNT(*) = 0 THEN 1 ELSE MAX(CmtID) + 1 END, @cmtDesc, @accName, @postId FROM Comment;`;
 
         const request = connection.request();
-        request.input("cmtDesc", sql.VarChar, newCommentData.cmtDesc);
-        request.input("accName", sql.VarChar, newCommentData.accName);
-        request.input("postId", sql.VarChar, newCommentData.postId);
+        request.input("cmtDesc", newCommentData.cmtDesc);
+        request.input("accName", newCommentData.accName);
+        request.input("postId", newCommentData.postId);
         await request.query(sqlQuery);
         connection.close();
     }
@@ -88,7 +88,7 @@ class Comment {
         const sqlQuery = `DELETE FROM Comment WHERE CmtID = @cmtId`;
 
         const request = connection.request();
-        request.input("cmtId", sql.VarChar, cmtId);
+        request.input("cmtId", cmtId);
 
         await request.query(sqlQuery);
         connection.close();
@@ -100,7 +100,7 @@ class Comment {
         const sqlQuery = `DELETE FROM Comment WHERE PostID = @postId`;
 
         const request = connection.request();
-        request.input("postId", sql.VarChar, postId);
+        request.input("postId", postId);
 
         await request.query(sqlQuery);
         connection.close();
