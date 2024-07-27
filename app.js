@@ -173,7 +173,8 @@ app.delete("/volunteer/:postId/:volId", verifyPostOwner, volunteersController.de
 app.get("/discussionMembers", discussionMembersController.getAllDiscussionMembers); // admin
 app.get("/discussionMembers/:dscName", discussionMembersController.getDiscussionMembersByDiscussion); // public
 app.get("/discussionMemberTop3Discussions/:accName", discussionMembersController.getDiscussionMemberTop3Discussions); // self
-app.post("/discussionMember/:dscName", verifyDiscussionMember, discussionMembersController.createDiscussionMember); // logged in user
+app.post("/discussionMember/:dscName", discussionMembersController.createDiscussionMember); // logged in user
+app.post("/inviteDiscussionMember/:dscName", verifyDiscussionOwner, discussionMembersController.createDiscussionMember) // discussion owner (restricted discussions)
 app.delete("/discussionMember/:accName/:dscName", verifyDiscussionMember, discussionMembersController.deleteDiscussionMember); // member
 
 // Post like routes
@@ -182,11 +183,11 @@ app.get("/postLikes/:dscName/:postId", verifyDiscussionMember, postLikesControll
 app.post("/postLike/:dscName", verifyDiscussionMember, postLikesController.createPostLike); // member
 app.delete("/postLike/:accName/:postId/:dscName", postLikesController.deletePostLike); // member
 
-// Invite routes
-app.get("/invites", invitesController.getAllInvites); // admin
-app.get("/invites/:dscName", invitesController.getInvitesByDiscussion); // discussion admin
-app.post("/invite", invitesController.createInvite); // discussion admin
-app.delete("/invite/:invId", invitesController.deleteInvite); // discussion admin
+// // Invite routes
+// app.get("/invites", invitesController.getAllInvites); // admin
+// app.get("/invites/:dscName", invitesController.getInvitesByDiscussion); // discussion admin
+// app.post("/invite", invitesController.createInvite); // discussion admin
+// app.delete("/invite/:invId", invitesController.deleteInvite); // discussion admin
 
 // Additional routes
 app.get('/login', accountsController.login);

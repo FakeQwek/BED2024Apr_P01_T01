@@ -13,11 +13,16 @@ const verifyDiscussionOwner = async (req, res, next) => {
             return res.status(403).json({ message: "Forbidden" });
         }
 
-        for (let i = 0; i < decoded.discussionOwner.length; i++) {
-            if (dscName == decoded.discussionOwner[i]) {
+        async function getDiscussionOwner() {
+            const res = await fetch("http://localhost:3000/discussions/" + dscName);
+            const discussion = await res.json();
+
+            if (discussion.accName == decoded.username) {
+                console.log("PASSED")
                 next();
             }
         }
+        getDiscussionOwner();
     });
 };
 
