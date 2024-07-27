@@ -648,8 +648,8 @@ async function getPostsByDiscussionOrderByLikes() {
     if (isMember) {
         discussionPosts.innerHTML = `<div class="flex justify-between w-full h-fit mt-4">
                                         <div>
-                                            <button class="btn btn-sm bg-white ml-8 max-[820px]:hidden" onclick="getPostsByDiscussionOrderByLikes()"><img src="../images/fire.svg" width="20px" />Hot</button>
-                                            <button class="btn btn-sm bg-white ml-4"><img src="../images/finance.svg" width="20px" />Trending</button>
+                                            <button class="btn btn-sm bg-white ml-8 max-[820px]:hidden" onclick="getPostsByDiscussionOrderByLikes()"><img src="../images/fire.svg" width="20px" />Top</button>
+                                            <button class="btn btn-sm bg-white ml-4"><img src="../images/finance.svg" width="20px" />Newest</button>
                                         </div>
                                         <div>
                                             <button id="joinButton" class="btn btn-sm bg-white mr-4 max-[820px]:mr-2" onclick="createDiscussionMember()"><img src="../images/plus.svg" width="20px" />Leave</button>
@@ -659,8 +659,8 @@ async function getPostsByDiscussionOrderByLikes() {
     } else {
         discussionPosts.innerHTML = `<div class="flex justify-between w-full h-fit mt-4">
                                         <div>
-                                            <button class="btn btn-sm bg-white ml-8 max-[820px]:hidden" onclick="getPostsByDiscussionOrderByLikes()"><img src="../images/fire.svg" width="20px" />Hot</button>
-                                            <button class="btn btn-sm bg-white ml-4"><img src="../images/finance.svg" width="20px" />Trending</button>
+                                            <button class="btn btn-sm bg-white ml-8 max-[820px]:hidden" onclick="getPostsByDiscussionOrderByLikes()"><img src="../images/fire.svg" width="20px" />Top</button>
+                                            <button class="btn btn-sm bg-white ml-4"><img src="../images/finance.svg" width="20px" />Newest</button>
                                         </div>
                                         <div>
                                             <button id="joinButton" class="btn btn-sm bg-white mr-4 max-[820px]:mr-2" onclick="createDiscussionMember()"><img src="../images/plus.svg" width="20px" />Join</button>
@@ -937,8 +937,8 @@ async function getPostsByDiscussionOrderByPostDate() {
     if (isMember) {
         discussionPosts.innerHTML = `<div class="flex justify-between w-full h-fit mt-4">
                                         <div>
-                                            <button class="btn btn-sm bg-white ml-8 max-[820px]:hidden" onclick="getPostsByDiscussionOrderByLikes()"><img src="../images/fire.svg" width="20px" />Hot</button>
-                                            <button class="btn btn-sm bg-white ml-4" onclick="getPostsByDiscussionOrderByPostDate()"><img src="../images/finance.svg" width="20px" />Trending</button>
+                                            <button class="btn btn-sm bg-white ml-8 max-[820px]:hidden" onclick="getPostsByDiscussionOrderByLikes()"><img src="../images/fire.svg" width="20px" />Top</button>
+                                            <button class="btn btn-sm bg-white ml-4" onclick="getPostsByDiscussionOrderByPostDate()"><img src="../images/finance.svg" width="20px" />Newest</button>
                                         </div>
                                         <div>
                                             <button id="joinButton" class="btn btn-sm bg-white mr-4 max-[820px]:mr-2" onclick="createDiscussionMember()"><img src="../images/plus.svg" width="20px" />Leave</button>
@@ -948,8 +948,8 @@ async function getPostsByDiscussionOrderByPostDate() {
     } else {
         discussionPosts.innerHTML = `<div class="flex justify-between w-full h-fit mt-4">
                                         <div>
-                                            <button class="btn btn-sm bg-white ml-8 max-[820px]:hidden" onclick="getPostsByDiscussionOrderByLikes()"><img src="../images/fire.svg" width="20px" />Hot</button>
-                                            <button class="btn btn-sm bg-white ml-4" onclick="getPostsByDiscussionOrderByPostDate()"><img src="../images/finance.svg" width="20px" />Trending</button>
+                                            <button class="btn btn-sm bg-white ml-8 max-[820px]:hidden" onclick="getPostsByDiscussionOrderByLikes()"><img src="../images/fire.svg" width="20px" />Top</button>
+                                            <button class="btn btn-sm bg-white ml-4" onclick="getPostsByDiscussionOrderByPostDate()"><img src="../images/finance.svg" width="20px" />Newest</button>
                                         </div>
                                         <div>
                                             <button id="joinButton" class="btn btn-sm bg-white mr-4 max-[820px]:mr-2" onclick="createDiscussionMember()"><img src="../images/plus.svg" width="20px" />Join</button>
