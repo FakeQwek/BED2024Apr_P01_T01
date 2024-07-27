@@ -555,7 +555,8 @@ async function createDiscussionMember() {
                 dscMemRole: "Member"
             }),
             headers: {
-                "Content-type": "application/json; charset=UTF-8"
+                "Content-type": "application/json; charset=UTF-8",
+                "Authorization": "Bearer " + localStorage.getItem("token")
             }
         })
         isMember = true;
@@ -1222,16 +1223,20 @@ async function sidebar() {
     }
 }
 
+const inviteName = document.getElementById("inviteName");
+
 // function to create an invite to the discussion
 async function createInvite() {
-    await fetch("http://localhost:3000/invite", {
+    console.log(inviteName.value);
+    await fetch("http://localhost:3000/inviteDiscussionMember/" + discussionName, {
         method: "POST",
         body: JSON.stringify({
-            accName: accountName,
-            dscName: discussionName
+            accName: inviteName.value,
+            dscMemRole: "Member"
         }),
         headers: {
-            "Content-type": "application/json; charset=UTF-8"
+            "Content-type": "application/json; charset=UTF-8",
+            "Authorization": "Bearer " + localStorage.getItem("token")
         }
     });
 }
