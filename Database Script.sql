@@ -4,12 +4,12 @@ DROP TABLE PostReport;
 DROP TABLE DiscussionReport; 
 DROP TABLE Comment; 
 DROP TABLE Post; 
-DROP TABLE Discussion; 
-DROP TABLE Account; 
 DROP TABLE BanInfo;
 DROP TABLE MuteInfo;
 DROP TABLE NewsPost;
 DROP TABLE Question;
+DROP TABLE Account; 
+DROP TABLE Discussion; 
  
 
 
@@ -82,12 +82,16 @@ CREATE TABLE Post (
     isApproved varchar(5) NOT NULL,
     PostDate varchar(10) NOT NULL,
     PostEventDate varchar(10) NULL,
+    isApproved varchar(5) NOT NULL,
+    PostDate varchar(10) NOT NULL,
+    PostEventDate varchar(10) NULL,
     OwnerID varchar(16) NOT NULL, 
     DscName varchar(16) NOT NULL 
     CONSTRAINT PK_Post PRIMARY KEY (PostID), 
     CONSTRAINT FK_Post_DscName FOREIGN KEY (DscName) 
     REFERENCES Discussion(DscName), 
     CONSTRAINT CHK_Post_isEvent CHECK (isEvent IN ('True', 'False')), 
+    CONSTRAINT CHK_Post_isApproved CHECK (isApproved IN ('True', 'False'))); 
     CONSTRAINT CHK_Post_isApproved CHECK (isApproved IN ('True', 'False'))); 
 
     INSERT INTO Post (PostID, PostName, PostDesc, isEvent, isApproved, PostDate, PostEventDate, OwnerID, DscName) VALUES
@@ -152,6 +156,18 @@ CREATE TABLE DiscussionReport (
     REFERENCES Account(AccName),
     CONSTRAINT FK_DiscussionReport_DscName FOREIGN KEY (DscName)
     REFERENCES Discussion(DscName));  
+CREATE TABLE DiscussionReport (
+    DscRptID varchar(10) NOT NULL,
+    DscRptCat varchar(100) NOT NULL,
+    DscRptDesc varchar(100) NOT NULL,
+    AccName varchar(16) NOT NULL,
+    DscName varchar(16) NOT NULL,
+    Warned BIT DEFAULT 0,
+    CONSTRAINT PK_DiscussionReport PRIMARY KEY (DscRptID),
+    CONSTRAINT FK_DiscussionReport_AccName FOREIGN KEY (AccName)
+    REFERENCES Account(AccName),
+    CONSTRAINT FK_DiscussionReport_DscName FOREIGN KEY (DscName)
+    REFERENCES Discussion(DscName));  
 
     INSERT INTO DiscussionReport (DscRptID, DscRptCat, DscRptDesc, AccName, DscName) VALUES
     ('1', 'Inappropriate Content', 'This discussion contains offensive material.', 'Abigail', 'ClimateAction');
@@ -167,9 +183,9 @@ CREATE TABLE DiscussionReport (
 CREATE TABLE PostReport ( 
     PostRptID varchar(10) NOT NULL, 
     PostRptCat varchar(100) NOT NULL, 
-    PostRptDesc varchar(100) NOT NULL, 
+    PostRptDesc varchar(100) NOT NULL,
     AccName varchar(16) NOT NULL, 
-    PostID varchar(10) NOT NULL,
+    PostID varchar(10) NOT NULL 
     CONSTRAINT PK_PostReport PRIMARY KEY (PostRptID), 
     CONSTRAINT FK_PostReport_AccName FOREIGN KEY (AccName) 
     REFERENCES Account(AccName), 
@@ -221,7 +237,7 @@ CREATE TABLE DiscussionAdmin (
 CREATE TABLE Volunteer ( 
     VolID varchar(10) NOT NULL, 
     AccName varchar(16) NOT NULL, 
-    isApproved varchar(5) NOT NULL,
+    isApproved varchar(5) NOT NULL, 
     PostID varchar(10) NOT NULL 
     CONSTRAINT PK_Volunteer PRIMARY KEY (VolID), 
     CONSTRAINT FK_Volunteer_AccName FOREIGN KEY (AccName) 
@@ -281,4 +297,49 @@ CREATE TABLE Question (
     Query varchar(255) NOT NULL,
     CONSTRAINT PK_Question PRIMARY KEY(QuestionID)
 
+);
+
+CREATE TABLE DiscussionMember (
+    DscMemID varchar(10) NOT NULL,
+    DscMemRole varchar(6) NOT NULL,
+    isMuted varchar(5) NOT NULL,
+    isBanned varchar(5) NOT NULL,
+    AccName varchar(16) NOT NULL,
+    DscName varchar(16) NOT NULL
+    CONSTRAINT PK_DiscussionMember PRIMARY KEY (DscMemID),
+    CONSTRAINT FK_DiscussionMember_AccName FOREIGN KEY (AccName)
+    REFERENCES Account(AccName),
+    CONSTRAINT FK_DiscussionMember_DscName FOREIGN KEY (DscName)
+    REFERENCES Discussion(DscName),
+    CONSTRAINT CHK_DiscussionMember_isMuted CHECK (isMuted IN ('True', 'False')),
+    CONSTRAINT CHK_DiscussionMember_isBanned CHECK (isBanned IN ('True', 'False')),
+    CONSTRAINT AK_AccName_DscName UNIQUE (AccName, DscName));
+
+CREATE TABLE PostLike (
+    PostLikeID varchar(10) NOT NULL,
+    AccName varchar(16) NOT NULL,
+    PostID varchar(10) NOT NULL
+    CONSTRAINT PK_PostLike PRIMARY KEY (PostLikeID),
+    CONSTRAINT FK_PostLike_AccName FOREIGN KEY (AccName)
+    REFERENCES Account(AccName),
+    CONSTRAINT FK_PostLike_PostID FOREIGN KEY (PostID)
+    REFERENCES Post(PostID),
+    CONSTRAINT AK_AccName_PostID UNIQUE (AccName, PostID));
+
+CREATE TABLE Invite (
+    InvID varchar(10) NOT NULL,
+    AccName varchar(16) NOT NULL,
+    DscName varchar(16) NOT NULL,
+    CONSTRAINT PK_Invite PRIMARY KEY (InvID),
+    CONSTRAINT FK_Invite_AccName FOREIGN KEY (AccName)
+    REFERENCES Account(AccName),
+    CONSTRAINT FK_Invite FOREIGN KEY (DscName)
+    REFERENCES Discussion(DscName),
+    CONSTRAINT AK_Invite_AccName_DscName UNIQUE (AccName, DscName));
+
+CREATE TABLE Feedback (
+    FeedbackID INT IDENTITY(1,1) PRIMARY KEY,
+    Username VARCHAR(255) NOT NULL,
+    RatingStar INT NOT NULL,
+    FeedbackDescription VARCHAR(MAX) NOT NULL
 );

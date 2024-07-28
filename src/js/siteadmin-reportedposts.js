@@ -227,7 +227,7 @@ async function deletePostReport(reportId) {
 
 //Function deletes post with their post id
 async function deletePost(postId) {
-    const response = await fetch(`http://localhost:3000/siteadmin/post/${postId}`, {
+    const response = await fetch(`http://localhost:3000/siteadmin/posts/${postId}`, {
         method: "DELETE",
         mode: "cors",
         cache: "no-cache",

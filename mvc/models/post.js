@@ -165,7 +165,7 @@ class Post {
 
     static async deletePost(postId) {
         const connection = await sql.connect(dbConfig);
-        const sqlQuery = `DELETE FROM Post WHERE PostID = @postId`;
+        const sqlQuery = `DELETE FROM PostLike WHERE PostID = @postId; DELETE FROM PostReport WHERE PostID = @postId; DELETE FROM Volunteer WHERE PostID = @postId; DELETE FROM Post WHERE PostID = @postId;`;
         const request = connection.request();
         request.input("postId", postId);
         await request.query(sqlQuery);

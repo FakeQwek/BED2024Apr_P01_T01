@@ -121,6 +121,7 @@ async function approveVolunteerAsync(volId) {
     await fetch("http://localhost:3000/volunteer/" + postId + "/" + volId, {
         method: "PUT",
         headers: {
+            "Content-type": "application/json; charset=UTF-8",
             "Authorization": "Bearer " + localStorage.getItem("token")
         }
     });
@@ -140,8 +141,9 @@ async function sidebar() {
 }
 
 function approveVolunteer(volId) {
-    location.reload();
     approveVolunteerAsync(volId);
+
+    location.reload();
 }
 
 // function to reject/delete volunteers
@@ -149,6 +151,7 @@ async function deleteVolunteerAsync(volId) {
     await fetch("http://localhost:3000/volunteer/" + postId + "/" + volId, {
         method: "DELETE",
         headers: {
+            "Content-type": "application/json; charset=UTF-8",
             "Authorization": "Bearer " + localStorage.getItem("token")
         }
     });
@@ -156,8 +159,9 @@ async function deleteVolunteerAsync(volId) {
 
 
 function deleteVolunteer(volId) {
-    location.reload();
     deleteVolunteerAsync(volId);
+
+    location.reload();
 };
 
 // direct page to profile page
