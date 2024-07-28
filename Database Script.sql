@@ -257,10 +257,10 @@ CREATE TABLE BanInfo (
 );
 
     INSERT INTO BanInfo (AccName, banDate, banReason, bannedBy, DscName) VALUES
-    ('Cameron', '2024-07-22 10:15:00', 'Violation of community guidelines', 'Johnathon', 'health_tech'),
-    ('Elizabeth', '2024-07-23 09:00:00', 'Repeated rule violations.', 'Abigail', 'nutrition'),
-    ('Marcus', '2024-07-26 13:00:00', 'Repeated offenses.', 'Riley', 'mental_health_support'),
-    ('Michellye', '2024-07-27 14:00:00', 'Violating guidelines.', 'Marcus', 'child_health');
+    ('Cameron', '2024-07-22 10:15:00', 'Violation of community guidelines', 'Johnathon', 'ClimateAction'),
+    ('Elizabeth', '2024-07-23 09:00:00', 'Repeated rule violations.', 'Abigail', 'PublicHealth'),
+    ('Marcus', '2024-07-26 13:00:00', 'Repeated offenses.', 'Riley', 'EqualityForAll'),
+    ('Michellye', '2024-07-27 14:00:00', 'Violating guidelines.', 'Marcus', 'Community');
 
 
 CREATE TABLE MuteInfo (
@@ -273,7 +273,7 @@ CREATE TABLE MuteInfo (
     CONSTRAINT FK_DscName_MuteInfo FOREIGN KEY (DscName) REFERENCES Discussion (DscName)
 );
 
- INSERT INTO BanInfo (AccName, banDate, banReason, bannedBy, DscName) VALUES
+ INSERT INTO MuteInfo (AccName, muteDate, muteReason, mutedBy, DscName) VALUES
     ('Cameron', '2024-07-22 10:15:00', 'Violation of community guidelines', 'Johnathon', 'ClimateAction'),
     ('Elizabeth', '2024-07-23 09:00:00', 'Repeated rule violations.', 'Abigail', 'Community'),
     ('Marcus', '2024-07-26 13:00:00', 'Repeated offenses.', 'Riley', 'EducationReform'),
@@ -287,6 +287,10 @@ CREATE TABLE Question (
     CONSTRAINT PK_Question PRIMARY KEY(QuestionID)
 
 );
+
+INSERT INTO Question (QuestionID, Name, Email, Query) VALUES
+    ('Q1', 'Alice', 'alice@example.com', 'How to participate in discussions?'),
+    ('Q2', 'Bob', 'bob@example.com', 'How to report inappropriate content?');
 
 CREATE TABLE DiscussionMember (
     DscMemID varchar(10) NOT NULL,
@@ -304,6 +308,14 @@ CREATE TABLE DiscussionMember (
     CONSTRAINT CHK_DiscussionMember_isBanned CHECK (isBanned IN ('True', 'False')),
     CONSTRAINT AK_AccName_DscName UNIQUE (AccName, DscName));
 
+
+    INSERT INTO DiscussionMember (DscMemID, DscMemRole, isMuted, isBanned, AccName, DscName) VALUES
+    ('DM1', 'Member', 'False', 'False', 'Johnathon', 'ClimateAction'),
+    ('DM2', 'Member', 'False', 'False', 'Marcus', 'EqualityForAll'),
+    ('DM3', 'Admin', 'False', 'False', 'Lily', 'Community'),
+    ('DM4', 'Member', 'True', 'False', 'Cameron', 'EducationReform'),
+    ('DM5', 'Member', 'False', 'True', 'Riley', 'PublicHealth');
+
 CREATE TABLE PostLike (
     PostLikeID varchar(10) NOT NULL,
     AccName varchar(16) NOT NULL,
@@ -314,6 +326,13 @@ CREATE TABLE PostLike (
     CONSTRAINT FK_PostLike_PostID FOREIGN KEY (PostID)
     REFERENCES Post(PostID),
     CONSTRAINT AK_AccName_PostID UNIQUE (AccName, PostID));
+
+    INSERT INTO PostLike (PostLikeID, AccName, PostID) VALUES
+    ('PL1', 'Johnathon', '1'),
+    ('PL2', 'Marcus', '2'),
+    ('PL3', 'Abigail', '3'),
+    ('PL4', 'Cameron', '4'),
+    ('PL5', 'Elizabeth', '5');
 
 CREATE TABLE Invite (
     InvID varchar(10) NOT NULL,
@@ -326,11 +345,25 @@ CREATE TABLE Invite (
     REFERENCES Discussion(DscName),
     CONSTRAINT AK_Invite_AccName_DscName UNIQUE (AccName, DscName));
 
+    INSERT INTO Invite (InvID, AccName, DscName) VALUES
+    ('INV1', 'Johnathon', 'ClimateAction'),
+    ('INV2', 'Marcus', 'EqualityForAll'),
+    ('INV3', 'Abigail', 'Community'),
+    ('INV4', 'Cameron', 'EducationReform'),
+    ('INV5', 'Elizabeth', 'PublicHealth');
+
 CREATE TABLE Feedback (
     FeedbackID INT IDENTITY(1,1) PRIMARY KEY,
     Username VARCHAR(255) NOT NULL,
     RatingStar INT NOT NULL,
     FeedbackDescription VARCHAR(MAX) NOT NULL
 );
+
+INSERT INTO Feedback (Username, RatingStar, FeedbackDescription) VALUES
+    ('Johnathon', 5, 'Great platform for discussions.'),
+    ('Marcus', 4, 'Useful for community engagement.'),
+    ('Abigail', 3, 'Needs some improvements.'),
+    ('Cameron', 2, 'Faced some issues while using.'),
+    ('Elizabeth', 1, 'Not satisfied with the experience.');
 
 
