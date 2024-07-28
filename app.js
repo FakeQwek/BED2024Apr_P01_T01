@@ -118,8 +118,7 @@ app.delete("/siteadmin/deny/:postId", siteadminPostReportController.deletePostRe
 app.delete("/siteadmin/post/:postId", siteadminPostReportController.deletePost);
 
 //Contact Us Routes
-app.get('/question', questionController.getAllQuestions);
-app.get('/question/:questionId', questionController.getQuestionById);
+app.post("/question", questionController.createQuestion);
 
 //News Routes
 app.get("/news", newsController.getAllNews);
