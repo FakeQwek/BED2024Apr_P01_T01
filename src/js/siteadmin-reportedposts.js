@@ -98,7 +98,7 @@ function addApproveDenyListeners() {
             postId = ids[0];
             reportId = ids[1];
             deletePostReport(reportId);
-            deletePost(postId);
+            denyPost(postId);
             sidebar.classList.remove('z-20');
            
             console.log(postId + reportId + " denied");
@@ -226,9 +226,9 @@ async function deletePostReport(reportId) {
 
 
 //Function deletes post with their post id
-async function deletePost(postId) {
-    const response = await fetch(`http://localhost:3000/siteadmin/post/${postId}`, {
-        method: "DELETE",
+async function denyPost(postId) {
+    const response = await fetch(`http://localhost:3000/siteadmin/deny/${postId}`, {
+        method: "PUT",
         mode: "cors",
         cache: "no-cache",
         credentials: "same-origin",

@@ -17,7 +17,7 @@ class Question {
     static async createQuestion(newQuestionData) {
         const connection = await sql.connect(dbConfig);
         //Question id will always be 1 up from the max question id
-        const sqlQuery = `INSERT INTO Question (QuestionID, Name, Email, Query) SELECT MAX(QuestionID) + 1, @name, @email, @query FROM Question;`;
+        const sqlQuery = `INSERT INTO Question (QuestionID, Name, Email, Query) SELECT CASE WHEN COUNT(*) = 0 THEN 1 ELSE MAX(QuestionID) + 1 END, @name, @email, @query FROM Question;`;
 
         const request = connection.request();
         request.input('name', newQuestionData.name);

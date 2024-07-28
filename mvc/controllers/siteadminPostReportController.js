@@ -30,10 +30,10 @@ const deletePostReport = async (req, res) => {
 };
 
 //Post id is taken in as parameter
-const deletePost = async (req, res) => {
+const denyPost = async (req, res) => {
     const postId = parseInt(req.params.postId);
     try {
-        const success = await PostReport.deletePost(postId);
+        const success = await PostReport.denyPost(postId);
         //Unsuccessful request will return 404
         if (!success) {
             return res.status(404).send("Post report not found")
@@ -41,7 +41,7 @@ const deletePost = async (req, res) => {
         res.status(204).send("Success");
     } catch (error) {
         console.log(error);
-        res.status(500).send("Error deleting post or post report");
+        res.status(500).send("Error denying post");
     }
 };
 
@@ -88,7 +88,7 @@ const getPostReportById = async (req,res) => {
 module.exports = {
     getAllPostReports,
     deletePostReport,
-    deletePost,
+    denyPost,
     getAllPostReportsByNewest,
     getAllCountOfPostReports,
     getPostReportById

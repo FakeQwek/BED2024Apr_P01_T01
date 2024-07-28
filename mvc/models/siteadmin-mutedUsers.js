@@ -16,7 +16,7 @@
          
          const connection = await sql.connect(dbConfig);
          const query = 
-         `SELECT AccName FROM Account WHERE isMuted = 'true'`;
+         `SELECT AccName FROM Account WHERE isMuted = 'True'`;
       
          const request = connection.request();
          const result = await request.query(query);
@@ -29,7 +29,7 @@
         const connection = await sql.connect(dbConfig);
         //Gets the muted user with AccName containing characters from input accName
         const query = 
-        `SELECT AccName FROM Account WHERE AccName LIKE '%${accName}%' AND isMuted ='true'`;
+        `SELECT AccName FROM Account WHERE AccName LIKE '%${accName}%' AND isMuted ='True'`;
     
         const request = connection.request();
         request.input("accName", accName);
@@ -42,7 +42,7 @@
      static async unmuteUser(accName) {
         const connection = await sql.connect(dbConfig);
         const query = 
-        `UPDATE Account SET isMuted = 'false' WHERE AccName = @accName`;
+        `UPDATE Account SET isMuted = 'False' WHERE AccName = @accName`;
     
         const request = connection.request();
         request.input("accName", accName);

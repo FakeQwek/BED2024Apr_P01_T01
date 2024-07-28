@@ -36,7 +36,7 @@
     specialchars = /[^a-zA-Z]/;
     email1 = /\.com{1}/;
     email2 = /@{1}/;
-    query = /[^a-zA-Z0-9\s]/;
+    query = /[^a-zA-Z0-9\s!?,']/;
     
     //Checks for spaces, space characters and blank input
     if (space.test(username) || specialchars.test(username) || username == "") {

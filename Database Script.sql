@@ -4,12 +4,16 @@ DROP TABLE PostReport;
 DROP TABLE DiscussionReport; 
 DROP TABLE Comment; 
 DROP TABLE Post; 
-DROP TABLE Discussion; 
-DROP TABLE Account; 
 DROP TABLE BanInfo;
 DROP TABLE MuteInfo;
 DROP TABLE NewsPost;
 DROP TABLE Question;
+DROP TABLE Account; 
+DROP TABLE Discussion; 
+ 
+
+
+
  
 
 
@@ -59,8 +63,8 @@ CREATE TABLE Discussion (
     CONSTRAINT PK_Discussion PRIMARY KEY (DscName), 
     CONSTRAINT FK_Discussion_OwnerID FOREIGN KEY (OwnerID) 
     REFERENCES Account(AccName)); 
- 
- 
+
+
 INSERT INTO Discussion (DscName, DscDesc, DscType, OwnerID) VALUES
 ('ClimateAction', 'Discuss strategies and actions to combat climate change and its effects.', 'Public', 'Johnathon');
 INSERT INTO Discussion (DscName, DscDesc, DscType, OwnerID) VALUES
@@ -71,6 +75,7 @@ INSERT INTO Discussion (DscName, DscDesc, DscType, OwnerID) VALUES
 ('EducationReform', 'Debate and propose changes to the education system to benefit all students.', 'Public', 'Cameron');
 INSERT INTO Discussion (DscName, DscDesc, DscType, OwnerID) VALUES
 ('PublicHealth', 'Discuss public health issues, policies, and initiatives for community well-being.', 'Public', 'Elizabeth');
+
 
 
 CREATE TABLE Post ( 
@@ -84,8 +89,6 @@ CREATE TABLE Post (
     OwnerID varchar(16) NOT NULL, 
     DscName varchar(16) NOT NULL 
     CONSTRAINT PK_Post PRIMARY KEY (PostID), 
-    CONSTRAINT FK_Post_OwnerID FOREIGN KEY (OwnerID) 
-    REFERENCES Account(AccName), 
     CONSTRAINT FK_Post_DscName FOREIGN KEY (DscName) 
     REFERENCES Discussion(DscName), 
     CONSTRAINT CHK_Post_isEvent CHECK (isEvent IN ('True', 'False')), 
@@ -101,6 +104,8 @@ CREATE TABLE Post (
     ('4', 'Education Reform Panel', 'Panel discussion on the future of education and necessary reforms to improve student outcomes.', 'True', 'False', '11/07/2024', NULL, 'Cameron', 'EducationReform');
     INSERT INTO Post (PostID, PostName, PostDesc, isEvent, isApproved, PostDate, PostEventDate, OwnerID, DscName) VALUES
     ('5', 'Public Health Awareness Campaign', 'Campaign to raise awareness about preventive measures and health tips for the public.', 'True', 'False', '18/07/2024', NULL, 'Elizabeth', 'PublicHealth');
+
+    
 
 
 
@@ -139,6 +144,7 @@ CREATE TABLE Comment (
     INSERT INTO Comment (CmtID, CmtDesc, OwnerID, PostID) VALUES
     ('5', 'I think there are some errors in the analysis.', 'Lily', '5');
  
+
 CREATE TABLE DiscussionReport (
     DscRptID varchar(10) NOT NULL,
     DscRptCat varchar(100) NOT NULL,
@@ -204,6 +210,17 @@ CREATE TABLE DiscussionAdmin (
     REFERENCES Account(AccName), 
     CONSTRAINT FK_DiscussionAdmin_DscName FOREIGN KEY (DscName) 
     REFERENCES Discussion(DscName)); 
+
+    INSERT INTO DiscussionAdmin (DscAdmID, AccName, DscName) VALUES 
+    ('DA1', 'Johnathon', 'ClimateAction');
+    INSERT INTO DiscussionAdmin (DscAdmID, AccName, DscName) VALUES 
+    ('DA2', 'Lily', 'Community');
+    INSERT INTO DiscussionAdmin (DscAdmID, AccName, DscName) VALUES 
+    ('DA3', 'Riley', 'EducationReform');
+    INSERT INTO DiscussionAdmin (DscAdmID, AccName, DscName) VALUES 
+    ('DA4', 'Miley', 'PublicHealth');
+    
+
     
  
 CREATE TABLE Volunteer ( 
@@ -216,8 +233,18 @@ CREATE TABLE Volunteer (
     REFERENCES Account(AccName), 
     CONSTRAINT FK_Volunteer_PostID FOREIGN KEY (PostID) 
     REFERENCES Post(PostID), 
-    CONSTRAINT CHK_Volunteer_isApproved CHECK (isApproved IN ('True', 'False'))
+    CONSTRAINT CHK_Volunteer_isApproved CHECK (isApproved IN ('True', 'False')),
     CONSTRAINT AK_Volunteer_AccName_PostID UNIQUE (AccName, PostID));
+
+    INSERT INTO Volunteer (VolID, AccName, isApproved, PostID) VALUES 
+    ('1', 'Johnathon', 'True', '2');
+     INSERT INTO Volunteer (VolID, AccName, isApproved, PostID) VALUES 
+    ('2', 'Michellye', 'True', '3');
+     INSERT INTO Volunteer (VolID, AccName, isApproved, PostID) VALUES 
+    ('3', 'Abigail', 'True', '4');
+     INSERT INTO Volunteer (VolID, AccName, isApproved, PostID) VALUES 
+    ('4', 'Riley', 'True', '1');
+
 
 CREATE TABLE BanInfo (
     AccName varchar(16) NOT NULL,
@@ -229,6 +256,13 @@ CREATE TABLE BanInfo (
     CONSTRAINT FK_DscName_BanInfo FOREIGN KEY (DscName) REFERENCES Discussion (DscName)
 );
 
+    INSERT INTO BanInfo (AccName, banDate, banReason, bannedBy, DscName) VALUES
+    ('Cameron', '2024-07-22 10:15:00', 'Violation of community guidelines', 'Johnathon', 'health_tech'),
+    ('Elizabeth', '2024-07-23 09:00:00', 'Repeated rule violations.', 'Abigail', 'nutrition'),
+    ('Marcus', '2024-07-26 13:00:00', 'Repeated offenses.', 'Riley', 'mental_health_support'),
+    ('Michellye', '2024-07-27 14:00:00', 'Violating guidelines.', 'Marcus', 'child_health');
+
+
 CREATE TABLE MuteInfo (
     AccName VARCHAR(16) NOT NULL,
     muteDate DATETIME NOT NULL DEFAULT GETDATE(),
@@ -239,8 +273,14 @@ CREATE TABLE MuteInfo (
     CONSTRAINT FK_DscName_MuteInfo FOREIGN KEY (DscName) REFERENCES Discussion (DscName)
 );
 
+ INSERT INTO BanInfo (AccName, banDate, banReason, bannedBy, DscName) VALUES
+    ('Cameron', '2024-07-22 10:15:00', 'Violation of community guidelines', 'Johnathon', 'ClimateAction'),
+    ('Elizabeth', '2024-07-23 09:00:00', 'Repeated rule violations.', 'Abigail', 'Community'),
+    ('Marcus', '2024-07-26 13:00:00', 'Repeated offenses.', 'Riley', 'EducationReform'),
+    ('Michellye', '2024-07-27 14:00:00', 'Violating guidelines.', 'Marcus', 'PublicHealth');
+
 CREATE TABLE Question (
-    QuestionID int NOT NULL,
+    QuestionID VARCHAR(16) NOT NULL,
     Name varchar(255) NOT NULL,
     Email varchar(255) NOT NULL,
     Query varchar(255) NOT NULL,
@@ -292,3 +332,5 @@ CREATE TABLE Feedback (
     RatingStar INT NOT NULL,
     FeedbackDescription VARCHAR(MAX) NOT NULL
 );
+
+
