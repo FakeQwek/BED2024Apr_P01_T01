@@ -367,3 +367,13 @@ INSERT INTO Feedback (Username, RatingStar, FeedbackDescription) VALUES
     ('Elizabeth', 1, 'Not satisfied with the experience.');
 
 
+/* Needed for my feature */
+INSERT INTO Post (PostID, PostName, PostDesc, isEvent, isApproved, PostDate, PostEventDate, OwnerID, DscName) VALUES
+('6', 'Tech Innovation Summit', 'Summit discussing the latest in technology and innovation.', 'True', 'True', '01/08/2024', NULL, 'jx100', 'PublicHealth'),
+('7', 'Mental Health Awareness Workshop', 'Workshop aimed at spreading awareness about mental health issues.', 'True', 'True', '03/08/2024', NULL, 'jx100', 'EqualityForAll'),
+('8', 'Youth Leadership Conference', 'A conference aimed at empowering youth with leadership skills.', 'True', 'True', '05/08/2024', NULL, 'jx100', 'EducationReform');
+
+INSERT INTO Comment (CmtID, CmtDesc, OwnerID, PostID) VALUES
+('6', 'This summit sounds very interesting. Looking forward to it.', 'jx100', '6'),
+('7', 'Mental health is a crucial topic. Thanks for organizing this workshop.', 'jx100', '7'),
+('8', 'Youth leadership is essential for our future. Excited for this conference.', 'jx100', '8');
