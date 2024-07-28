@@ -72,55 +72,97 @@ class DiscussionReport {
     }
 
     static async deleteDiscussionReport(dscRptId) {
-        const connection = await sql.connect(dbConfig);
+    const connection = await sql.connect(dbConfig);
     
-        // Begin transaction
-        const transaction = new sql.Transaction(connection);
-        await transaction.begin();
+    // Begin transaction
+    const transaction = new sql.Transaction(connection);
+    await transaction.begin();
     
-        try {
-            // Get the discussion name associated with the report
-            const getDscNameQuery = `SELECT DscName FROM DiscussionReport WHERE DscRptID = @dscRptId`;
-            const getRequest = transaction.request();
-            getRequest.input("dscRptId", sql.VarChar, dscRptId); // Treat as varchar
-            const result = await getRequest.query(getDscNameQuery);
+    try {
+        // Get the discussion name associated with the report
+        const getDscNameQuery = `SELECT DscName FROM DiscussionReport WHERE DscRptID = @dscRptId`;
+        const getRequest = transaction.request();
+        getRequest.input("dscRptId", sql.VarChar, dscRptId); // Treat as varchar
+        const result = await getRequest.query(getDscNameQuery);
     
-            if (result.recordset.length === 0) {
-                connection.close();
-                throw new Error("Discussion report not found");
-            }
-    
-            const dscName = result.recordset[0].DscName;
-    
-            // Delete related records in the correct order
-            const deletePostLikesQuery = `DELETE FROM PostLike WHERE PostID IN (SELECT PostID FROM Post WHERE DscName = @dscName)`;
-            await transaction.request().input("dscName", sql.VarChar, dscName).query(deletePostLikesQuery);
-    
-            const deleteCommentsQuery = `DELETE FROM Comment WHERE PostID IN (SELECT PostID FROM Post WHERE DscName = @dscName)`;
-            await transaction.request().input("dscName", sql.VarChar, dscName).query(deleteCommentsQuery);
-    
-            const deletePostsQuery = `DELETE FROM Post WHERE DscName = @dscName`;
-            await transaction.request().input("dscName", sql.VarChar, dscName).query(deletePostsQuery);
-    
-            const deleteBanInfoQuery = `DELETE FROM BanInfo WHERE DscName = @dscName`;
-            await transaction.request().input("dscName", sql.VarChar, dscName).query(deleteBanInfoQuery);
-    
-            const deleteDiscussionReportQuery = `DELETE FROM DiscussionReport WHERE DscRptID = @dscRptId`;
-            await transaction.request().input("dscRptId", sql.VarChar, dscRptId).query(deleteDiscussionReportQuery);
-    
-            const deleteDiscussionQuery = `DELETE FROM Discussion WHERE DscName = @dscName`;
-            await transaction.request().input("dscName", sql.VarChar, dscName).query(deleteDiscussionQuery);
-    
-            // Commit transaction
-            await transaction.commit();
-        } catch (error) {
-            // Rollback transaction in case of error
+        if (result.recordset.length === 0) {
             await transaction.rollback();
-            throw error;
-        } finally {
             connection.close();
+            throw new Error("Discussion report not found");
         }
+    
+        const dscName = result.recordset[0].DscName;
+    
+        // Log the obtained DscName
+        console.log(`Obtained DscName: ${dscName}`);
+    
+        // Delete related records in the correct order
+        const deleteDiscussionMembersQuery = `DELETE FROM DiscussionMember WHERE DscName = @dscName`;
+        await transaction.request().input("dscName", sql.VarChar, dscName).query(deleteDiscussionMembersQuery);
+    
+        // Log after deleting DiscussionMember
+        console.log(`Deleted DiscussionMembers related to DscName: ${dscName}`);
+    
+        const deleteMuteInfoQuery = `DELETE FROM MuteInfo WHERE DscName = @dscName`;
+        await transaction.request().input("dscName", sql.VarChar, dscName).query(deleteMuteInfoQuery);
+    
+        // Log after deleting MuteInfo
+        console.log(`Deleted MuteInfo related to DscName: ${dscName}`);
+    
+        const deletePostLikesQuery = `DELETE FROM PostLike WHERE PostID IN (SELECT PostID FROM Post WHERE DscName = @dscName)`;
+        await transaction.request().input("dscName", sql.VarChar, dscName).query(deletePostLikesQuery);
+    
+        // Log after deleting post likes
+        console.log(`Deleted PostLikes related to DscName: ${dscName}`);
+    
+        const deleteCommentsQuery = `DELETE FROM Comment WHERE PostID IN (SELECT PostID FROM Post WHERE DscName = @dscName)`;
+        await transaction.request().input("dscName", sql.VarChar, dscName).query(deleteCommentsQuery);
+    
+        // Log after deleting comments
+        console.log(`Deleted Comments related to DscName: ${dscName}`);
+    
+        const deletePostsQuery = `DELETE FROM Post WHERE DscName = @dscName`;
+        await transaction.request().input("dscName", sql.VarChar, dscName).query(deletePostsQuery);
+    
+        // Log after deleting posts
+        console.log(`Deleted Posts related to DscName: ${dscName}`);
+    
+        const deleteBanInfoQuery = `DELETE FROM BanInfo WHERE DscName = @dscName`;
+        await transaction.request().input("dscName", sql.VarChar, dscName).query(deleteBanInfoQuery);
+    
+        // Log after deleting ban info
+        console.log(`Deleted BanInfo related to DscName: ${dscName}`);
+    
+        const deleteDiscussionReportQuery = `DELETE FROM DiscussionReport WHERE DscRptID = @dscRptId`;
+        await transaction.request().input("dscRptId", sql.VarChar, dscRptId).query(deleteDiscussionReportQuery);
+    
+        // Log after deleting discussion report
+        console.log(`Deleted DiscussionReport with ID: ${dscRptId}`);
+    
+        const deleteDiscussionQuery = `DELETE FROM Discussion WHERE DscName = @dscName`;
+        await transaction.request().input("dscName", sql.VarChar, dscName).query(deleteDiscussionQuery);
+    
+        // Log after deleting discussion
+        console.log(`Deleted Discussion with DscName: ${dscName}`);
+    
+        // Commit transaction
+        await transaction.commit();
+    } catch (error) {
+        // Rollback transaction in case of error
+        await transaction.rollback();
+        console.error(`Error deleting discussion report with ID: ${dscRptId}`, error);
+        throw error;
+    } finally {
+        connection.close();
     }
+}
+
+    
+    
+    
+    
+    
+    
 }
 
 // export discussion report
