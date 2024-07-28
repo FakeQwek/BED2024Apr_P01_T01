@@ -112,7 +112,7 @@ CREATE TABLE DiscussionAdmin (
  
 CREATE TABLE Volunteer ( 
     VolID varchar(10) NOT NULL, 
-    AccName varchar(16) UNIQUE NOT NULL, 
+    AccName varchar(16) NOT NULL, 
     isApproved varchar(5) NOT NULL, 
     PostID varchar(10) NOT NULL 
     CONSTRAINT PK_Volunteer PRIMARY KEY (VolID), 
@@ -120,7 +120,8 @@ CREATE TABLE Volunteer (
     REFERENCES Account(AccName), 
     CONSTRAINT FK_Volunteer_PostID FOREIGN KEY (PostID) 
     REFERENCES Post(PostID), 
-    CONSTRAINT CHK_Volunteer_isApproved CHECK (isApproved IN ('True', 'False')));
+    CONSTRAINT CHK_Volunteer_isApproved CHECK (isApproved IN ('True', 'False'))
+    CONSTRAINT AK_Volunteer_AccName_PostID UNIQUE (AccName, PostID));
 
 CREATE TABLE NewsPost (
 	NewsID varchar(1000) NOT NULL,
