@@ -53,23 +53,24 @@ VALUES ('Michellye','Michellye@gmail.com', 'password9', '91633267', 'False', 'Tr
  
 CREATE TABLE Discussion ( 
     DscName varchar(16) NOT NULL, 
-    DscDesc varchar(100) NULL, 
+    DscDesc varchar(100) NULL,
+    DscType varchar(10) NOT NULL,
     OwnerID varchar(16) NOT NULL, 
     CONSTRAINT PK_Discussion PRIMARY KEY (DscName), 
     CONSTRAINT FK_Discussion_OwnerID FOREIGN KEY (OwnerID) 
     REFERENCES Account(AccName)); 
  
  
-INSERT INTO Discussion (DscName, DscDesc, OwnerID) VALUES
-('ClimateAction', 'Discuss strategies and actions to combat climate change and its effects.', 'Johnathon');
-INSERT INTO Discussion (DscName, DscDesc, OwnerID) VALUES
-('EqualityForAll', 'Explore topics around equality, social justice, and human rights.', 'Marcus');
-INSERT INTO Discussion (DscName, DscDesc, OwnerID) VALUES
-('Community', 'Share ideas and projects related to improving local communities and neighborhoods.', 'Abigail');
-INSERT INTO Discussion (DscName, DscDesc, OwnerID) VALUES
-('EducationReform', 'Debate and propose changes to the education system to benefit all students.', 'Cameron');
-INSERT INTO Discussion (DscName, DscDesc, OwnerID) VALUES
-('PublicHealth', 'Discuss public health issues, policies, and initiatives for community well-being.', 'Elizabeth');
+INSERT INTO Discussion (DscName, DscDesc, DscType, OwnerID) VALUES
+('ClimateAction', 'Discuss strategies and actions to combat climate change and its effects.', 'Public', 'Johnathon');
+INSERT INTO Discussion (DscName, DscDesc, DscType, OwnerID) VALUES
+('EqualityForAll', 'Explore topics around equality, social justice, and human rights.', 'Public', 'Marcus');
+INSERT INTO Discussion (DscName, DscDesc, DscType, OwnerID) VALUES
+('Community', 'Share ideas and projects related to improving local communities and neighborhoods.', 'Public', 'Abigail');
+INSERT INTO Discussion (DscName, DscDesc, DscType, OwnerID) VALUES
+('EducationReform', 'Debate and propose changes to the education system to benefit all students.', 'Public', 'Cameron');
+INSERT INTO Discussion (DscName, DscDesc, DscType, OwnerID) VALUES
+('PublicHealth', 'Discuss public health issues, policies, and initiatives for community well-being.', 'Public', 'Elizabeth');
 
 
 CREATE TABLE Post ( 
@@ -77,7 +78,9 @@ CREATE TABLE Post (
     PostName varchar(100) NOT NULL, 
     PostDesc varchar(1000) NOT NULL, 
     isEvent varchar(5) NOT NULL, 
-    isApproved varchar(5) NOT NULL, 
+    isApproved varchar(5) NOT NULL,
+    PostDate varchar(10) NOT NULL,
+    PostEventDate varchar(10) NULL,
     OwnerID varchar(16) NOT NULL, 
     DscName varchar(16) NOT NULL 
     CONSTRAINT PK_Post PRIMARY KEY (PostID), 
@@ -86,20 +89,18 @@ CREATE TABLE Post (
     CONSTRAINT FK_Post_DscName FOREIGN KEY (DscName) 
     REFERENCES Discussion(DscName), 
     CONSTRAINT CHK_Post_isEvent CHECK (isEvent IN ('True', 'False')), 
-    CONSTRAINT CHK_Post_isApproved CHECK (isApproved IN ('True', 'False')))
-    ON DELETE CASCADE;
+    CONSTRAINT CHK_Post_isApproved CHECK (isApproved IN ('True', 'False'))); 
 
-    INSERT INTO Post (PostID, PostName, PostDesc, isEvent, isApproved, OwnerID, DscName) VALUES
-    ('1', 'Climate Change Seminar', 'A seminar discussing the latest research and strategies for combating climate change.', 'True', 'True', 'Johnathon', 'ClimateAction');
-    INSERT INTO Post (PostID, PostName, PostDesc, isEvent, isApproved, OwnerID, DscName) VALUES
-    ('2', 'Equal Rights Workshop', 'Workshop focused on exploring practical approaches to achieving social equality.', 'False', 'True', 'Marcus', 'EqualityForAll');
-    INSERT INTO Post (PostID, PostName, PostDesc, isEvent, isApproved, OwnerID, DscName) VALUES
-    ('3', 'Community Cleanup Drive', 'Organizing a community cleanup drive to improve local parks and public spaces.', 'True', 'False', 'Abigail', 'Community');
-    INSERT INTO Post (PostID, PostName, PostDesc, isEvent, isApproved, OwnerID, DscName) VALUES
-    ('4', 'Education Reform Panel', 'Panel discussion on the future of education and necessary reforms to improve student outcomes.', 'False', 'True', 'Cameron', 'EducationReform');
-    INSERT INTO Post (PostID, PostName, PostDesc, isEvent, isApproved, OwnerID, DscName) VALUES
-    ('5', 'Public Health Awareness Campaign', 'Campaign to raise awareness about preventive measures and health tips for the public.', 'True', 'True', 'Elizabeth', 'PublicHealth');
-    INSERT INTO Post (PostID, PostName, PostDesc, isEvent, isApproved, OwnerID, DscName) VALUES
+    INSERT INTO Post (PostID, PostName, PostDesc, isEvent, isApproved, PostDate, PostEventDate, OwnerID, DscName) VALUES
+    ('1', 'Climate Change Seminar', 'A seminar discussing the latest research and strategies for combating climate change.', 'True', 'True', '30/07/2024', NULL, 'Johnathon', 'ClimateAction');
+    INSERT INTO Post (PostID, PostName, PostDesc, isEvent, isApproved, PostDate, PostEventDate, OwnerID, DscName) VALUES
+    ('2', 'Equal Rights Workshop', 'Workshop focused on exploring practical approaches to achieving social equality.', 'False', 'True', '28/07/2024', NULL, 'Marcus', 'EqualityForAll');
+    INSERT INTO Post (PostID, PostName, PostDesc, isEvent, isApproved, PostDate, PostEventDate, OwnerID, DscName) VALUES
+    ('3', 'Community Cleanup Drive', 'Organizing a community cleanup drive to improve local parks and public spaces.', 'True', 'False', '29/07/2024', NULL, 'Abigail', 'Community');
+    INSERT INTO Post (PostID, PostName, PostDesc, isEvent, isApproved, PostDate, PostEventDate, OwnerID, DscName) VALUES
+    ('4', 'Education Reform Panel', 'Panel discussion on the future of education and necessary reforms to improve student outcomes.', 'True', 'False', '11/07/2024', NULL, 'Cameron', 'EducationReform');
+    INSERT INTO Post (PostID, PostName, PostDesc, isEvent, isApproved, PostDate, PostEventDate, OwnerID, DscName) VALUES
+    ('5', 'Public Health Awareness Campaign', 'Campaign to raise awareness about preventive measures and health tips for the public.', 'True', 'False', '18/07/2024', NULL, 'Elizabeth', 'PublicHealth');
 
 
 
@@ -138,17 +139,18 @@ CREATE TABLE Comment (
     INSERT INTO Comment (CmtID, CmtDesc, OwnerID, PostID) VALUES
     ('5', 'I think there are some errors in the analysis.', 'Lily', '5');
  
-CREATE TABLE DiscussionReport ( 
-    DscRptID varchar(10) NOT NULL, 
-    DscRptCat varchar(100) NOT NULL, 
-    DscRptDesc varchar(100) NOT NULL, 
-    AccName varchar(16) NOT NULL, 
-    DscName varchar(16) NOT NULL 
-    CONSTRAINT PK_DiscussionReport PRIMARY KEY (DscRptID), 
-    CONSTRAINT FK_DiscussionReport_AccName FOREIGN KEY (AccName) 
-    REFERENCES Account(AccName), 
-    CONSTRAINT FK_DiscussionReport_DscName FOREIGN KEY (DscName) 
-    REFERENCES Discussion(DscName)); 
+CREATE TABLE DiscussionReport (
+    DscRptID varchar(10) NOT NULL,
+    DscRptCat varchar(100) NOT NULL,
+    DscRptDesc varchar(100) NOT NULL,
+    AccName varchar(16) NOT NULL,
+    DscName varchar(16) NOT NULL,
+    Warned BIT DEFAULT 0,
+    CONSTRAINT PK_DiscussionReport PRIMARY KEY (DscRptID),
+    CONSTRAINT FK_DiscussionReport_AccName FOREIGN KEY (AccName)
+    REFERENCES Account(AccName),
+    CONSTRAINT FK_DiscussionReport_DscName FOREIGN KEY (DscName)
+    REFERENCES Discussion(DscName));  
 
     INSERT INTO DiscussionReport (DscRptID, DscRptCat, DscRptDesc, AccName, DscName) VALUES
     ('1', 'Inappropriate Content', 'This discussion contains offensive material.', 'Abigail', 'ClimateAction');
@@ -164,9 +166,9 @@ CREATE TABLE DiscussionReport (
 CREATE TABLE PostReport ( 
     PostRptID varchar(10) NOT NULL, 
     PostRptCat varchar(100) NOT NULL, 
-    PostRptDesc varchar(100) NOT NULL, 
+    PostRptDesc varchar(100) NOT NULL,
     AccName varchar(16) NOT NULL, 
-    PostID varchar(10) NOT NULL,
+    PostID varchar(10) NOT NULL 
     CONSTRAINT PK_PostReport PRIMARY KEY (PostRptID), 
     CONSTRAINT FK_PostReport_AccName FOREIGN KEY (AccName) 
     REFERENCES Account(AccName), 
@@ -207,14 +209,15 @@ CREATE TABLE DiscussionAdmin (
 CREATE TABLE Volunteer ( 
     VolID varchar(10) NOT NULL, 
     AccName varchar(16) NOT NULL, 
-    isApproved varchar(5) NOT NULL,
+    isApproved varchar(5) NOT NULL, 
     PostID varchar(10) NOT NULL 
     CONSTRAINT PK_Volunteer PRIMARY KEY (VolID), 
     CONSTRAINT FK_Volunteer_AccName FOREIGN KEY (AccName) 
     REFERENCES Account(AccName), 
     CONSTRAINT FK_Volunteer_PostID FOREIGN KEY (PostID) 
     REFERENCES Post(PostID), 
-    CONSTRAINT CHK_Volunteer_isApproved CHECK (isApproved IN ('True', 'False')));
+    CONSTRAINT CHK_Volunteer_isApproved CHECK (isApproved IN ('True', 'False'))
+    CONSTRAINT AK_Volunteer_AccName_PostID UNIQUE (AccName, PostID));
 
 CREATE TABLE BanInfo (
     AccName varchar(16) NOT NULL,
@@ -243,4 +246,49 @@ CREATE TABLE Question (
     Query varchar(255) NOT NULL,
     CONSTRAINT PK_Question PRIMARY KEY(QuestionID)
 
+);
+
+CREATE TABLE DiscussionMember (
+    DscMemID varchar(10) NOT NULL,
+    DscMemRole varchar(6) NOT NULL,
+    isMuted varchar(5) NOT NULL,
+    isBanned varchar(5) NOT NULL,
+    AccName varchar(16) NOT NULL,
+    DscName varchar(16) NOT NULL
+    CONSTRAINT PK_DiscussionMember PRIMARY KEY (DscMemID),
+    CONSTRAINT FK_DiscussionMember_AccName FOREIGN KEY (AccName)
+    REFERENCES Account(AccName),
+    CONSTRAINT FK_DiscussionMember_DscName FOREIGN KEY (DscName)
+    REFERENCES Discussion(DscName),
+    CONSTRAINT CHK_DiscussionMember_isMuted CHECK (isMuted IN ('True', 'False')),
+    CONSTRAINT CHK_DiscussionMember_isBanned CHECK (isBanned IN ('True', 'False')),
+    CONSTRAINT AK_AccName_DscName UNIQUE (AccName, DscName));
+
+CREATE TABLE PostLike (
+    PostLikeID varchar(10) NOT NULL,
+    AccName varchar(16) NOT NULL,
+    PostID varchar(10) NOT NULL
+    CONSTRAINT PK_PostLike PRIMARY KEY (PostLikeID),
+    CONSTRAINT FK_PostLike_AccName FOREIGN KEY (AccName)
+    REFERENCES Account(AccName),
+    CONSTRAINT FK_PostLike_PostID FOREIGN KEY (PostID)
+    REFERENCES Post(PostID),
+    CONSTRAINT AK_AccName_PostID UNIQUE (AccName, PostID));
+
+CREATE TABLE Invite (
+    InvID varchar(10) NOT NULL,
+    AccName varchar(16) NOT NULL,
+    DscName varchar(16) NOT NULL,
+    CONSTRAINT PK_Invite PRIMARY KEY (InvID),
+    CONSTRAINT FK_Invite_AccName FOREIGN KEY (AccName)
+    REFERENCES Account(AccName),
+    CONSTRAINT FK_Invite FOREIGN KEY (DscName)
+    REFERENCES Discussion(DscName),
+    CONSTRAINT AK_Invite_AccName_DscName UNIQUE (AccName, DscName));
+
+CREATE TABLE Feedback (
+    FeedbackID INT IDENTITY(1,1) PRIMARY KEY,
+    Username VARCHAR(255) NOT NULL,
+    RatingStar INT NOT NULL,
+    FeedbackDescription VARCHAR(MAX) NOT NULL
 );
