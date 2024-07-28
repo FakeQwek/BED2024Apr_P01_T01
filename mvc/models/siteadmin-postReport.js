@@ -51,9 +51,9 @@ class PostReport {
     }
 
     //Deletes post based on id
-    static async deletePost(postId) {
+    static async denyPost(postId) {
         const connection = await sql.connect(dbConfig);
-        const sqlQuery = `DELETE FROM Post WHERE PostID = @postId`;
+        const sqlQuery = `UPDATE Post SET isApproved = 'False' WHERE PostID = @postId`;
         const request = connection.request();
         request.input("postId", postId);
         const result = await request.query(sqlQuery);

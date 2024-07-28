@@ -13,6 +13,10 @@ DROP TABLE Discussion;
  
 
 
+
+ 
+
+
 CREATE TABLE Account (      
     AccName varchar(16) NOT NULL,  
     AccEmail varchar(64) NOT NULL,      
@@ -82,16 +86,12 @@ CREATE TABLE Post (
     isApproved varchar(5) NOT NULL,
     PostDate varchar(10) NOT NULL,
     PostEventDate varchar(10) NULL,
-    isApproved varchar(5) NOT NULL,
-    PostDate varchar(10) NOT NULL,
-    PostEventDate varchar(10) NULL,
     OwnerID varchar(16) NOT NULL, 
     DscName varchar(16) NOT NULL 
     CONSTRAINT PK_Post PRIMARY KEY (PostID), 
     CONSTRAINT FK_Post_DscName FOREIGN KEY (DscName) 
     REFERENCES Discussion(DscName), 
     CONSTRAINT CHK_Post_isEvent CHECK (isEvent IN ('True', 'False')), 
-    CONSTRAINT CHK_Post_isApproved CHECK (isApproved IN ('True', 'False'))); 
     CONSTRAINT CHK_Post_isApproved CHECK (isApproved IN ('True', 'False'))); 
 
     INSERT INTO Post (PostID, PostName, PostDesc, isEvent, isApproved, PostDate, PostEventDate, OwnerID, DscName) VALUES
@@ -144,18 +144,7 @@ CREATE TABLE Comment (
     INSERT INTO Comment (CmtID, CmtDesc, OwnerID, PostID) VALUES
     ('5', 'I think there are some errors in the analysis.', 'Lily', '5');
  
-CREATE TABLE DiscussionReport (
-    DscRptID varchar(10) NOT NULL,
-    DscRptCat varchar(100) NOT NULL,
-    DscRptDesc varchar(100) NOT NULL,
-    AccName varchar(16) NOT NULL,
-    DscName varchar(16) NOT NULL,
-    Warned BIT DEFAULT 0,
-    CONSTRAINT PK_DiscussionReport PRIMARY KEY (DscRptID),
-    CONSTRAINT FK_DiscussionReport_AccName FOREIGN KEY (AccName)
-    REFERENCES Account(AccName),
-    CONSTRAINT FK_DiscussionReport_DscName FOREIGN KEY (DscName)
-    REFERENCES Discussion(DscName));  
+
 CREATE TABLE DiscussionReport (
     DscRptID varchar(10) NOT NULL,
     DscRptCat varchar(100) NOT NULL,
@@ -244,7 +233,7 @@ CREATE TABLE Volunteer (
     REFERENCES Account(AccName), 
     CONSTRAINT FK_Volunteer_PostID FOREIGN KEY (PostID) 
     REFERENCES Post(PostID), 
-    CONSTRAINT CHK_Volunteer_isApproved CHECK (isApproved IN ('True', 'False'))
+    CONSTRAINT CHK_Volunteer_isApproved CHECK (isApproved IN ('True', 'False')),
     CONSTRAINT AK_Volunteer_AccName_PostID UNIQUE (AccName, PostID));
 
     INSERT INTO Volunteer (VolID, AccName, isApproved, PostID) VALUES 
@@ -343,3 +332,5 @@ CREATE TABLE Feedback (
     RatingStar INT NOT NULL,
     FeedbackDescription VARCHAR(MAX) NOT NULL
 );
+
+
