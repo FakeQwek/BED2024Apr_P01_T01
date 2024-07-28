@@ -156,8 +156,10 @@ class Account {
     static async createAccount(account) {
         try {
             const connection = await sql.connect(dbConfig);
-            const sqlQuery = `INSERT INTO Account (AccName, AccEmail, Password, isAdmin, isMuted, isBanned) 
-                              VALUES (@accName, @accEmail, @password, @isAdmin, @isMuted, @isBanned)`;
+            const sqlQuery = `
+                INSERT INTO Account (AccName, AccEmail, Password, isAdmin, isMuted, isBanned) 
+                VALUES (@accName, @accEmail, @password, @isAdmin, @isMuted, @isBanned)
+            `;
             const request = connection.request();
             request.input("accName", sql.VarChar, account.accName);
             request.input("accEmail", sql.VarChar, account.accEmail);
