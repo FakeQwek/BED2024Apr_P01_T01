@@ -23,12 +23,12 @@ class PostReport {
         //Inner join gets related data from account and post tables
        
         const allQuery = 
-        `SELECT PostRptID, PostRptDesc, PostName, AccName, Post.PostID
+        `SELECT PostRptID, PostRptDesc, PostName, PostReport.AccName, Post.PostID
             FROM PostReport
             INNER JOIN Post 
             ON PostReport.PostID = Post.PostID
             INNER JOIN Account
-            ON PostReport.AccID = Account.AccID;`;
+            ON PostReport.AccName = Account.AccName;`;
     
         
         const request = connection.request();
@@ -64,12 +64,12 @@ class PostReport {
     //Gets post report data by newest 
     static async getAllPostReportsByNewest() {
         const connection = await sql.connect(dbConfig);
-        const sqlQuery = `SELECT PostRptID, PostRptDesc, PostName, AccName, Post.PostID
+        const sqlQuery = `SELECT PostRptID, PostRptDesc, PostName, PostReport.AccName, Post.PostID
             FROM PostReport
             INNER JOIN Post 
             ON PostReport.PostID = Post.PostID
             INNER JOIN Account
-            ON PostReport.AccID = Account.AccID
+            ON PostReport.AccName = Account.AccName
             ORDER BY PostRptID DESC`;
         const request = connection.request();
         const result = await request.query(sqlQuery);
@@ -82,12 +82,12 @@ class PostReport {
     //Get post reports by id
     static async getPostReportById(postId) {
         const connection = await sql.connect(dbConfig);
-        const sqlQuery = `SELECT PostRptID, PostRptDesc, PostName, AccName, Post.PostID
+        const sqlQuery = `SELECT PostRptID, PostRptDesc, PostName, PostReport.AccName, Post.PostID
             FROM PostReport
             INNER JOIN Post 
             ON PostReport.PostID = Post.PostID
             INNER JOIN Account
-            ON PostReport.AccID = Account.AccID
+            ON PostReport.AccName = Account.AccName
             WHERE PostReport.PostID = @postId`;
         const request = connection.request();
         request.input("postId", postId);

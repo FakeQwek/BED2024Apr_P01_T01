@@ -111,9 +111,11 @@ app.get("/siteadmin/mutedusers", siteadminMutedUserController.getAllMutedUsers);
 app.get("/siteadmin/mutedusers/:name", siteadminMutedUserController.getMutedUsersByName);
 app.get("/siteadmin/bannedusers", siteadminBannedUserController.getAllBannedUsers);
 app.get("/siteadmin/bannedusers/:name", siteadminBannedUserController.getBannedUsersByName);
-app.delete("/siteadminApprove/:reportId", siteadminPostReportController.deletePostReport);
-app.delete("/siteadminDeny/:postId", siteadminPostReportController.deletePostReport);
-app.delete("/siteadminPost/:postId", siteadminPostReportController.deletePost);
+app.put("/siteadmin/unban/:accName", siteadminBannedUserController.unbanUser);
+app.put("/siteadmin/unmute/:accName", siteadminMutedUserController.unmuteUser);
+app.delete("/siteadmin/approve/:reportId", siteadminPostReportController.deletePostReport);
+app.delete("/siteadmin/deny/:postId", siteadminPostReportController.deletePostReport);
+app.delete("/siteadmin/post/:postId", siteadminPostReportController.deletePost);
 
 //Contact Us Routes
 app.get('/question', questionController.getAllQuestions);

@@ -177,9 +177,9 @@
     static async getTypeOfDiscussions(){
         const connection = await sql.connect(dbConfig);
         const allQuery = 
-        `SELECT DscName, COUNT(DscName) AS 'Count' From Discussion
-         INNER JOIN Post ON Discussion.DscID = Post.DscID
-         GROUP BY DscName `;    
+        `SELECT Discussion.DscName, COUNT(Discussion.DscName) AS 'Count' From Discussion
+         INNER JOIN Post ON Discussion.DscName = Post.DscName
+         GROUP BY Discussion.DscName`;    
         const request = connection.request();
         const result = await request.query(allQuery);
         connection.close();

@@ -60,7 +60,7 @@ function populateUsers(bannedUsers) {
     for (i = 0; i < length; i++ ) {
         currentUser = bannedUsers[i];
         userBox.insertAdjacentHTML("beforeend", `
-            <div class="bg-white rounded-xl w-90per mt-4 h-12 flex flex-row items-center user" id="${currentUser["accId"]},${currentUser["accName"]}">
+            <div class="bg-white rounded-xl w-90per mt-4 h-12 flex flex-row items-center user" id="${currentUser["accName"]}">
                 <img src="../images/account-circle-outline.svg" width="40px" height="40px" class="ml-4">
                 <p class="ml-4"><b>u:${currentUser["accName"]}</b></p>
             </div>`)
@@ -121,8 +121,8 @@ async function getBannedUsersByName(accName) {
 
 
 //Unbans user
-async function unbanUser(accId) {
-    const response = await fetch(`http://localhost:3000/siteadmin/unban/${accId}`, {
+async function unbanUser(accName) {
+    const response = await fetch(`http://localhost:3000/siteadmin/unban/${accName}`, {
         method: "PUT",
         mode: "cors",
         cache: "no-cache",
@@ -150,16 +150,15 @@ function addUserListeners() {
         
         users[i].addEventListener("click", function(e) {
             console.log("clicked");
-            values = event.currentTarget.id.split(",");
-            accId = values[0];
-            accName = values[1];
+            accName = event.currentTarget.id;
+    
             //Makes popup visible
             popup.style.visibility = "visible";
             background.style.visibility = "visible";
             sidebar.classList.remove('z-20');
             namebox.innerHTML = `<b>u:${accName}</b>`;
             data = [];
-            data.push(accId);
+           
             data.push(accName);
         })
     }
@@ -186,11 +185,10 @@ function addPopupListeners() {
     });
     //Unbans selected user
     confirm.addEventListener('click', function(e) {
-        accId = data[0];
-        accName = data[1];
-        console.log(accId + " " + accName + "Confirmed selection");
+        accName = data[0];
+        console.log(accName + "Confirmed selection");
         if (selection == "unban") {
-            unbanUser(accId);
+            unbanUser(accName);
             alert("User unbanned!");
         }
         window.location.reload();

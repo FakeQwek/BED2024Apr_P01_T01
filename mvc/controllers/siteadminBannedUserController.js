@@ -26,8 +26,8 @@ const getBannedUsersByName = async (req,res) => {
 
 const unbanUser = async (req, res) => {
     try {
-        const accId = req.params.accId;
-        const unban = await BannedUsers.unbanUser(accId);
+        const accName = req.params.accName;
+        const unban = await BannedUsers.unbanUser(accName);
         if (!unban) {
             return res.status(404).send("Banned user not found")
         }

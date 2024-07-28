@@ -64,7 +64,7 @@ function populateUsers(mutedUsers) {
     for (i = 0; i < length; i++ ) {
         currentUser = mutedUsers[i];
         userBox.insertAdjacentHTML("beforeend", `
-            <div class="bg-white rounded-xl w-90per mt-4 h-12 flex flex-row items-center user" id="${currentUser["accId"]},${currentUser["accName"]}">
+            <div class="bg-white rounded-xl w-90per mt-4 h-12 flex flex-row items-center user" id="${currentUser["accName"]}">
                 <img src="../images/account-circle-outline.svg" width="40px" height="40px" class="ml-4">
                 <p class="ml-4"><b>u:${currentUser["accName"]}</b></p>
             </div>`)
@@ -123,8 +123,8 @@ async function getMutedUsersByName(accName) {
 }
 
 //Updates user to be unmuted
-async function unmuteUser(accId) {
-    const response = await fetch(`http://localhost:3000/siteadmin/unmute/${accId}`, {
+async function unmuteUser(accName) {
+    const response = await fetch(`http://localhost:3000/siteadmin/unmute/${accName}`, {
         method: "PUT",
         mode: "cors",
         cache: "no-cache",
@@ -151,9 +151,7 @@ function addUserListeners() {
         
         users[i].addEventListener("click", function(e) {
             console.log("clicked");
-            values = event.currentTarget.id.split(",");
-            accId = values[0];
-            accName = values[1];
+            accName = event.currentTarget.id;
             //Makes popup visible after clicking
             popup.style.visibility = "visible";
             background.style.visibility = "visible";
@@ -161,7 +159,7 @@ function addUserListeners() {
             //Assigns name in popup
             namebox.innerHTML = `<b>u:${accName}</b>`;
             data = [];
-            data.push(accId);
+        
             data.push(accName);
         })
     }
